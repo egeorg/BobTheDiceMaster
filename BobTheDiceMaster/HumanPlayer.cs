@@ -72,7 +72,7 @@ namespace BobTheDiceMaster
                 isInputCorrect = Enum.TryParse(typeof(CombinationTypes), combinationString, out object? result);
                 if (isInputCorrect)
                 {
-                  inputDecision = new Score((CombinationTypes)result);
+                  inputDecision = new CrossOut((CombinationTypes)result);
                 }
                 //TODO[GE]: check if combination is available
               }

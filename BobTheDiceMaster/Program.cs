@@ -9,7 +9,7 @@ namespace BobTheDiceMaster
       Console.WriteLine("Stargin a game with Bob...");
 
       GameOfSchool game = new GameOfSchool(new HumanPlayer());
-      while (true)
+      while (!game.IsOver)
       {
         Console.WriteLine("Performing next step");
         game.NextStep();

@@ -31,12 +31,19 @@ namespace BobTheDiceMaster
         combinationTypesUint = combinationTypesUint >> 1;
       }
 
-      return gradesLeft < 3;
+      if (gradesLeft > 3)
+      {
+        return false;
+      }
+      isSchoolFinished = true;
+      return true;
     }
     #endregion
 
     #region public properties
     public int Score => totalScore;
+
+    public bool IsOver { get; private set; } = false;
     #endregion
 
     #region public methods
@@ -55,6 +62,12 @@ namespace BobTheDiceMaster
 
     public void NextStep()
     {
+      if (allowedCombinationTypes == CombinationTypes.None)
+      {
+        IsOver = true;
+        Console.WriteLine($"Game over! Score is {totalScore}");
+        return;
+      }
       DiceRoll roll = DiceRoll.GenerateNew();
       int rollsLeft = RollsPerTurn;
       while (rollsLeft > 0)
@@ -68,18 +81,32 @@ namespace BobTheDiceMaster
             roll.Reroll(reroll.DiceToReroll);
             break;
           case Score score:
-            if (rollsLeft == RollsPerTurn)
+            //TODO[GE]: check that combination is valid.
+            if ((score.CombinationToScore & allowedCombinationTypes) == CombinationTypes.None)
             {
-              totalScore += roll.Sum() * 2;
+              throw new InvalidOperationException($"Combination {score.CombinationToScore} is already used");
+            }
+            if (rollsLeft == RollsPerTurn
+              && (score.CombinationToScore & CombinationTypes.School) != score.CombinationToScore)
+            {
+              totalScore += roll.Score(score.CombinationToScore) * 2;
             }
             else
             {
-              totalScore += roll.Sum();
+              totalScore += roll.Score(score.CombinationToScore);
             }
             allowedCombinationTypes -= score.CombinationToScore;
             rollsLeft = 0;
             break;
           case CrossOut crossOut:
+            if ((crossOut.Combination & allowedCombinationTypes) == CombinationTypes.None)
+            {
+              throw new InvalidOperationException($"Combination {crossOut.Combination} is already used");
+            }
+            if ((crossOut.Combination & CombinationTypes.School) != CombinationTypes.None)
+            {
+              throw new InvalidOperationException($"Can't cross out combination {crossOut.Combination}. Can't cross out combinations from school");
+            }
             allowedCombinationTypes -= crossOut.Combination;
             rollsLeft = 0;
             break;
