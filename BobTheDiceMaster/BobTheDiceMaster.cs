@@ -2,7 +2,7 @@
 
 namespace BobTheDiceMaster
 {
-  public class BobTheDiceMaster
+  public class BobTheDiceMaster : IPlayer
   {
     #region public methods
     public BobTheDiceMaster()
@@ -10,19 +10,10 @@ namespace BobTheDiceMaster
       // TODO
     }
 
-    public IDecision FirstRoll(CombinationTypes combinationsUsed, DiceRoll currentRoll)
-    {
-      // TODO
-      throw new NotImplementedException();
-    }
-
-    public IDecision SecondRoll(CombinationTypes combinationsUsed, DiceRoll currentRoll)
-    {
-      // TODO
-      throw new NotImplementedException();
-    }
-
-    public IDecision ThirdRoll(CombinationTypes combinationsUsed, DiceRoll currentRoll)
+    public IDecision DecideOnRoll(
+      CombinationTypes availableCombinations,
+      DiceRoll currentRoll,
+      int rerloosLeft)
     {
       // TODO
       throw new NotImplementedException();

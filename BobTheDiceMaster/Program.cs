@@ -8,8 +8,13 @@ namespace BobTheDiceMaster
     {
       Console.WriteLine("Stargin a game with Bob...");
 
-      GameWithBob game = new GameWithBob();
-      game.Start();
+      GameOfSchool game = new GameOfSchool(new HumanPlayer());
+      while (true)
+      {
+        Console.WriteLine("Performing next step");
+        game.NextStep();
+        Console.WriteLine($"Scored. Current score: {game.Score}");
+      }
     }
   }
 }

@@ -3,7 +3,7 @@
 namespace BobTheDiceMaster
 {
   [Flags]
-  public enum CombinationTypes
+  public enum CombinationTypes : uint
   {
     None = 0,
     Grade1 = 0x1,
@@ -12,6 +12,7 @@ namespace BobTheDiceMaster
     Grade4 = 0x8,
     Grade5 = 0x10,
     Grade6 = 0x20,
+    School = Grade1 | Grade2 | Grade3 | Grade4 | Grade5 | Grade6,
     Pair = 0x40,
     Three = 0x80,
     TwoPairs = 0x100,
@@ -19,6 +20,8 @@ namespace BobTheDiceMaster
     Care = 0x400,
     SmallStreet = 0x800,
     BigStreet = 0x1000,
-    Trash = 0x2000
+    Trash = 0x2000,
+    All = 0x3fff,
+    AllButSchool = All - School
   }
 }
