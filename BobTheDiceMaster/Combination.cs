@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System;
 
 namespace BobTheDiceMaster
 {
   public abstract class Combination
   {
     #region private methods
-    private double GetAverageProfit()
+    public virtual double GetAverageProfit()
     {
-      int sum = SuccessfulThrows.Sum(x => x.Sum());
-      return sum * (FirstTrySuccessProbability() * 2 + SecondTrySuccessProbability() + ThirdTrySuccessProbability());
+      //int sum = SuccessfulThrows.Sum(x => x.Sum());
+      //return sum * (FirstTrySuccessProbability() * 2 + SecondTrySuccessProbability() + ThirdTrySuccessProbability());
+      throw new NotImplementedException();
     }
     #endregion
 
@@ -18,16 +19,16 @@ namespace BobTheDiceMaster
 
     abstract public CombinationTypes CombinationType { get; }
 
-    abstract public IReadOnlyList<DiceRoll> SuccessfulThrows { get; }
+    //abstract public IReadOnlyList<DiceRoll> SuccessfulThrows { get; }
     #endregion
 
-    #region protected methods
-    abstract protected double FirstTrySuccessProbability();
+    //#region protected methods
+    //abstract protected double FirstTrySuccessProbability();
 
-    abstract protected double SecondTrySuccessProbability();
+    //abstract protected double SecondTrySuccessProbability();
 
-    abstract protected double ThirdTrySuccessProbability();
-    #endregion
+    //abstract protected double ThirdTrySuccessProbability();
+    //#endregion
 
     #region public methods
     public Combination()
@@ -35,9 +36,9 @@ namespace BobTheDiceMaster
       AverageProfit = GetAverageProfit();
     }
 
-    abstract public double SecondTrySuccessProbability(DiceRoll current);
+    //abstract public double SecondTrySuccessProbability(DiceRoll current);
 
-    abstract public double ThirdTrySuccessProbability(DiceRoll current);
+    //abstract public double ThirdTrySuccessProbability(DiceRoll current);
     #endregion
   }
 }
