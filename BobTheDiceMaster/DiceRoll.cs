@@ -103,7 +103,7 @@ namespace BobTheDiceMaster
           return GradeScore(6);
         case CombinationTypes.Pair:
           return PairScore();
-        case CombinationTypes.Three:
+        case CombinationTypes.Set:
           return ThreeScore();
         case CombinationTypes.TwoPairs:
           return TwoPairsScore();
@@ -113,6 +113,7 @@ namespace BobTheDiceMaster
         case CombinationTypes.SmallStreet:
         case CombinationTypes.BigStreet:
         case CombinationTypes.Trash:
+        case CombinationTypes.Poker:
           return Sum();
         default:
           throw new ArgumentException(
@@ -231,6 +232,27 @@ namespace BobTheDiceMaster
 
       throw new InvalidOperationException($"No two pairs found in roll {this}");
     }
+
+    public static readonly IReadOnlyList<int[]> Rerolls = new List<int[]>()
+    {
+      Array.Empty<int>(),
+      new [] { 0 }, new [] { 1 }, new [] { 2 }, new [] { 3 }, new [] { 4 },
+      new [] { 0, 1 }, new [] { 0, 2 }, new [] { 0, 3 }, new [] { 0, 4 },
+      new [] { 1, 2 }, new [] { 1, 3 }, new [] { 1, 4 },
+      new [] { 2, 3 }, new [] { 2, 4 },
+      new [] { 3, 4 },
+      new [] { 0, 1, 2}, new [] { 0, 1, 3}, new [] { 0, 1, 4},
+      new [] { 0, 2, 3}, new [] { 0, 2, 4},
+      new [] { 0, 3, 4},
+      new [] { 1, 2, 3}, new [] { 1, 2, 4},
+      new [] { 1, 3, 4},
+      new [] { 2, 3, 4},
+      new [] { 0, 1, 2, 3 }, new [] { 0, 1, 2, 4 },
+      new [] { 0, 1, 3, 4 },
+      new [] { 0, 2, 3, 4 },
+      new [] { 1, 2, 3, 4 },
+      new [] { 0, 1, 2, 3, 4 },
+    };
     #endregion
   }
 }

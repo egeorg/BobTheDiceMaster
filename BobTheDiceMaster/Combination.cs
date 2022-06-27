@@ -6,29 +6,16 @@ namespace BobTheDiceMaster
   public abstract class Combination
   {
     #region private methods
-    public virtual double GetAverageProfit()
-    {
-      //int sum = SuccessfulThrows.Sum(x => x.Sum());
-      //return sum * (FirstTrySuccessProbability() * 2 + SecondTrySuccessProbability() + ThirdTrySuccessProbability());
-      throw new NotImplementedException();
-    }
+    public abstract double GetAverageProfit();
+    public abstract double SingleRerollAverageProfit(DiceRoll roll, int[] diceToReroll);
+    public abstract double TwoRerollAverageProfit(DiceRoll roll, int[] diceToReroll);
     #endregion
 
     #region public properties
     public double AverageProfit { get; }
 
     abstract public CombinationTypes CombinationType { get; }
-
-    //abstract public IReadOnlyList<DiceRoll> SuccessfulThrows { get; }
     #endregion
-
-    //#region protected methods
-    //abstract protected double FirstTrySuccessProbability();
-
-    //abstract protected double SecondTrySuccessProbability();
-
-    //abstract protected double ThirdTrySuccessProbability();
-    //#endregion
 
     #region public methods
     public Combination()
