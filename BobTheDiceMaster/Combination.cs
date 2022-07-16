@@ -10,6 +10,8 @@ namespace BobTheDiceMaster
     {
       double averageProfit = 0;
 
+      Dictionary<DiceRoll, double> secondRollScoreCache = new Dictionary<DiceRoll, double>();
+
       foreach (DiceRoll firstRoll in DiceRoll.Roll5Results)
       {
         double firstRollScore = firstRoll.Score(CombinationType);
@@ -51,45 +53,56 @@ namespace BobTheDiceMaster
 
             // The best score that can be achieved on the secondRoll result, including optimal reroll.
             // i.e. if first reroll yields firstRerollResult, it's the best.
-            double secondRollScore = secondRoll.Score(CombinationType);
+            double secondRollScore;
 
-            // null indicates that current score is better than any reroll
-            int[] bestSecondReroll = null;
-
-            foreach (int[] secondReroll in DiceRoll.Rerolls)
+            if (secondRollScoreCache.ContainsKey(secondRoll))
             {
-              if (secondReroll.Length == 0)
-              {
-                continue;
-              }
-              IReadOnlyList<DiceRoll> secondRerollResults = DiceRoll.RollResults[secondReroll.Length - 1];
-              double secondRerollAverage = 0;
+              secondRollScore = secondRollScoreCache[secondRoll];
+            }
+            else
+            {
+              secondRollScore = secondRoll.Score(CombinationType);
 
-              foreach (var secondRerollResult in secondRerollResults)
+              // null indicates that current score is better than any reroll
+              int[] bestSecondReroll = null;
+
+              foreach (int[] secondReroll in DiceRoll.Rerolls)
               {
-                int[] thirdRollDice = new int[DiceRoll.MaxDiceAmount];
-                int secondRerollCounter = 0;
-                for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+                if (secondReroll.Length == 0)
                 {
-                  // Indices in DiceRoll.Rerolls are in ascending order
-                  if (secondRerollCounter < secondReroll.Length && secondReroll[secondRerollCounter] == i)
-                  {
-                    thirdRollDice[i] = secondRerollResult[secondRerollCounter++];
-                  }
-                  else
-                  {
-                    thirdRollDice[i] = secondRoll[i];
-                  }
+                  continue;
                 }
-                DiceRoll thirdRoll = new DiceRoll(thirdRollDice);
-                secondRerollAverage += secondRerollResult.GetProbability() * thirdRoll.Score(CombinationType);
+                IReadOnlyList<DiceRoll> secondRerollResults = DiceRoll.RollResults[secondReroll.Length - 1];
+                double secondRerollAverage = 0;
+
+                foreach (var secondRerollResult in secondRerollResults)
+                {
+                  int[] thirdRollDice = new int[DiceRoll.MaxDiceAmount];
+                  int secondRerollCounter = 0;
+                  for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+                  {
+                    // Indices in DiceRoll.Rerolls are in ascending order
+                    if (secondRerollCounter < secondReroll.Length && secondReroll[secondRerollCounter] == i)
+                    {
+                      thirdRollDice[i] = secondRerollResult[secondRerollCounter++];
+                    }
+                    else
+                    {
+                      thirdRollDice[i] = secondRoll[i];
+                    }
+                  }
+                  DiceRoll thirdRoll = new DiceRoll(thirdRollDice);
+                  secondRerollAverage += secondRerollResult.GetProbability() * thirdRoll.Score(CombinationType);
+                }
+
+                if (secondRerollAverage > secondRollScore)
+                {
+                  secondRollScore = secondRerollAverage;
+                  bestSecondReroll = secondReroll;
+                }
               }
 
-              if (secondRerollAverage > secondRollScore)
-              {
-                secondRollScore = secondRerollAverage;
-                bestSecondReroll = secondReroll;
-              }
+              secondRollScoreCache.Add(secondRoll, secondRollScore);
             }
 
             firstRerollAverage += firstRerollResult.GetProbability() * secondRollScore;

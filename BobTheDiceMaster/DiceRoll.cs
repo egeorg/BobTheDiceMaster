@@ -129,6 +129,43 @@ namespace BobTheDiceMaster
       return $"DiceRoll({ String.Join(", ", dice) }";
     }
 
+    public override int GetHashCode()
+    {
+      int[] diceHist = new int[D6.MaxValue];
+      for (int i = 0; i < dice.Length; ++i)
+      {
+        ++diceHist[dice[i] - 1];
+      }
+      int hash = 0;
+      int basePower = 1;
+      for (int i = 0; i < D6.MaxValue; ++i)
+      {
+        hash += basePower * diceHist[i];
+        basePower *= MaxDiceAmount;
+      }
+      return hash;
+    }
+
+    public override bool Equals(object obj)
+    {
+      DiceRoll other = (DiceRoll)obj;
+      int[] diceHist = new int[D6.MaxValue];
+      int[] otherDiceHist = new int[D6.MaxValue];
+      for (int i = 0; i < dice.Length; ++i)
+      {
+        ++diceHist[dice[i] - 1];
+        ++otherDiceHist[other[i] - 1];
+      }
+      for (int i = 0; i < D6.MaxValue; ++i)
+      {
+        if (diceHist[i] != otherDiceHist[i])
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+
     private int GradeScore(int grade)
     {
       int rollScore = 0;//  -(grade * MaxDiceAmount);

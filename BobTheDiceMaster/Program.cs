@@ -39,5 +39,14 @@ namespace BobTheDiceMaster
         Console.WriteLine($"{i} dice rerolls probability sum: {pSum}");
       }
     }
+
+    static void TestDiceRollEquals()
+    {
+      DiceRoll r1 = new DiceRoll(new[] { 1, 1, 6, 6, 6 });
+      DiceRoll r2 = new DiceRoll(new[] { 6, 1, 6, 1, 6 });
+      DiceRoll r3 = new DiceRoll(new[] { 1, 2, 3, 4, 5 });
+      Console.WriteLine(r1.Equals(r2));
+      Console.WriteLine(r1.Equals(r3));
+    }
   }
 }
