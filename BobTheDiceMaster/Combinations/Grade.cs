@@ -17,10 +17,15 @@ namespace BobTheDiceMaster.Combinations
         + ThirdRollNSuccessProbability(1));
     }
 
+    public double BaseGetAverageProfit()
+    {
+      return base.GetAverageProfit();
+    }
+
     public double SingleRerollAverageProfit(DiceRoll roll)
     {
       int wrongDiceAmount = 0;
-      for (int i = 0; i < DiceRoll.DiceAmount; ++i)
+      for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
       {
         if (roll[i] != GradeNumber)
         {
@@ -28,10 +33,10 @@ namespace BobTheDiceMaster.Combinations
         }
       }
 
-      int correctDiceAmount = DiceRoll.DiceAmount - wrongDiceAmount;
+      int correctDiceAmount = DiceRoll.MaxDiceAmount - wrongDiceAmount;
 
       double result = 0;
-      for (int i = 0; correctDiceAmount + i <= DiceRoll.DiceAmount; ++i)
+      for (int i = 0; correctDiceAmount + i <= DiceRoll.MaxDiceAmount; ++i)
       {
         result += GradeNumber * (correctDiceAmount + i) * NDiceRollKSuccessProbability(wrongDiceAmount, i);
       }
@@ -39,32 +44,10 @@ namespace BobTheDiceMaster.Combinations
       return result;
     }
 
-    //public override double SingleRerollAverageProfit(DiceRoll roll)
-    //{
-    //  int wrongDiceAmount = 0;
-    //  for (int i = 0; i < DiceRoll.DiceAmount; ++i)
-    //  {
-    //    if (roll[i] != GradeNumber)
-    //    {
-    //      ++wrongDiceAmount;
-    //    }
-    //  }
-
-    //  int correctDiceAmount = DiceRoll.DiceAmount - wrongDiceAmount;
-
-    //  double result = 0;
-    //  for (int i = 0; correctDiceAmount + i <= DiceRoll.DiceAmount; ++i)
-    //  {
-    //    result += GradeNumber * (correctDiceAmount + i) * NDiceRollKSuccessProbability(wrongDiceAmount, i);
-    //  }
-
-    //  return result;
-    //}
-
     public override double SingleRerollAverageProfit(DiceRoll roll, int[] diceToReroll)
     {
       int correctDiceAmount = 0;
-      for (int i = 0; i < DiceRoll.DiceAmount; ++i)
+      for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
       {
         if (roll[i] == GradeNumber)
         {
@@ -89,41 +72,10 @@ namespace BobTheDiceMaster.Combinations
       return result;
     }
 
-    //public override double TwoRerollAverageProfit(DiceRoll roll)
-    //{
-    //  int wrongDiceAmount = 0;
-    //  for (int i = 0; i < DiceRoll.DiceAmount; ++i)
-    //  {
-    //    if (roll[i] != GradeNumber)
-    //    {
-    //      ++wrongDiceAmount;
-    //    }
-    //  }
-
-    //  int correctDiceAmount = DiceRoll.DiceAmount - wrongDiceAmount;
-
-    //  // Situation 1: all dice are GradeNumber after a single reroll.
-    //  double result = GradeNumber * DiceRoll.DiceAmount * NDiceRollKSuccessProbability(wrongDiceAmount, wrongDiceAmount);
-
-    //  // Situation 2: i dice rerolled as GradeNumber after a single reroll,
-    //  // j dice rerolled as GradeNumber after a second reroll.
-    //  for (int i = 0; correctDiceAmount + i < DiceRoll.DiceAmount; ++i)
-    //  {
-    //    for (int j = 0; correctDiceAmount + i + j <= DiceRoll.DiceAmount; ++j)
-    //    {
-    //      result += GradeNumber * (correctDiceAmount + i + j)
-    //        * NDiceRollKSuccessProbability(wrongDiceAmount, i)
-    //        * NDiceRollKSuccessProbability(wrongDiceAmount - i, j);
-    //    }
-    //  }
-
-    //  return result;
-    //}
-
     public override double TwoRerollAverageProfit(DiceRoll roll, int[] diceToReroll)
     {
       int correctDiceAmount = 0;
-      for (int i = 0; i < DiceRoll.DiceAmount; ++i)
+      for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
       {
         if (roll[i] == GradeNumber)
         {
@@ -166,7 +118,7 @@ namespace BobTheDiceMaster.Combinations
 
     public double FirstRollNSuccessProbability(int n)
     {
-      return NDiceRollKSuccessProbability(DiceRoll.DiceAmount, n);
+      return NDiceRollKSuccessProbability(DiceRoll.MaxDiceAmount, n);
     }
 
     public double SecondRollNSuccessProbability(int n)
@@ -174,13 +126,13 @@ namespace BobTheDiceMaster.Combinations
       double p = 0;
       // Inequality is not strict to make sure that only second roll yields to n success
       for (int firstRollSuccessDice = 0;
-        firstRollSuccessDice <= n;
+        firstRollSuccessDice < n;
         ++firstRollSuccessDice)
       {
         int secondRollSuccessDice = n - firstRollSuccessDice;
-        p += NDiceRollKSuccessProbability(DiceRoll.DiceAmount, firstRollSuccessDice)
+        p += NDiceRollKSuccessProbability(DiceRoll.MaxDiceAmount, firstRollSuccessDice)
           * NDiceRollKSuccessProbability(
-              DiceRoll.DiceAmount - firstRollSuccessDice,
+              DiceRoll.MaxDiceAmount - firstRollSuccessDice,
               secondRollSuccessDice);
       }
       return p;
@@ -193,17 +145,26 @@ namespace BobTheDiceMaster.Combinations
         firstRollSuccessDice <= n;
         ++firstRollSuccessDice)
       {
+        if (firstRollSuccessDice == DiceRoll.MaxDiceAmount)
+        {
+          continue;
+        }
         for (int secondRollSuccessDice = 0;
           secondRollSuccessDice <= n - firstRollSuccessDice;
           ++secondRollSuccessDice)
         {
+
+          if (secondRollSuccessDice == DiceRoll.MaxDiceAmount - firstRollSuccessDice)
+          {
+            continue;
+          }
           int thirdRollSuccessDice = n - firstRollSuccessDice - secondRollSuccessDice;
-          p += NDiceRollKSuccessProbability(DiceRoll.DiceAmount, firstRollSuccessDice)
+          p += NDiceRollKSuccessProbability(DiceRoll.MaxDiceAmount, firstRollSuccessDice)
             * NDiceRollKSuccessProbability(
-              DiceRoll.DiceAmount - firstRollSuccessDice,
+              DiceRoll.MaxDiceAmount - firstRollSuccessDice,
               secondRollSuccessDice)
             * NDiceRollKSuccessProbability(
-              DiceRoll.DiceAmount - firstRollSuccessDice - secondRollSuccessDice,
+              DiceRoll.MaxDiceAmount - firstRollSuccessDice - secondRollSuccessDice,
               thirdRollSuccessDice);
         }
       }
@@ -219,9 +180,9 @@ namespace BobTheDiceMaster.Combinations
         ++firstRollSuccessDice)
       {
         int secondRollSuccessDice = n - firstRollSuccessDice;
-        p += NDiceRollKSuccessProbability(DiceRoll.DiceAmount, firstRollSuccessDice)
+        p += NDiceRollKSuccessProbability(DiceRoll.MaxDiceAmount, firstRollSuccessDice)
           * NDiceRollKSuccessProbability(
-            DiceRoll.DiceAmount - firstRollSuccessDice,
+            DiceRoll.MaxDiceAmount - firstRollSuccessDice,
             secondRollSuccessDice);
       }
       return p;
@@ -239,12 +200,12 @@ namespace BobTheDiceMaster.Combinations
           ++secondRollSuccessDice)
         {
           int thirdRollSuccessDice = n - firstRollSuccessDice - secondRollSuccessDice;
-          p += NDiceRollKSuccessProbability(DiceRoll.DiceAmount, firstRollSuccessDice)
+          p += NDiceRollKSuccessProbability(DiceRoll.MaxDiceAmount, firstRollSuccessDice)
             * NDiceRollKSuccessProbability(
-              DiceRoll.DiceAmount - firstRollSuccessDice,
+              DiceRoll.MaxDiceAmount - firstRollSuccessDice,
               secondRollSuccessDice)
             * NDiceRollKSuccessProbability(
-              DiceRoll.DiceAmount - firstRollSuccessDice - secondRollSuccessDice,
+              DiceRoll.MaxDiceAmount - firstRollSuccessDice - secondRollSuccessDice,
               thirdRollSuccessDice);
         }
       }

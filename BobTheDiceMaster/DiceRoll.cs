@@ -9,7 +9,7 @@ namespace BobTheDiceMaster
     #region private fields
     private static D6 die = new D6();
 
-    private int[] dice = new int[DiceAmount];
+    private int[] dice;
     #endregion
 
     #region private methods
@@ -27,26 +27,29 @@ namespace BobTheDiceMaster
       }
     }
 
-    public const int DiceAmount = 5;
+    public int DiceAmount => dice.Length;
+
+    public const int MaxDiceAmount = 5;
     #endregion
 
     #region public methods
     public DiceRoll(int[] dice)
     {
-      if (dice.Length != DiceAmount)
+      this.dice = (int[])dice.Clone();
+
+      if (dice.Length < 1 || dice.Length > MaxDiceAmount)
       {
         throw new ArgumentException(
-          $"Exactly {DiceAmount} dice expected, but was '{dice.Length}'");
+          $"Between 1 and {MaxDiceAmount} dice expected, but was '{dice.Length}'");
       }
 
-      for (int i = 0; i < DiceAmount; ++i)
+      for (int i = 0; i < dice.Length; ++i)
       {
         if (dice[i] < 1 || dice[i] > D6.MaxValue)
         {
           throw new ArgumentException(
             $"Die value has to be between 1 and {D6.MaxValue}, but {i}-th value was '{dice[i]}'");
         }
-        this.dice[i] = dice[i];
       }
     }
 
@@ -57,9 +60,9 @@ namespace BobTheDiceMaster
 
     public static DiceRoll GenerateNew()
     {
-      int[] dice = new int[DiceAmount];
+      int[] dice = new int[MaxDiceAmount];
 
-      for (int i = 0; i < DiceAmount; ++i)
+      for (int i = 0; i < MaxDiceAmount; ++i)
       {
         dice[i] = RollSingleDice();
       }
@@ -69,17 +72,17 @@ namespace BobTheDiceMaster
 
     public void Reroll(IReadOnlyCollection<int> diceToReroll)
     {
-      if (diceToReroll.Count > DiceAmount)
+      if (diceToReroll.Count > dice.Length)
       {
-        throw new ArgumentException($"Can't reroll more than {DiceAmount} dice.");
+        throw new ArgumentException($"Can't reroll more than {dice.Length} dice for roll {this}.");
       }
 
       foreach (var dieNumber in diceToReroll)
       {
-        if (dieNumber < 0 || dieNumber >= DiceAmount)
+        if (dieNumber < 0 || dieNumber >= dice.Length)
         {
           throw new ArgumentException(
-            $"Can't reroll die {dieNumber}. Die number has to be between 0 and {DiceAmount - 1} inclusively.");
+            $"Can't reroll die {dieNumber}. Die number has to be between 0 and {dice.Length - 1} inclusively for roll {this}.");
         }
         dice[dieNumber] = RollSingleDice();
       }
@@ -123,14 +126,13 @@ namespace BobTheDiceMaster
 
     public override string ToString()
     {
-      //TODO: use DiceAmount?
-      return $"{dice[0]} {dice[1]} {dice[2]} {dice[3]} {dice[4]}";
+      return $"DiceRoll({ String.Join(", ", dice) }";
     }
 
     private int GradeScore(int grade)
     {
-      int rollScore = -(grade * DiceAmount);
-      for (int i = 0; i < DiceAmount; ++i)
+      int rollScore = 0;//  -(grade * MaxDiceAmount);
+      for (int i = 0; i < MaxDiceAmount; ++i)
       {
         if (dice[i] == grade)
         {
@@ -140,11 +142,29 @@ namespace BobTheDiceMaster
       return rollScore;
     }
 
+    public double GetProbability()
+    {
+      int[] diceHist = new int[D6.MaxValue];
+      for (int i = 0; i < dice.Length; ++i)
+      {
+        ++diceHist[dice[i] - 1];
+      }
+
+      long numberOfThrows = Combinatorics.Factorial(dice.Length);
+
+      for (int i = 0; i < D6.MaxValue; ++i)
+      {
+        numberOfThrows /= Combinatorics.Factorial(diceHist[i]);
+      }
+
+      return numberOfThrows / Math.Pow(6, dice.Length);
+    }
+
     private int PairScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
-      for (int i = 0; i < DiceAmount; ++i)
+      for (int i = 0; i < MaxDiceAmount; ++i)
       {
         ++valuesCount[dice[i] - 1];
       }
@@ -163,7 +183,7 @@ namespace BobTheDiceMaster
     {
       int[] valuesCount = new int[D6.MaxValue];
 
-      for (int i = 0; i < DiceAmount; ++i)
+      for (int i = 0; i < MaxDiceAmount; ++i)
       {
         ++valuesCount[dice[i] - 1];
       }
@@ -183,7 +203,7 @@ namespace BobTheDiceMaster
     {
       int[] valuesCount = new int[D6.MaxValue];
 
-      for (int i = 0; i < DiceAmount; ++i)
+      for (int i = 0; i < MaxDiceAmount; ++i)
       {
         ++valuesCount[dice[i] - 1];
       }
@@ -203,7 +223,7 @@ namespace BobTheDiceMaster
     {
       int[] valuesCount = new int[D6.MaxValue];
 
-      for (int i = 0; i < DiceAmount; ++i)
+      for (int i = 0; i < MaxDiceAmount; ++i)
       {
         ++valuesCount[dice[i] - 1];
       }
@@ -233,6 +253,10 @@ namespace BobTheDiceMaster
       throw new InvalidOperationException($"No two pairs found in roll {this}");
     }
 
+    static DiceRoll() {
+      InitRollResults();
+    }
+
     public static readonly IReadOnlyList<int[]> Rerolls = new List<int[]>()
     {
       Array.Empty<int>(),
@@ -253,6 +277,44 @@ namespace BobTheDiceMaster
       new [] { 1, 2, 3, 4 },
       new [] { 0, 1, 2, 3, 4 },
     };
+
+    private static List<DiceRoll> roll5Results = new List<DiceRoll>();
+    private static List<DiceRoll> roll4Results = new List<DiceRoll>();
+    private static List<DiceRoll> roll3Results = new List<DiceRoll>();
+    private static List<DiceRoll> roll2Results = new List<DiceRoll>();
+    private static List<DiceRoll> roll1Results = new List<DiceRoll>();
+
+    public static IReadOnlyList<DiceRoll> Roll5Results => roll5Results;
+    public static IReadOnlyList<DiceRoll> Roll4Results => roll4Results;
+    public static IReadOnlyList<DiceRoll> Roll3Results => roll3Results;
+    public static IReadOnlyList<DiceRoll> Roll2Results => roll2Results;
+    public static IReadOnlyList<DiceRoll> Roll1Results => roll1Results;
+
+    public static IReadOnlyList<DiceRoll>[] RollResults => new [] { roll1Results, roll2Results, roll3Results, roll4Results, roll5Results };
+
+    public static void InitRollResults()
+    {
+      for (int i1 = 1; i1 <= 6; ++i1)
+      {
+        roll1Results.Add(new DiceRoll(new[] { i1 }));
+        for (int i2 = i1; i2 <= 6; ++i2)
+        {
+          roll2Results.Add(new DiceRoll(new[] { i1, i2 }));
+          for (int i3 = i2; i3 <= 6; ++i3)
+          {
+            roll3Results.Add(new DiceRoll(new[] { i1, i2, i3 }));
+            for (int i4 = i3; i4 <= 6; ++i4)
+            {
+              roll4Results.Add(new DiceRoll(new[] { i1, i2, i3, i4 }));
+              for (int i5 = i4; i5 <= 6; ++i5)
+              {
+                roll5Results.Add(new DiceRoll(new[] { i1, i2, i3, i4, i5 }));
+              }
+            }
+          }
+        }
+      }
+    }
     #endregion
   }
 }
