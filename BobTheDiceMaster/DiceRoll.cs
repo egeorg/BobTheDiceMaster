@@ -88,6 +88,122 @@ namespace BobTheDiceMaster
       }
     }
 
+    public static double AverageScore(CombinationTypes combination)
+    {
+
+      double averageProfit = 0;
+
+      Dictionary<DiceRoll, double> secondRollScoreCache = new Dictionary<DiceRoll, double>();
+
+      foreach (DiceRoll firstRoll in DiceRoll.Roll5Results)
+      {
+        double firstRollScore = firstRoll.Score(combination);
+
+        if ((combination & CombinationTypes.School) != combination)
+        {
+          firstRollScore *= 2;
+        }
+
+        int[] bestFirstReroll = null;
+
+        foreach (int[] firstReroll in DiceRoll.Rerolls)
+        {
+          if (firstReroll.Length == 0)
+          {
+            continue;
+          }
+          IReadOnlyList<DiceRoll> firstRerollResults = DiceRoll.RollResults[firstReroll.Length - 1];
+          double firstRerollAverage = 0;
+
+          foreach (var firstRerollResult in firstRerollResults)
+          {
+            int[] secondRollDice = new int[DiceRoll.MaxDiceAmount];
+            int firstRerollCounter = 0;
+
+            for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+            {
+              // Indices in DiceRoll.Rerolls are in ascending order
+              if (firstRerollCounter < firstReroll.Length && firstReroll[firstRerollCounter] == i)
+              {
+                secondRollDice[i] = firstRerollResult[firstRerollCounter++];
+              }
+              else
+              {
+                secondRollDice[i] = firstRoll[i];
+              }
+            }
+            DiceRoll secondRoll = new DiceRoll(secondRollDice);
+
+            // The best score that can be achieved on the secondRoll result, including optimal reroll.
+            // i.e. if first reroll yields firstRerollResult, it's the best.
+            double secondRollScore;
+
+            if (secondRollScoreCache.ContainsKey(secondRoll))
+            {
+              secondRollScore = secondRollScoreCache[secondRoll];
+            }
+            else
+            {
+              secondRollScore = secondRoll.Score(combination);
+
+              // null indicates that current score is better than any reroll
+              int[] bestSecondReroll = null;
+
+              foreach (int[] secondReroll in DiceRoll.Rerolls)
+              {
+                if (secondReroll.Length == 0)
+                {
+                  continue;
+                }
+                IReadOnlyList<DiceRoll> secondRerollResults = DiceRoll.RollResults[secondReroll.Length - 1];
+                double secondRerollAverage = 0;
+
+                foreach (var secondRerollResult in secondRerollResults)
+                {
+                  int[] thirdRollDice = new int[DiceRoll.MaxDiceAmount];
+                  int secondRerollCounter = 0;
+                  for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+                  {
+                    // Indices in DiceRoll.Rerolls are in ascending order
+                    if (secondRerollCounter < secondReroll.Length && secondReroll[secondRerollCounter] == i)
+                    {
+                      thirdRollDice[i] = secondRerollResult[secondRerollCounter++];
+                    }
+                    else
+                    {
+                      thirdRollDice[i] = secondRoll[i];
+                    }
+                  }
+                  DiceRoll thirdRoll = new DiceRoll(thirdRollDice);
+                  secondRerollAverage += secondRerollResult.GetProbability() * thirdRoll.Score(combination);
+                }
+
+                if (secondRerollAverage > secondRollScore)
+                {
+                  secondRollScore = secondRerollAverage;
+                  bestSecondReroll = secondReroll;
+                }
+              }
+
+              secondRollScoreCache.Add(secondRoll, secondRollScore);
+            }
+
+            firstRerollAverage += firstRerollResult.GetProbability() * secondRollScore;
+          }
+
+          if (firstRerollAverage > firstRollScore)
+          {
+            firstRollScore = firstRerollAverage;
+            bestFirstReroll = firstReroll;
+          }
+        }
+
+        averageProfit += firstRoll.GetProbability() * firstRollScore;
+      }
+
+      return averageProfit;
+    }
+
     public int Score(CombinationTypes combination)
     {
       switch (combination)
@@ -107,16 +223,20 @@ namespace BobTheDiceMaster
         case CombinationTypes.Pair:
           return PairScore();
         case CombinationTypes.Set:
-          return ThreeScore();
+          return SetScore();
         case CombinationTypes.TwoPairs:
           return TwoPairsScore();
         case CombinationTypes.Care:
           return CareScore();
         case CombinationTypes.Full:
+          return FullScore();
         case CombinationTypes.SmallStreet:
+          return SmallStreetScore();
         case CombinationTypes.BigStreet:
-        case CombinationTypes.Trash:
+          return BigStreetScore();
         case CombinationTypes.Poker:
+          return PokerScore();
+        case CombinationTypes.Trash:
           return Sum();
         default:
           throw new ArgumentException(
@@ -213,10 +333,11 @@ namespace BobTheDiceMaster
           return 2 * i;
         }
       }
-      throw new InvalidOperationException($"No pairs in roll {this}");
+
+      return 0;
     }
 
-    private int ThreeScore()
+    private int SetScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -233,7 +354,7 @@ namespace BobTheDiceMaster
         }
       }
 
-      throw new InvalidOperationException($"No threes found in roll {this}");
+      return 0;
     }
 
     private int CareScore()
@@ -253,7 +374,7 @@ namespace BobTheDiceMaster
         }
       }
 
-      throw new InvalidOperationException($"No care found in roll {this}");
+      return 0;
     }
 
     private int TwoPairsScore()
@@ -287,7 +408,112 @@ namespace BobTheDiceMaster
         }
       }
 
-      throw new InvalidOperationException($"No two pairs found in roll {this}");
+      return 0;
+    }
+
+    private int FullScore()
+    {
+      int[] valuesCount = new int[D6.MaxValue];
+
+      for (int i = 0; i < MaxDiceAmount; ++i)
+      {
+        ++valuesCount[dice[i] - 1];
+      }
+
+      bool threeSameFound = false;
+      bool twoSameFound = false;
+
+      int score = 0;
+
+      for (int i = D6.MaxValue; i > 0; --i)
+      {
+        // Situation 1: 2 + 3 of single value
+        // (basically same as poker, but for some reason we want to score it as full)
+        if (valuesCount[i - 1] == 5)
+        {
+          return 5 * i;
+        }
+
+        if (valuesCount[i - 1] == 3)
+        {
+          score += 3 * i;
+          threeSameFound = true;
+          continue;
+        }
+
+        if (valuesCount[i - 1] == 2)
+        {
+          score += 2 * i;
+          twoSameFound = true;
+        }
+      }
+
+      if (threeSameFound && twoSameFound)
+      {
+        return score;
+      }
+
+      return 0;
+    }
+
+    private int PokerScore()
+    {
+      int[] valuesCount = new int[D6.MaxValue];
+
+      for (int i = 0; i < MaxDiceAmount; ++i)
+      {
+        ++valuesCount[dice[i] - 1];
+      }
+
+      for (int i = D6.MaxValue; i > 0; --i)
+      {
+        if (valuesCount[i - 1] == 5)
+        {
+          return 5 * i;
+        }
+      }
+
+      return 0;
+    }
+
+    private int SmallStreetScore()
+    {
+      int[] valuesCount = new int[D6.MaxValue];
+
+      for (int i = 0; i < MaxDiceAmount; ++i)
+      {
+        ++valuesCount[dice[i] - 1];
+      }
+
+      if (valuesCount[0] == 1
+        && valuesCount[1] == 1
+        && valuesCount[2] == 1
+        && valuesCount[3] == 1
+        && valuesCount[4] == 1)
+      {
+        return 20;
+      }
+      return 0;
+    }
+
+    private int BigStreetScore()
+    {
+      int[] valuesCount = new int[D6.MaxValue];
+
+      for (int i = 0; i < MaxDiceAmount; ++i)
+      {
+        ++valuesCount[dice[i] - 1];
+      }
+
+      if (valuesCount[1] == 1
+        && valuesCount[2] == 1
+        && valuesCount[3] == 1
+        && valuesCount[4] == 1
+        && valuesCount[5] == 1)
+      {
+        return 30;
+      }
+      return 0;
     }
 
     static DiceRoll() {

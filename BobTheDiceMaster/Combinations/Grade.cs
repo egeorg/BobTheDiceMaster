@@ -2,11 +2,11 @@
 
 namespace BobTheDiceMaster.Combinations
 {
-  public abstract class Grade : Combination
+  public abstract class GradeCombinatoric
   {
     protected abstract int GradeNumber { get; }
 
-    public override double GetAverageProfit()
+    public double GetAverageProfit()
     {
       return GradeNumber * (5 * FirstRollNSuccessProbability(5)
         + 5 * SecondRollNSuccessProbability(5)
@@ -15,11 +15,6 @@ namespace BobTheDiceMaster.Combinations
         + 3 * ThirdRollNSuccessProbability(3)
         + 2 * ThirdRollNSuccessProbability(2)
         + ThirdRollNSuccessProbability(1));
-    }
-
-    public double BaseGetAverageProfit()
-    {
-      return base.GetAverageProfit();
     }
 
     public double SingleRerollAverageProfit(DiceRoll roll)
@@ -44,7 +39,7 @@ namespace BobTheDiceMaster.Combinations
       return result;
     }
 
-    public override double SingleRerollAverageProfit(DiceRoll roll, int[] diceToReroll)
+    public double SingleRerollAverageProfit(DiceRoll roll, int[] diceToReroll)
     {
       int correctDiceAmount = 0;
       for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
@@ -72,7 +67,7 @@ namespace BobTheDiceMaster.Combinations
       return result;
     }
 
-    public override double TwoRerollAverageProfit(DiceRoll roll, int[] diceToReroll)
+    public double TwoRerollAverageProfit(DiceRoll roll, int[] diceToReroll)
     {
       int correctDiceAmount = 0;
       for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)

@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BobTheDiceMaster
 {
-  public abstract class Combination
+  class BruteForceBob : IPlayer
   {
-    #region private methods
-    public virtual double GetAverageProfit()
+    public IDecision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerloosLeft)
     {
       double averageProfit = 0;
 
@@ -14,12 +16,12 @@ namespace BobTheDiceMaster
 
       foreach (DiceRoll firstRoll in DiceRoll.Roll5Results)
       {
-        double firstRollScore = firstRoll.Score(CombinationType);
+        double firstRollScore = firstRoll.Score(CombinationTypes.Trash);
 
-        if ((CombinationType & CombinationTypes.School) != CombinationType)
-        {
-          firstRollScore *= 2;
-        }
+        //if ((CombinationType & CombinationTypes.School) != CombinationType)
+        //{
+        //  firstRollScore *= 2;
+        //}
 
         int[] bestFirstReroll = null;
 
@@ -61,7 +63,7 @@ namespace BobTheDiceMaster
             }
             else
             {
-              secondRollScore = secondRoll.Score(CombinationType);
+              secondRollScore = secondRoll.Score(CombinationTypes.Trash);
 
               // null indicates that current score is better than any reroll
               int[] bestSecondReroll = null;
@@ -92,7 +94,7 @@ namespace BobTheDiceMaster
                     }
                   }
                   DiceRoll thirdRoll = new DiceRoll(thirdRollDice);
-                  secondRerollAverage += secondRerollResult.GetProbability() * thirdRoll.Score(CombinationType);
+                  secondRerollAverage += secondRerollResult.GetProbability() * thirdRoll.Score(CombinationTypes.Trash);
                 }
 
                 if (secondRerollAverage > secondRollScore)
@@ -118,30 +120,12 @@ namespace BobTheDiceMaster
         averageProfit += firstRoll.GetProbability() * firstRollScore;
       }
 
-      return averageProfit;
+      return new Score(CombinationTypes.Trash);
     }
 
-    public virtual double SingleRerollAverageProfit(DiceRoll roll, int[] diceToReroll)
+    private CombinationTypes GetBestCombination(DiceRoll roll)
     {
       throw new NotImplementedException();
     }
-    public virtual double TwoRerollAverageProfit(DiceRoll roll, int[] diceToReroll)
-    {
-      throw new NotImplementedException();
-    }
-    #endregion
-
-    #region public properties
-    public double AverageProfit { get; }
-
-    abstract public CombinationTypes CombinationType { get; }
-    #endregion
-
-    #region public methods
-    public Combination()
-    {
-      AverageProfit = GetAverageProfit();
-    }
-    #endregion
   }
 }

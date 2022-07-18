@@ -7,13 +7,14 @@ namespace BobTheDiceMaster
   {
     static void Main(string[] args)
     {
-      //TestRollProbability();
-      Grade6 g6 = new Grade6();
+      foreach (var combination in CombinationTypesExtension.ElementaryCombinations)
+      {
+        Console.WriteLine($"{combination}: {DiceRoll.AverageScore(combination)}");
+      }
+      //Console.WriteLine($"Grade 6: {DiceRoll.AverageScore(CombinationTypes.Grade6)}");
 
-      Console.WriteLine(g6.GetAverageProfit());
-
-      Console.WriteLine(g6.BaseGetAverageProfit());
-
+      Console.WriteLine("Press any key to start a game...");
+      Console.ReadKey();
       Console.WriteLine("Starting a game...");
       //GameOfSchool game = new GameOfSchool(new HumanPlayer());
       GameOfSchool game = new GameOfSchool(new BobTheDiceMaster());

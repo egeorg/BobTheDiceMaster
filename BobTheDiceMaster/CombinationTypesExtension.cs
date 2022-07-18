@@ -8,7 +8,7 @@ namespace BobTheDiceMaster
 {
   static class CombinationTypesExtension
   {
-    private static List<CombinationTypes> elementaryCombinations =
+    public static IReadOnlyList<CombinationTypes> ElementaryCombinations =>
       new List<CombinationTypes>
       {
         CombinationTypes.Grade1,
@@ -24,12 +24,14 @@ namespace BobTheDiceMaster
         CombinationTypes.Care,
         CombinationTypes.SmallStreet,
         CombinationTypes.BigStreet,
+        CombinationTypes.Poker,
         CombinationTypes.Trash
       };
+
     public static IEnumerable<CombinationTypes> GetElementaryCombinationTypes(
       this CombinationTypes combinations)
     {
-      foreach (var elementaryCombination in elementaryCombinations)
+      foreach (var elementaryCombination in ElementaryCombinations)
       {
         if ((combinations & elementaryCombination) == elementaryCombination)
         {
