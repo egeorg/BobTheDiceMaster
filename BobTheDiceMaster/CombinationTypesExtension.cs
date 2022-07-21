@@ -39,5 +39,15 @@ namespace BobTheDiceMaster
         }
       }
     }
+
+    public static bool IsElementary(this CombinationTypes combination)
+    {
+      return ElementaryCombinations.Any(x => x == combination);
+    }
+
+    public static bool IsFromSchool(this CombinationTypes combination)
+    {
+      return (combination & CombinationTypes.School) == combination;
+    }
   }
 }

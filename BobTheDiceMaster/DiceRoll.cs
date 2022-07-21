@@ -10,6 +10,9 @@ namespace BobTheDiceMaster
     private static D6 die = new D6();
 
     private int[] dice;
+
+    private static Dictionary<CombinationTypes, double> averageScore =
+      new Dictionary<CombinationTypes, double>();
     #endregion
 
     #region private methods
@@ -33,6 +36,14 @@ namespace BobTheDiceMaster
     #endregion
 
     #region public methods
+    static DiceRoll()
+    {
+      InitRollResults();
+      foreach (var elementaryCombination in CombinationTypesExtension.ElementaryCombinations)
+      {
+        averageScore.Add(elementaryCombination, AverageScore(elementaryCombination));
+      }
+    }
     public DiceRoll(int[] dice)
     {
       this.dice = (int[])dice.Clone();
@@ -90,6 +101,15 @@ namespace BobTheDiceMaster
 
     public static double AverageScore(CombinationTypes combination)
     {
+      if (!combination.IsElementary())
+      {
+        throw new ArgumentException(
+          $"Elementary combination expected, but was {combination}");
+      }
+      if (averageScore.ContainsKey(combination))
+      {
+        return averageScore[combination];
+      }
 
       double averageProfit = 0;
 
@@ -246,7 +266,7 @@ namespace BobTheDiceMaster
 
     public override string ToString()
     {
-      return $"DiceRoll({ String.Join(", ", dice) }";
+      return $"DiceRoll({ String.Join(", ", dice) })";
     }
 
     public override int GetHashCode()
@@ -514,10 +534,6 @@ namespace BobTheDiceMaster
         return 30;
       }
       return 0;
-    }
-
-    static DiceRoll() {
-      InitRollResults();
     }
 
     public static readonly IReadOnlyList<int[]> Rerolls = new List<int[]>()

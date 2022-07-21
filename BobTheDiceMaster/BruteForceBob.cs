@@ -8,62 +8,91 @@ namespace BobTheDiceMaster
 {
   class BruteForceBob : IPlayer
   {
-    public IDecision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerloosLeft)
+    public IDecision DecideOnRoll(
+      CombinationTypes availableCombinations, DiceRoll currentRoll, int rollsLeft)
     {
-      double averageProfit = 0;
+
+      double firstRollScore;
+      //TODO[GE]: 3 to constants?
+      CombinationTypes bestFirstRollCombination = GetBestCombination(
+        availableCombinations, currentRoll, isFirstRoll: rollsLeft == 3, out firstRollScore);
+
+      if (rollsLeft == 1)
+      {
+        CombinationTypes leastValuableCombination =
+          GetLeastValuableCombination(availableCombinations, currentRoll, out double worstScore);
+        //TODO[GE]: check that firstRollScore < worstScore comparison is correct
+        if (bestFirstRollCombination == CombinationTypes.None || firstRollScore < worstScore)
+        {
+          if (leastValuableCombination.IsFromSchool())
+          {
+            return new Score(leastValuableCombination);
+          }
+          else
+          {
+            return new CrossOut(leastValuableCombination);
+          }
+        }
+        else
+        {
+          return new Score(bestFirstRollCombination);
+        }
+      }
 
       Dictionary<DiceRoll, double> secondRollScoreCache = new Dictionary<DiceRoll, double>();
 
-      foreach (DiceRoll firstRoll in DiceRoll.Roll5Results)
+      int[] bestFirstReroll = null;
+
+      foreach (int[] firstReroll in DiceRoll.Rerolls)
       {
-        double firstRollScore = firstRoll.Score(CombinationTypes.Trash);
-
-        //if ((CombinationType & CombinationTypes.School) != CombinationType)
-        //{
-        //  firstRollScore *= 2;
-        //}
-
-        int[] bestFirstReroll = null;
-
-        foreach (int[] firstReroll in DiceRoll.Rerolls)
+        if (firstReroll.Length == 0)
         {
-          if (firstReroll.Length == 0)
-          {
-            continue;
-          }
-          IReadOnlyList<DiceRoll> firstRerollResults = DiceRoll.RollResults[firstReroll.Length - 1];
-          double firstRerollAverage = 0;
+          continue;
+        }
+        IReadOnlyList<DiceRoll> firstRerollResults = DiceRoll.RollResults[firstReroll.Length - 1];
+        double firstRerollAverage = 0;
 
-          foreach (var firstRerollResult in firstRerollResults)
-          {
-            int[] secondRollDice = new int[DiceRoll.MaxDiceAmount];
-            int firstRerollCounter = 0;
+        foreach (var firstRerollResult in firstRerollResults)
+        {
+          int[] secondRollDice = new int[DiceRoll.MaxDiceAmount];
+          int firstRerollCounter = 0;
 
-            for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+          for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+          {
+            // Indices in DiceRoll.Rerolls are in ascending order
+            if (firstRerollCounter < firstReroll.Length && firstReroll[firstRerollCounter] == i)
             {
-              // Indices in DiceRoll.Rerolls are in ascending order
-              if (firstRerollCounter < firstReroll.Length && firstReroll[firstRerollCounter] == i)
-              {
-                secondRollDice[i] = firstRerollResult[firstRerollCounter++];
-              }
-              else
-              {
-                secondRollDice[i] = firstRoll[i];
-              }
+              secondRollDice[i] = firstRerollResult[firstRerollCounter++];
             }
-            DiceRoll secondRoll = new DiceRoll(secondRollDice);
+            else
+            {
+              secondRollDice[i] = currentRoll[i];
+            }
+          }
+          DiceRoll secondRoll = new DiceRoll(secondRollDice);
 
-            // The best score that can be achieved on the secondRoll result, including optimal reroll.
-            // i.e. if first reroll yields firstRerollResult, it's the best.
-            double secondRollScore;
+          // The best average score that can be achieved on the secondRoll result,
+          // including optimal reroll. i.e. if first reroll yields firstRerollResult,
+          // it's the best.
+          // Best available score for secondRoll if no rerolls left.
 
+          double secondRollScore;
+
+          if (rollsLeft == 2)
+          {
+            secondRollScore = GetBestScore(
+              availableCombinations, secondRoll, isFirstRoll: false);
+          }
+          else
+          {
             if (secondRollScoreCache.ContainsKey(secondRoll))
             {
               secondRollScore = secondRollScoreCache[secondRoll];
             }
             else
             {
-              secondRollScore = secondRoll.Score(CombinationTypes.Trash);
+              secondRollScore = GetBestScore(
+                availableCombinations, secondRoll, isFirstRoll: false);
 
               // null indicates that current score is better than any reroll
               int[] bestSecondReroll = null;
@@ -94,7 +123,9 @@ namespace BobTheDiceMaster
                     }
                   }
                   DiceRoll thirdRoll = new DiceRoll(thirdRollDice);
-                  secondRerollAverage += secondRerollResult.GetProbability() * thirdRoll.Score(CombinationTypes.Trash);
+                  secondRerollAverage += secondRerollResult.GetProbability()
+                    * GetBestScore(
+                        availableCombinations, thirdRoll, isFirstRoll: false); ;
                 }
 
                 if (secondRerollAverage > secondRollScore)
@@ -106,26 +137,98 @@ namespace BobTheDiceMaster
 
               secondRollScoreCache.Add(secondRoll, secondRollScore);
             }
-
-            firstRerollAverage += firstRerollResult.GetProbability() * secondRollScore;
           }
 
-          if (firstRerollAverage > firstRollScore)
-          {
-            firstRollScore = firstRerollAverage;
-            bestFirstReroll = firstReroll;
-          }
+          firstRerollAverage += firstRerollResult.GetProbability() * secondRollScore;
         }
 
-        averageProfit += firstRoll.GetProbability() * firstRollScore;
+        if (firstRerollAverage > firstRollScore)
+        {
+          firstRollScore = firstRerollAverage;
+          bestFirstReroll = firstReroll;
+        }
       }
 
-      return new Score(CombinationTypes.Trash);
+      if (bestFirstReroll == null)
+      {
+        return new Score(bestFirstRollCombination);
+      }
+      else
+      {
+        return new Reroll(bestFirstReroll);
+      }
     }
 
-    private CombinationTypes GetBestCombination(DiceRoll roll)
+    private CombinationTypes GetBestCombination(
+      CombinationTypes availableCombinations, DiceRoll roll, bool isFirstRoll, out double bestScore)
     {
-      throw new NotImplementedException();
+      bestScore = double.NegativeInfinity;
+      CombinationTypes bestCombination = CombinationTypes.None;
+      foreach (var combination in availableCombinations.GetElementaryCombinationTypes())
+      {
+        double rollScore = roll.Score(combination);
+        //TODO[GE]: what if best combination is worse than cross out something?
+        if (rollScore == 0)
+        {
+          continue;
+        }
+        if (isFirstRoll && !combination.IsFromSchool())
+        {
+          rollScore *= 2;
+        }
+        double combinationScore = rollScore - DiceRoll.AverageScore(combination);
+        if (combinationScore > bestScore)
+        {
+          bestScore = combinationScore;
+          bestCombination = combination;
+        }
+      }
+      return bestCombination;
+    }
+
+    private CombinationTypes GetLeastValuableCombination(
+      CombinationTypes availableCombinations, DiceRoll roll, out double worstScore)
+    {
+      worstScore = double.PositiveInfinity;
+      CombinationTypes leastValuableCombination = CombinationTypes.None;
+      foreach (var combination in availableCombinations.GetElementaryCombinationTypes())
+      {
+        double rollScore;
+        if (combination.IsFromSchool())
+        {
+          rollScore = DiceRoll.AverageScore(combination) - roll.Score(combination);
+        }
+        else
+        {
+          rollScore = DiceRoll.AverageScore(combination);
+        }
+        if (rollScore < worstScore)
+        {
+          worstScore = rollScore;
+          leastValuableCombination = combination;
+        }
+      }
+      return leastValuableCombination;
+    }
+
+    private double GetBestScore(
+      CombinationTypes availableCombinations, DiceRoll roll, bool isFirstRoll)
+    {
+      double bestScore = double.NegativeInfinity;
+      foreach (var combination in availableCombinations.GetElementaryCombinationTypes())
+      {
+        double rollScore = roll.Score(combination);
+        if (isFirstRoll && !combination.IsFromSchool())
+        {
+          rollScore *= 2;
+        }
+        double combinationScore = rollScore - DiceRoll.AverageScore(combination);
+        if (combinationScore > bestScore)
+        {
+          bestScore = combinationScore;
+        }
+      }
+      return bestScore;
     }
   }
 }

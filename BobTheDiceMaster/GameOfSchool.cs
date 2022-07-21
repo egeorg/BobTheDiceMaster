@@ -72,7 +72,9 @@ namespace BobTheDiceMaster
       int rollsLeft = RollsPerTurn;
       while (rollsLeft > 0)
       {
+        Console.WriteLine($"Considering roll {roll}. Waiting for a decision.");
         IDecision decision = player.DecideOnRoll(allowedCombinationTypes, roll, rollsLeft);
+        Console.WriteLine($"Decision is {decision}.");
 
         switch (decision)
         {

@@ -8,5 +8,10 @@
     {
       Combination = combination;
     }
+
+    public override string ToString()
+    {
+      return $"CrossOut({Combination})";
+    }
   }
 }

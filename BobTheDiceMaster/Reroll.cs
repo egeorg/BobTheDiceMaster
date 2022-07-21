@@ -11,5 +11,10 @@ namespace BobTheDiceMaster
     {
       DiceToReroll = diceToReroll.ToList();
     }
+
+    public override string ToString()
+    {
+      return $"Reroll({string.Join(", ", DiceToReroll)})";
+    }
   }
 }

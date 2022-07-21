@@ -2,9 +2,9 @@
 
 namespace BobTheDiceMaster.Combinations
 {
-  public abstract class GradeCombinatoric
+  public class GradeCombinatoric
   {
-    protected abstract int GradeNumber { get; }
+    protected int GradeNumber { get; }
 
     public double GetAverageProfit()
     {

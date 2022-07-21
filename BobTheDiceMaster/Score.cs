@@ -8,5 +8,10 @@
     {
       CombinationToScore = combinationToScore;
     }
+
+    public override string ToString()
+    {
+      return $"Score({CombinationToScore})";
+    }
   }
 }
