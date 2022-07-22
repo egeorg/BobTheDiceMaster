@@ -119,7 +119,7 @@ namespace BobTheDiceMaster
       {
         double firstRollScore = firstRoll.Score(combination);
 
-        if ((combination & CombinationTypes.School) != combination)
+        if (!combination.IsFromSchool())
         {
           firstRollScore *= 2;
         }

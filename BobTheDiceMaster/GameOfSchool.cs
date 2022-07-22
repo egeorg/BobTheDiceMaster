@@ -19,7 +19,7 @@ namespace BobTheDiceMaster
     #region private methods
     private bool AreThreeGradesFinished(CombinationTypes combinationTypes)
     {
-      if ((combinationTypes & ~CombinationTypes.School) != 0)
+      if (!combinationTypes.IsFromSchool())
       {
         throw new ArgumentException($"Only grade combinations expected, but was {combinationTypes}");
       }
@@ -84,12 +84,12 @@ namespace BobTheDiceMaster
             break;
           case Score score:
             //TODO[GE]: check that combination is valid.
-            if ((score.CombinationToScore & allowedCombinationTypes) == CombinationTypes.None)
+            if (!allowedCombinationTypes.HasFlag(score.CombinationToScore))
             {
               throw new InvalidOperationException($"Combination {score.CombinationToScore} is already used");
             }
             if (rollsLeft == RollsPerTurn
-              && (score.CombinationToScore & CombinationTypes.School) != score.CombinationToScore)
+              && !score.CombinationToScore.IsFromSchool())
             {
               totalScore += roll.Score(score.CombinationToScore) * 2;
             }
@@ -101,11 +101,11 @@ namespace BobTheDiceMaster
             rollsLeft = 0;
             break;
           case CrossOut crossOut:
-            if ((crossOut.Combination & allowedCombinationTypes) == CombinationTypes.None)
+            if (!allowedCombinationTypes.HasFlag(crossOut.Combination))
             {
               throw new InvalidOperationException($"Combination {crossOut.Combination} is already used");
             }
-            if ((crossOut.Combination & CombinationTypes.School) != CombinationTypes.None)
+            if (crossOut.Combination.IsFromSchool())
             {
               throw new InvalidOperationException($"Can't cross out combination {crossOut.Combination}. Can't cross out combinations from school");
             }
