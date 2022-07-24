@@ -25,8 +25,15 @@ namespace BobTheDiceMaster
               Console.WriteLine("Enter dice to reroll (their numbers, not values: 1-5), separated by space");
               Console.WriteLine("For example: 2 3 4");
               string diceToRerollString = Console.ReadLine();
-              //TODO[GE]: handle non-numbers
-              diceToReroll = diceToRerollString.Split(" ").Select(x => Int32.Parse(x) - 1).ToList();
+              try
+              {
+                diceToReroll = diceToRerollString.Split(" ").Select(x => Int32.Parse(x) - 1).ToList();
+              }
+              catch (Exception e) when (e is FormatException || e is OverflowException)
+              {
+                Console.WriteLine($"Dice number must be an integer between 1 and 5");
+                continue;
+              }
               if (diceToReroll.Count == 0)
               {
                 Console.WriteLine("Enter more than zero dice numbers");
@@ -38,7 +45,7 @@ namespace BobTheDiceMaster
                 {
                   diceToReroll = null;
                   Console.WriteLine(
-                    $"Invalid dice number: {dieToReroll + 1}. It has to be a whole number from 1 to 5");
+                    $"Invalid dice number: {dieToReroll + 1}. Dice number must be an integer between 1 and 5");
                 }
               }
             }
@@ -49,15 +56,27 @@ namespace BobTheDiceMaster
               bool isInputCorrect = false;
               while (!isInputCorrect)
               {
-                //TODO[GE]: list only available combinations
-                Console.WriteLine("Enter a combination type to score (Grade1, Grade2, Grade3, Grade4, Grade5, Grade6, Pair, Three, TwoPairs, Full, Care, SmallStreet, BigStreet, Trash)");
+                Console.WriteLine(
+                  $"Enter a combination type to score ({String.Join(", ", availableCombinations.GetElementaryCombinationTypes())})");
                 string combinationString = Console.ReadLine();
-                isInputCorrect = Enum.TryParse(typeof(CombinationTypes), combinationString, out object? result);
-                if (isInputCorrect)
+                if (!Enum.TryParse(typeof(CombinationTypes), combinationString, out object result))
                 {
-                  inputDecision = new Score((CombinationTypes)result);
+                  Console.WriteLine($"Can't parse string '{combinationString}' as a combination.");
+                  continue;
                 }
-                //TODO[GE]: check if combination is available
+                if (!availableCombinations.HasFlag((CombinationTypes)result))
+                {
+                  Console.WriteLine(
+                    $"Combination '{combinationString}' is not available (it's already scored or crossed out).");
+                  continue;
+                }
+                if (!currentRoll.Score((CombinationTypes)result).HasValue)
+                {
+                  Console.WriteLine(
+                    $"Combination '{combinationString}' can't be scored for for roll '{currentRoll}'");
+                  continue;
+                }
+                inputDecision = new Score((CombinationTypes)result);
               }
             }
             break;
@@ -66,15 +85,21 @@ namespace BobTheDiceMaster
               bool isInputCorrect = false;
               while (!isInputCorrect)
               {
-                //TODO[GE]: list only available combinations
-                Console.WriteLine("Enter a combination type to cross out (Grade1, Grade2, Grade3, Grade4, Grade5, Grade6, Pair, Three, TwoPairs, Full, Care, SmallStreet, BigStreet, Trash)");
+                Console.WriteLine(
+                  $"Enter a combination type to cross out ({String.Join(", ", availableCombinations.GetElementaryCombinationTypes())})");
                 string combinationString = Console.ReadLine();
-                isInputCorrect = Enum.TryParse(typeof(CombinationTypes), combinationString, out object? result);
-                if (isInputCorrect)
+                if (!Enum.TryParse(typeof(CombinationTypes), combinationString, out object result))
                 {
-                  inputDecision = new CrossOut((CombinationTypes)result);
+                  Console.WriteLine($"Can't parse string '{combinationString}' as a combination.");
+                  continue;
                 }
-                //TODO[GE]: check if combination is available
+                if (!availableCombinations.HasFlag((CombinationTypes)result))
+                {
+                  Console.WriteLine(
+                    $"Combination '{combinationString}' is not available (it's already scored or crossed out).");
+                  continue;
+                }
+                inputDecision = new CrossOut((CombinationTypes)result);
               }
             }
             break;

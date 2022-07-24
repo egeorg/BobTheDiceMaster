@@ -15,13 +15,6 @@ namespace BobTheDiceMaster
       new Dictionary<CombinationTypes, double>();
     #endregion
 
-    #region private methods
-    private static int RollSingleDice()
-    {
-      return die.Roll();
-    }
-    #endregion
-
     #region public constants and properties
     public int this[int i]
     {
@@ -75,7 +68,7 @@ namespace BobTheDiceMaster
 
       for (int i = 0; i < MaxDiceAmount; ++i)
       {
-        dice[i] = RollSingleDice();
+        dice[i] = die.Roll();
       }
 
       return new DiceRoll(dice);
@@ -95,7 +88,7 @@ namespace BobTheDiceMaster
           throw new ArgumentException(
             $"Can't reroll die {dieNumber}. Die number has to be between 0 and {dice.Length - 1} inclusively for roll {this}.");
         }
-        dice[dieNumber] = RollSingleDice();
+        dice[dieNumber] = die.Roll();
       }
     }
 
@@ -117,7 +110,7 @@ namespace BobTheDiceMaster
 
       foreach (DiceRoll firstRoll in DiceRoll.Roll5Results)
       {
-        double firstRollScore = firstRoll.Score(combination);
+        double firstRollScore = firstRoll.Score(combination) ?? 0;
 
         if (!combination.IsFromSchool())
         {
@@ -164,7 +157,7 @@ namespace BobTheDiceMaster
             }
             else
             {
-              secondRollScore = secondRoll.Score(combination);
+              secondRollScore = secondRoll.Score(combination) ?? 0;
 
               // null indicates that current score is better than any reroll
               int[] bestSecondReroll = null;
@@ -195,7 +188,7 @@ namespace BobTheDiceMaster
                     }
                   }
                   DiceRoll thirdRoll = new DiceRoll(thirdRollDice);
-                  secondRerollAverage += secondRerollResult.GetProbability() * thirdRoll.Score(combination);
+                  secondRerollAverage += secondRerollResult.GetProbability() * (thirdRoll.Score(combination) ?? 0);
                 }
 
                 if (secondRerollAverage > secondRollScore)
@@ -224,7 +217,7 @@ namespace BobTheDiceMaster
       return averageProfit;
     }
 
-    public int Score(CombinationTypes combination)
+    public int? Score(CombinationTypes combination)
     {
       switch (combination)
       {
@@ -337,7 +330,7 @@ namespace BobTheDiceMaster
       return numberOfThrows / Math.Pow(6, dice.Length);
     }
 
-    private int PairScore()
+    private int? PairScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -354,7 +347,7 @@ namespace BobTheDiceMaster
         }
       }
 
-      return 0;
+      return null;
     }
 
     private int SetScore()

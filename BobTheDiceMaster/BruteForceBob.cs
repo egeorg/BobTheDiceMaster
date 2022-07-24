@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BobTheDiceMaster
 {
@@ -11,6 +7,13 @@ namespace BobTheDiceMaster
     public IDecision DecideOnRoll(
       CombinationTypes availableCombinations, DiceRoll currentRoll, int rollsLeft)
     {
+      double? bestCombinationScore = null;
+      double? secondBestCombinationScore = null;
+      double? thirdBestCombinationScore = null;
+
+      CombinationTypes? bestCombination = null;
+      CombinationTypes? secondBestCombination = null;
+      CombinationTypes? thirdBestCombination = null;
 
       double firstRollScore;
       //TODO[GE]: 3 to constants?
@@ -21,7 +24,6 @@ namespace BobTheDiceMaster
       {
         CombinationTypes leastValuableCombination =
           GetLeastValuableCombination(availableCombinations, currentRoll, out double worstScore);
-        //TODO[GE]: check that firstRollScore < worstScore comparison is correct
         if (bestFirstRollCombination == CombinationTypes.None || firstRollScore < worstScore)
         {
           if (leastValuableCombination.IsFromSchool())
@@ -41,6 +43,9 @@ namespace BobTheDiceMaster
 
       Dictionary<DiceRoll, double> secondRollScoreCache = new Dictionary<DiceRoll, double>();
 
+      Dictionary<DiceRoll, CombinationTypes> secondRollBestCombinationsCache =
+        new Dictionary<DiceRoll, CombinationTypes>();
+
       int[] bestFirstReroll = null;
 
       foreach (int[] firstReroll in DiceRoll.Rerolls)
@@ -51,6 +56,8 @@ namespace BobTheDiceMaster
         }
         IReadOnlyList<DiceRoll> firstRerollResults = DiceRoll.RollResults[firstReroll.Length - 1];
         double firstRerollAverage = 0;
+
+        List<(CombinationTypes, double)> combinationsScore = new List<(CombinationTypes, double)>();
 
         foreach (var firstRerollResult in firstRerollResults)
         {
@@ -78,6 +85,8 @@ namespace BobTheDiceMaster
 
           double secondRollScore;
 
+          CombinationTypes secondRollBestCombination;
+
           if (rollsLeft == 2)
           {
             secondRollScore = GetBestScore(
@@ -93,9 +102,6 @@ namespace BobTheDiceMaster
             {
               secondRollScore = GetBestScore(
                 availableCombinations, secondRoll, isFirstRoll: false);
-
-              // null indicates that current score is better than any reroll
-              int[] bestSecondReroll = null;
 
               foreach (int[] secondReroll in DiceRoll.Rerolls)
               {
@@ -131,7 +137,6 @@ namespace BobTheDiceMaster
                 if (secondRerollAverage > secondRollScore)
                 {
                   secondRollScore = secondRerollAverage;
-                  bestSecondReroll = secondReroll;
                 }
               }
 
@@ -166,8 +171,7 @@ namespace BobTheDiceMaster
       CombinationTypes bestCombination = CombinationTypes.None;
       foreach (var combination in availableCombinations.GetElementaryCombinationTypes())
       {
-        double rollScore = roll.Score(combination);
-        //TODO[GE]: what if best combination is worse than cross out something?
+        double rollScore = roll.Score(combination) ?? 0;
         if (rollScore == 0)
         {
           continue;
@@ -196,7 +200,7 @@ namespace BobTheDiceMaster
         double rollScore;
         if (combination.IsFromSchool())
         {
-          rollScore = DiceRoll.AverageScore(combination) - roll.Score(combination);
+          rollScore = DiceRoll.AverageScore(combination) - roll.Score(combination) ?? 0;
         }
         else
         {
@@ -217,7 +221,7 @@ namespace BobTheDiceMaster
       double bestScore = double.NegativeInfinity;
       foreach (var combination in availableCombinations.GetElementaryCombinationTypes())
       {
-        double rollScore = roll.Score(combination);
+        double rollScore = roll.Score(combination) ?? 0;
         if (isFirstRoll && !combination.IsFromSchool())
         {
           rollScore *= 2;

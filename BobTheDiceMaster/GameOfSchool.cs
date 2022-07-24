@@ -83,19 +83,22 @@ namespace BobTheDiceMaster
             roll.Reroll(reroll.DiceToReroll);
             break;
           case Score score:
-            //TODO[GE]: check that combination is valid.
             if (!allowedCombinationTypes.HasFlag(score.CombinationToScore))
             {
               throw new InvalidOperationException($"Combination {score.CombinationToScore} is already used");
             }
+            if (roll.Score(score.CombinationToScore) == null)
+            {
+              throw new InvalidOperationException($"Combination {score.CombinationToScore} can't be scored for roll {roll}");
+            }
             if (rollsLeft == RollsPerTurn
               && !score.CombinationToScore.IsFromSchool())
             {
-              totalScore += roll.Score(score.CombinationToScore) * 2;
+              totalScore += roll.Score(score.CombinationToScore).Value * 2;
             }
             else
             {
-              totalScore += roll.Score(score.CombinationToScore);
+              totalScore += roll.Score(score.CombinationToScore).Value;
             }
             allowedCombinationTypes -= score.CombinationToScore;
             rollsLeft = 0;
