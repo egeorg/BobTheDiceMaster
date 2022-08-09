@@ -40,6 +40,7 @@ namespace BobTheDiceMaster
     public DiceRoll(int[] dice)
     {
       this.dice = (int[])dice.Clone();
+      Array.Sort(this.dice);
 
       if (dice.Length < 1 || dice.Length > MaxDiceAmount)
       {
@@ -90,6 +91,31 @@ namespace BobTheDiceMaster
         }
         dice[dieNumber] = die.Roll();
       }
+      Array.Sort(dice);
+    }
+
+    public DiceRoll ApplyReroll(int[] diceToReroll, DiceRoll rerollResult)
+    {
+      if (diceToReroll.Length != rerollResult.DiceAmount)
+      {
+        throw new ArgumentException(
+          $"Dice to reroll and dice result has to be of the same length, but was: diceToReroll({diceToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
+      }
+      int[] newRollDice = new int[MaxDiceAmount];
+      int rerollCounter = 0;
+      for (int i = 0; i < MaxDiceAmount; ++i)
+      {
+        // Indices in DiceRoll.Rerolls are in ascending order
+        if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
+        {
+          newRollDice[i] = rerollResult[rerollCounter++];
+        }
+        else
+        {
+          newRollDice[i] = dice[i];
+        }
+      }
+      return new DiceRoll(newRollDice);
     }
 
     public static double AverageScore(CombinationTypes combination)
@@ -350,7 +376,7 @@ namespace BobTheDiceMaster
       return null;
     }
 
-    private int SetScore()
+    private int? SetScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -367,10 +393,10 @@ namespace BobTheDiceMaster
         }
       }
 
-      return 0;
+      return null;
     }
 
-    private int CareScore()
+    private int? CareScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -387,10 +413,10 @@ namespace BobTheDiceMaster
         }
       }
 
-      return 0;
+      return null;
     }
 
-    private int TwoPairsScore()
+    private int? TwoPairsScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -421,10 +447,10 @@ namespace BobTheDiceMaster
         }
       }
 
-      return 0;
+      return null;
     }
 
-    private int FullScore()
+    private int? FullScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -466,10 +492,10 @@ namespace BobTheDiceMaster
         return score;
       }
 
-      return 0;
+      return null;
     }
 
-    private int PokerScore()
+    private int? PokerScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -486,10 +512,10 @@ namespace BobTheDiceMaster
         }
       }
 
-      return 0;
+      return null;
     }
 
-    private int SmallStreetScore()
+    private int? SmallStreetScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -506,10 +532,10 @@ namespace BobTheDiceMaster
       {
         return 20;
       }
-      return 0;
+      return null;
     }
 
-    private int BigStreetScore()
+    private int? BigStreetScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -526,7 +552,7 @@ namespace BobTheDiceMaster
       {
         return 30;
       }
-      return 0;
+      return null;
     }
 
     public static readonly IReadOnlyList<int[]> Rerolls = new List<int[]>()

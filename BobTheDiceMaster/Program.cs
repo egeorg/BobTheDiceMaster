@@ -13,10 +13,11 @@ namespace BobTheDiceMaster
       }
 
       Console.WriteLine("Press any key to start a game...");
+
       Console.ReadKey();
       Console.WriteLine("Starting a game...");
       //GameOfSchool game = new GameOfSchool(new HumanPlayer());
-      GameOfSchool game = new GameOfSchool(new BruteForceBob());
+      GameOfSchool game = new GameOfSchool(new RecursiveBruteForceBob());
 
       while (!game.IsOver)
       {

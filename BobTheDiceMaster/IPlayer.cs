@@ -5,6 +5,6 @@
     IDecision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
-      int rerloosLeft);
+      int rerollsLeft);
   }
 }
