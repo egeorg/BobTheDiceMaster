@@ -7,6 +7,8 @@ namespace BobTheDiceMaster
   {
     static void Main(string[] args)
     {
+      TestVerboseBob();
+
       foreach (var combination in CombinationTypesExtension.ElementaryCombinations)
       {
         Console.WriteLine($"{combination}: {DiceRoll.AverageScore(combination)}");
@@ -60,7 +62,14 @@ namespace BobTheDiceMaster
 
     static void TestVerboseBob()
     {
-      
+      VerboseBruteForceBob bob = new VerboseBruteForceBob();
+
+      IDecision decision = bob.DecideOnRoll(
+        availableCombinations: CombinationTypes.School,
+        currentRoll: new DiceRoll(new[] { 2, 3, 5, 5, 5 }),
+        rerollsLeft: 3);
+
+      Console.WriteLine(decision);
     }
   }
 }
