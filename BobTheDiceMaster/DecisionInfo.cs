@@ -1,6 +1,6 @@
 ﻿namespace BobTheDiceMaster
 {
-  class DecisionInfo
+  public class DecisionInfo
   {
     public double Value { get; }
     public CombinationTypes Combination { get; }
@@ -11,6 +11,12 @@
       Value = value;
       Combination = combination;
       Reroll = reroll;
+    }
+
+    public override string ToString()
+    {
+      string rerollString = Reroll != null ? string.Join(",", Reroll) : "null";
+      return $"DecisionInfo(Value={Value},Combination={Combination},Reroll=({rerollString}))";
     }
   }
 }

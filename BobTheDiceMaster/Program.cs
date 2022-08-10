@@ -17,7 +17,7 @@ namespace BobTheDiceMaster
       Console.ReadKey();
       Console.WriteLine("Starting a game...");
       //GameOfSchool game = new GameOfSchool(new HumanPlayer());
-      GameOfSchool game = new GameOfSchool(new RecursiveBruteForceBob());
+      GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
 
       while (!game.IsOver)
       {
@@ -56,6 +56,11 @@ namespace BobTheDiceMaster
       DiceRoll r3 = new DiceRoll(new[] { 1, 2, 3, 4, 5 });
       Console.WriteLine(r1.Equals(r2));
       Console.WriteLine(r1.Equals(r3));
+    }
+
+    static void TestVerboseBob()
+    {
+      
     }
   }
 }
