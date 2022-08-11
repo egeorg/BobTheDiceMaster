@@ -6,8 +6,8 @@ namespace BobTheDiceMaster
 {
   public class VerboseBruteForceBob : IPlayer
   {
-    Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfo>>>> ratedDecisionsCache
-       = new Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfo>>>>();
+    Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>> ratedDecisionsCache
+       = new Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>>();
 
     public IDecision DecideOnRoll(
       CombinationTypes availableCombinations,
@@ -25,7 +25,7 @@ namespace BobTheDiceMaster
       DiceRoll currentRoll,
       int rerollsLeft)
     {
-      SortedSet<DecisionInfo> ratedDecisionsInfo = GetRatedDecisions(
+      SortedSet<DecisionInfoVerbose> ratedDecisionsInfo = GetRatedDecisions(
         availableCombinations,
         currentRoll,
         rerollsLeft);
@@ -34,7 +34,7 @@ namespace BobTheDiceMaster
         $"Best combinations are: {Environment.NewLine}" +
         $"{string.Join(Environment.NewLine, ratedDecisionsInfo.Take(3))}");
 
-      DecisionInfo bestDecisionInfo = ratedDecisionsInfo.First();
+      DecisionInfoVerbose bestDecisionInfo = ratedDecisionsInfo.First();
 
       if (bestDecisionInfo.Reroll != null)
       {
@@ -49,7 +49,7 @@ namespace BobTheDiceMaster
       return new CrossOut(bestDecisionInfo.Combination);
     }
 
-    private SortedSet<DecisionInfo> GetRatedDecisions(
+    private SortedSet<DecisionInfoVerbose> GetRatedDecisions(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)
@@ -61,7 +61,7 @@ namespace BobTheDiceMaster
         return ratedDecisionsCache[availableCombinations][rerollsLeft][currentRoll];
       }
 
-      SortedSet<DecisionInfo> noRerollRatedDecisions = GetNoRerollRatedDecisions(
+      SortedSet<DecisionInfoVerbose> noRerollRatedDecisions = GetNoRerollRatedDecisions(
         availableCombinations,
         currentRoll,
         isFirstReroll: rerollsLeft == 3);
@@ -72,8 +72,8 @@ namespace BobTheDiceMaster
         return noRerollRatedDecisions;
       }
 
-      SortedSet<DecisionInfo> ratedDecisions =
-        new SortedSet<DecisionInfo>(new DecisionInfoInverseByValueComparer());
+      SortedSet<DecisionInfoVerbose> ratedDecisions =
+        new SortedSet<DecisionInfoVerbose>(new DecisionInfoInverseByValueComparer());
 
       ratedDecisions.Add(noRerollRatedDecisions.First());
 
@@ -85,17 +85,33 @@ namespace BobTheDiceMaster
         }
 
         double rerollScore = 0;
+        //TODO[GE]: use noRerollRatedDecisions?
+        // bestNextRerollDecision used only to get most valuable combination
         DecisionInfo bestNextRerollDecision =
           new DecisionInfo(double.NegativeInfinity, CombinationTypes.None, null);
+        List<OutcomeInfo> outcomes = new List<OutcomeInfo>();
 
         foreach (var rerollResult in DiceRoll.RollResults[reroll.Length - 1])
         {
           DiceRoll nextRoll = currentRoll.ApplyReroll(reroll, rerollResult);
 
-          DecisionInfo nextRollDecision =
+          DecisionInfoVerbose nextRollDecision =
             GetRatedDecisions(availableCombinations, nextRoll, rerollsLeft - 1).First();
 
-          rerollScore += rerollResult.GetProbability() * nextRollDecision.Value;
+          double rerollResultScore = rerollResult.GetProbability() * nextRollDecision.Value;
+
+          rerollScore += rerollResultScore;
+
+          OutcomeInfo outcome =
+            outcomes.FirstOrDefault(x => x.Combination == nextRollDecision.Combination);
+          if (outcome == null)
+          {
+            outcomes.Add(new OutcomeInfo(rerollResultScore, nextRollDecision.Combination));
+          }
+          else
+          {
+            outcome.IncreaseValue(rerollResultScore);
+          }
 
           if (nextRollDecision.Value > bestNextRerollDecision.Value)
           {
@@ -104,7 +120,7 @@ namespace BobTheDiceMaster
         }
 
         ratedDecisions.Add(
-          new DecisionInfo(rerollScore, bestNextRerollDecision.Combination, reroll));
+          new DecisionInfoVerbose(rerollScore, bestNextRerollDecision.Combination, outcomes, reroll));
       }
 
       ratedDecisionsCache[availableCombinations][rerollsLeft].Add(currentRoll, ratedDecisions);
@@ -112,13 +128,13 @@ namespace BobTheDiceMaster
       return ratedDecisions;
     }
 
-    private SortedSet<DecisionInfo> GetNoRerollRatedDecisions(
+    private SortedSet<DecisionInfoVerbose> GetNoRerollRatedDecisions(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       bool isFirstReroll)
     {
-      SortedSet<DecisionInfo> ratedDecisions =
-        new SortedSet<DecisionInfo>(new DecisionInfoInverseByValueComparer());
+      SortedSet<DecisionInfoVerbose> ratedDecisions =
+        new SortedSet<DecisionInfoVerbose>(new DecisionInfoInverseByValueComparer());
 
       foreach (var combination in availableCombinations.GetElementaryCombinationTypes())
       {
@@ -132,7 +148,11 @@ namespace BobTheDiceMaster
         double combinationScore = (currentRollScore ?? 0)
           - DiceRoll.AverageScore(combination);
 
-        ratedDecisions.Add(new DecisionInfo(combinationScore, combination));
+        ratedDecisions.Add(
+          new DecisionInfoVerbose(
+            combinationScore,
+            combination,
+            new [] { new OutcomeInfo(combinationScore, combination) } ));
       }
 
       return ratedDecisions;
@@ -146,13 +166,13 @@ namespace BobTheDiceMaster
       {
         ratedDecisionsCache.Add(
           availableCombinations,
-          new Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfo>>>());
+          new Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>());
       }
       if (!ratedDecisionsCache[availableCombinations].ContainsKey(rerollsLeft))
       {
         ratedDecisionsCache[availableCombinations].Add(
           rerollsLeft,
-          new Dictionary<DiceRoll, SortedSet<DecisionInfo>>());
+          new Dictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>());
       }
     }
   }

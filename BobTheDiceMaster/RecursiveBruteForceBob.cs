@@ -17,6 +17,9 @@ namespace BobTheDiceMaster
         currentRoll,
         rerollsLeft);
 
+      System.Console.WriteLine(
+        $"Best combination is {bestDecisionInfo.Combination} with score {bestDecisionInfo.Value}");
+
       if (bestDecisionInfo.Reroll != null)
       {
         return new Reroll(bestDecisionInfo.Reroll);
