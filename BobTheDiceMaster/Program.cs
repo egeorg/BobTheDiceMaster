@@ -1,5 +1,4 @@
 ﻿using System;
-using BobTheDiceMaster.Combinations;
 
 namespace BobTheDiceMaster
 {
@@ -7,12 +6,10 @@ namespace BobTheDiceMaster
   {
     static void Main(string[] args)
     {
-      TestVerboseBob();
-
-      foreach (var combination in CombinationTypesExtension.ElementaryCombinations)
-      {
-        Console.WriteLine($"{combination}: {DiceRoll.AverageScore(combination)}");
-      }
+      //foreach (var combination in CombinationTypesExtension.ElementaryCombinations)
+      //{
+      //  Console.WriteLine($"{combination}: {DiceRoll.AverageScore(combination)}");
+      //}
 
       Console.WriteLine("Press any key to start a game...");
 
@@ -29,10 +26,6 @@ namespace BobTheDiceMaster
         if (!game.IsOver)
         {
           Console.WriteLine($"Scored. Current score: {game.Score}");
-        }
-        else
-        {
-          Console.WriteLine($"Game over. Score is {game.Score}");
         }
         Console.ReadKey();
       }

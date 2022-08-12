@@ -85,10 +85,6 @@ namespace BobTheDiceMaster
         }
 
         double rerollScore = 0;
-        //TODO[GE]: use noRerollRatedDecisions?
-        // bestNextRerollDecision used only to get most valuable combination
-        DecisionInfo bestNextRerollDecision =
-          new DecisionInfo(double.NegativeInfinity, CombinationTypes.None, null);
         List<OutcomeInfo> outcomes = new List<OutcomeInfo>();
 
         foreach (var rerollResult in DiceRoll.RollResults[reroll.Length - 1])
@@ -112,15 +108,10 @@ namespace BobTheDiceMaster
           {
             outcome.IncreaseValue(rerollResultScore);
           }
-
-          if (nextRollDecision.Value > bestNextRerollDecision.Value)
-          {
-            bestNextRerollDecision = nextRollDecision;
-          }
         }
 
         ratedDecisions.Add(
-          new DecisionInfoVerbose(rerollScore, bestNextRerollDecision.Combination, outcomes, reroll));
+          new DecisionInfoVerbose(rerollScore, outcomes, reroll));
       }
 
       ratedDecisionsCache[availableCombinations][rerollsLeft].Add(currentRoll, ratedDecisions);
@@ -151,7 +142,6 @@ namespace BobTheDiceMaster
         ratedDecisions.Add(
           new DecisionInfoVerbose(
             combinationScore,
-            combination,
             new [] { new OutcomeInfo(combinationScore, combination) } ));
       }
 

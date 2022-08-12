@@ -2,15 +2,20 @@
 {
   public class DecisionInfo
   {
-    public double Value { get; }
-    public CombinationTypes Combination { get; }
-    public int[] Reroll { get; }
+    public double Value { get; protected set; }
+    public CombinationTypes Combination { get; protected set; }
+    public int[] Reroll { get; protected set; }
 
     public DecisionInfo(double value, CombinationTypes combination, int[] reroll = null)
     {
       Value = value;
       Combination = combination;
       Reroll = reroll;
+    }
+
+    protected DecisionInfo()
+    {
+      //do nothing
     }
 
     public override string ToString()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BobTheDiceMaster
 {
@@ -6,12 +7,13 @@ namespace BobTheDiceMaster
   {
     public DecisionInfoVerbose(
       double value,
-      CombinationTypes combination,
       IEnumerable<OutcomeInfo> outcomes,
       int[] reroll = null)
-      : base(value, combination, reroll)
     {
+      Value = value;
+      Reroll = reroll;
       Outcomes = new SortedSet<OutcomeInfo>(outcomes, new OutcomeInfoInverseByValueComparer());
+      Combination = Outcomes.First().Combination;
     }
 
     public SortedSet<OutcomeInfo> Outcomes { get; }
