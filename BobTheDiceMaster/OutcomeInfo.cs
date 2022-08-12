@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BobTheDiceMaster
+﻿namespace BobTheDiceMaster
 {
   public class OutcomeInfo
   {
     public double Value { get; private set; }
-    public double? Probability { get; }
+    public double? Probability { get; private set; }
     public CombinationTypes Combination { get; }
 
     public OutcomeInfo(double value, CombinationTypes combination, double? probability = null)
@@ -22,6 +16,11 @@ namespace BobTheDiceMaster
     public void IncreaseValue(double increment)
     {
       Value += increment;
+    }
+
+    public void IncreaseProbability(double increment)
+    {
+      Probability += increment;
     }
 
     public override string ToString()

@@ -74,7 +74,10 @@ namespace BobTheDiceMaster
       {
         Console.WriteLine($"Considering roll {roll}. Waiting for a decision.");
         IDecision decision = player.DecideOnRoll(allowedCombinationTypes, roll, rollsLeft);
-        Console.WriteLine($"Decision is {decision}.");
+
+        Console.WriteLine(
+          $"Best combinations are: {Environment.NewLine}" +
+          $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo.Take(3))}");
 
         switch (decision)
         {

@@ -7,14 +7,6 @@ namespace BobTheDiceMaster
     public IDecision DecideOnRoll(
       CombinationTypes availableCombinations, DiceRoll currentRoll, int rollsLeft)
     {
-      double? bestCombinationScore = null;
-      double? secondBestCombinationScore = null;
-      double? thirdBestCombinationScore = null;
-
-      CombinationTypes? bestCombination = null;
-      CombinationTypes? secondBestCombination = null;
-      CombinationTypes? thirdBestCombination = null;
-
       double firstRollScore;
       //TODO[GE]: 3 to constants?
       CombinationTypes bestFirstRollCombination = GetBestCombination(
@@ -67,10 +59,7 @@ namespace BobTheDiceMaster
           // including optimal reroll. i.e. if first reroll yields firstRerollResult,
           // it's the best.
           // Best available score for secondRoll if no rerolls left.
-
           double secondRollScore;
-
-          CombinationTypes secondRollBestCombination;
 
           if (rollsLeft == 2)
           {

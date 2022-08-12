@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace BobTheDiceMaster
@@ -28,31 +27,29 @@ namespace BobTheDiceMaster
       SortedSet<DecisionInfoVerbose> ratedDecisionsInfo = GetRatedDecisions(
         availableCombinations,
         currentRoll,
-        rerollsLeft);
-
-      Console.WriteLine(
-        $"Best combinations are: {Environment.NewLine}" +
-        $"{string.Join(Environment.NewLine, ratedDecisionsInfo.Take(3))}");
+        rerollsLeft,
+        1);
 
       DecisionInfoVerbose bestDecisionInfo = ratedDecisionsInfo.First();
 
       if (bestDecisionInfo.Reroll != null)
       {
-        return new Reroll(bestDecisionInfo.Reroll);
+        return new Reroll(bestDecisionInfo.Reroll, ratedDecisionsInfo);
       }
 
       if (currentRoll.Score(bestDecisionInfo.Combination) != null)
       {
-        return new Score(bestDecisionInfo.Combination);
+        return new Score(bestDecisionInfo.Combination, ratedDecisionsInfo);
       }
 
-      return new CrossOut(bestDecisionInfo.Combination);
+      return new CrossOut(bestDecisionInfo.Combination, ratedDecisionsInfo);
     }
 
     private SortedSet<DecisionInfoVerbose> GetRatedDecisions(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
-      int rerollsLeft)
+      int rerollsLeft,
+      double currentRollProbability)
     {
       InitializeCache(availableCombinations, rerollsLeft);
 
@@ -91,10 +88,18 @@ namespace BobTheDiceMaster
         {
           DiceRoll nextRoll = currentRoll.ApplyReroll(reroll, rerollResult);
 
-          DecisionInfoVerbose nextRollDecision =
-            GetRatedDecisions(availableCombinations, nextRoll, rerollsLeft - 1).First();
+          double rerollResultProbability = rerollResult.GetProbability();
+          double nextRollOverallProbability = currentRollProbability * rerollResultProbability;
 
-          double rerollResultScore = rerollResult.GetProbability() * nextRollDecision.Value;
+          DecisionInfoVerbose nextRollDecision =
+            GetRatedDecisions(
+              availableCombinations,
+              nextRoll,
+              rerollsLeft - 1,
+              nextRollOverallProbability)
+            .First();
+
+          double rerollResultScore = rerollResultProbability * nextRollDecision.Value;
 
           rerollScore += rerollResultScore;
 
@@ -102,11 +107,13 @@ namespace BobTheDiceMaster
             outcomes.FirstOrDefault(x => x.Combination == nextRollDecision.Combination);
           if (outcome == null)
           {
-            outcomes.Add(new OutcomeInfo(rerollResultScore, nextRollDecision.Combination));
+            outcomes.Add(new OutcomeInfo(
+              rerollResultScore, nextRollDecision.Combination, nextRollOverallProbability));
           }
           else
           {
             outcome.IncreaseValue(rerollResultScore);
+            outcome.IncreaseProbability(nextRollOverallProbability);
           }
         }
 
@@ -142,7 +149,7 @@ namespace BobTheDiceMaster
         ratedDecisions.Add(
           new DecisionInfoVerbose(
             combinationScore,
-            new [] { new OutcomeInfo(combinationScore, combination) } ));
+            new [] { new OutcomeInfo(combinationScore, combination, 1) } ));
       }
 
       return ratedDecisions;
