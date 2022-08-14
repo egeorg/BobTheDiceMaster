@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BobTheDiceMaster
 {
@@ -10,6 +7,7 @@ namespace BobTheDiceMaster
   {
     #region private fields
     private IPlayer player;
+    private IDie die;
     private CombinationTypes allowedCombinationTypes;
     private bool isSchoolFinished;
     private int totalScore;
@@ -47,9 +45,10 @@ namespace BobTheDiceMaster
     #endregion
 
     #region public methods
-    public GameOfSchool(IPlayer player)
+    public GameOfSchool(IPlayer player, IDie die)
     {
       this.player = player;
+      this.die = die;
       Reset();
     }
 
@@ -65,10 +64,9 @@ namespace BobTheDiceMaster
       if (allowedCombinationTypes == CombinationTypes.None)
       {
         IsOver = true;
-        Console.WriteLine($"Game over! Score is {totalScore}");
         return;
       }
-      DiceRoll roll = DiceRoll.GenerateNew();
+      DiceRoll roll = DiceRoll.GenerateNew(die);
       int rollsLeft = RollsPerTurn;
       while (rollsLeft > 0)
       {
@@ -83,7 +81,7 @@ namespace BobTheDiceMaster
         {
           case Reroll reroll:
             --rollsLeft;
-            roll.Reroll(reroll.DiceToReroll);
+            roll.Reroll(reroll.DiceToReroll, die);
             break;
           case Score score:
             if (!allowedCombinationTypes.HasFlag(score.CombinationToScore))

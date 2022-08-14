@@ -112,8 +112,8 @@ namespace BobTheDiceMaster
 
             OutcomeInfo outcome =
               outcomes.FirstOrDefault(x =>
-              x.Combination == nextRollOutcome.Combination
-              && x.IsScored == nextRollOutcome.IsScored);
+                x.Combination == nextRollOutcome.Combination
+                && x.IsScored == nextRollOutcome.IsScored);
 
             if (outcome == null)
             {

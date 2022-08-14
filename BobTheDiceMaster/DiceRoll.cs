@@ -7,8 +7,6 @@ namespace BobTheDiceMaster
   public class DiceRoll
   {
     #region private fields
-    private static D6 die = new D6();
-
     private int[] dice;
 
     private static Dictionary<CombinationTypes, double> averageScore =
@@ -63,24 +61,20 @@ namespace BobTheDiceMaster
       return dice.Sum();
     }
 
-    public static DiceRoll GenerateNew()
+    public static DiceRoll GenerateNew(IDie die)
     {
-      int[] dice = new int[MaxDiceAmount];
-
-      for (int i = 0; i < MaxDiceAmount; ++i)
-      {
-        dice[i] = die.Roll();
-      }
-
-      return new DiceRoll(dice);
+      return new DiceRoll(die.Roll(MaxDiceAmount));
     }
 
-    public void Reroll(IReadOnlyCollection<int> diceToReroll)
+    public void Reroll(IReadOnlyCollection<int> diceToReroll, IDie die)
     {
       if (diceToReroll.Count > dice.Length)
       {
         throw new ArgumentException($"Can't reroll more than {dice.Length} dice for roll {this}.");
       }
+
+      int[] dieRollResult = die.Roll(diceToReroll.Count);
+      int dieRollResultCounter = 0;
 
       foreach (var dieNumber in diceToReroll)
       {
@@ -89,7 +83,7 @@ namespace BobTheDiceMaster
           throw new ArgumentException(
             $"Can't reroll die {dieNumber}. Die number has to be between 0 and {dice.Length - 1} inclusively for roll {this}.");
         }
-        dice[dieNumber] = die.Roll();
+        dice[dieNumber] = dieRollResult[dieRollResultCounter++];
       }
       Array.Sort(dice);
     }

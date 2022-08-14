@@ -17,7 +17,7 @@ namespace BobTheDiceMaster
       Console.ReadKey();
       Console.WriteLine("Starting a game...");
       //GameOfSchool game = new GameOfSchool(new HumanPlayer());
-      GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
+      GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob(), new D6Console());
 
       while (!game.IsOver)
       {
@@ -27,6 +27,10 @@ namespace BobTheDiceMaster
         if (!game.IsOver)
         {
           Console.WriteLine($"Scored. Current score: {game.Score}");
+        }
+        else
+        {
+          Console.WriteLine($"Game over! Score is {game.Score}");
         }
         Console.ReadKey();
       }
