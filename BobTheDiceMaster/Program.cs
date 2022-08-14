@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace BobTheDiceMaster
 {
@@ -58,9 +59,13 @@ namespace BobTheDiceMaster
       VerboseBruteForceBob bob = new VerboseBruteForceBob();
 
       IDecision decision = bob.DecideOnRoll(
-        availableCombinations: CombinationTypes.School,
-        currentRoll: new DiceRoll(new[] { 2, 3, 5, 5, 5 }),
+        availableCombinations: (CombinationTypes)(CombinationTypes.All - CombinationTypes.Grade2),
+        currentRoll: new DiceRoll(new[] { 1, 1, 2, 5, 6 }),
         rerollsLeft: 3);
+
+      Console.WriteLine(
+        $"Best combinations are: {Environment.NewLine}" +
+        $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo.Take(3))}");
 
       Console.WriteLine(decision);
     }

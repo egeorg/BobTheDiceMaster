@@ -103,17 +103,26 @@ namespace BobTheDiceMaster
 
           rerollScore += rerollResultScore;
 
-          OutcomeInfo outcome =
-            outcomes.FirstOrDefault(x => x.Combination == nextRollDecision.Combination);
-          if (outcome == null)
+          foreach (OutcomeInfo nextRollOutcome in nextRollDecision.Outcomes)
           {
-            outcomes.Add(new OutcomeInfo(
-              rerollResultScore, nextRollDecision.Combination, nextRollOverallProbability));
-          }
-          else
-          {
-            outcome.IncreaseValue(rerollResultScore);
-            outcome.IncreaseProbability(nextRollOverallProbability);
+            double nextRollOutcomeScore =
+              rerollResultProbability * nextRollOutcome.Value;
+            double nextRollOutcomeProbability =
+              rerollResultProbability * nextRollOutcome.Probability.Value;
+
+            OutcomeInfo outcome =
+              outcomes.FirstOrDefault(x => x.Combination == nextRollOutcome.Combination);
+
+            if (outcome == null)
+            {
+              outcomes.Add(new OutcomeInfo(
+                nextRollOutcomeScore, nextRollOutcome.Combination, nextRollOutcomeProbability));
+            }
+            else
+            {
+              outcome.IncreaseValue(nextRollOutcomeScore);
+              outcome.IncreaseProbability(nextRollOutcomeProbability);
+            }
           }
         }
 
