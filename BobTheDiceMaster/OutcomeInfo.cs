@@ -3,14 +3,23 @@
   public class OutcomeInfo
   {
     public double Value { get; private set; }
-    public double? Probability { get; private set; }
+    public double Probability { get; private set; }
     public CombinationTypes Combination { get; }
+    /// <summary>
+    /// True if the combination is scored (and not crossed out) in this outcome.
+    /// </summary>
+    public bool IsScored { get; }
 
-    public OutcomeInfo(double value, CombinationTypes combination, double? probability = null)
+    public OutcomeInfo(
+      double value,
+      CombinationTypes combination,
+      double probability,
+      bool isScored)
     {
       Value = value;
       Combination = combination;
       Probability = probability;
+      IsScored = isScored;
     }
 
     public void IncreaseValue(double increment)
@@ -25,11 +34,9 @@
 
     public override string ToString()
     {
-      if (Probability.HasValue)
-      {
-        return $"{Combination}({Value:G4},{Probability:G4})";
-      }
-      return $"{Combination}({Value:G4})";
+      // G4 to use only 4 digits so that the string representation is more compact.
+      // This class is often used in lists.
+      return $"{(IsScored ? "S" : "X")} {Combination}({Value:G4},{Probability:G4})";
     }
   }
 }

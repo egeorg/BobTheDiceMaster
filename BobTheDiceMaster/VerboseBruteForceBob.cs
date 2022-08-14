@@ -108,15 +108,20 @@ namespace BobTheDiceMaster
             double nextRollOutcomeScore =
               rerollResultProbability * nextRollOutcome.Value;
             double nextRollOutcomeProbability =
-              rerollResultProbability * nextRollOutcome.Probability.Value;
+              rerollResultProbability * nextRollOutcome.Probability;
 
             OutcomeInfo outcome =
-              outcomes.FirstOrDefault(x => x.Combination == nextRollOutcome.Combination);
+              outcomes.FirstOrDefault(x =>
+              x.Combination == nextRollOutcome.Combination
+              && x.IsScored == nextRollOutcome.IsScored);
 
             if (outcome == null)
             {
               outcomes.Add(new OutcomeInfo(
-                nextRollOutcomeScore, nextRollOutcome.Combination, nextRollOutcomeProbability));
+                nextRollOutcomeScore,
+                nextRollOutcome.Combination,
+                nextRollOutcomeProbability,
+                nextRollOutcome.IsScored));
             }
             else
             {
@@ -158,7 +163,13 @@ namespace BobTheDiceMaster
         ratedDecisions.Add(
           new DecisionInfoVerbose(
             combinationScore,
-            new [] { new OutcomeInfo(combinationScore, combination, 1) } ));
+            new [] {
+              new OutcomeInfo(
+                value: combinationScore,
+                combination: combination,
+                probability: 1,
+                isScored: currentRollScore.HasValue)
+            } ));
       }
 
       return ratedDecisions;
