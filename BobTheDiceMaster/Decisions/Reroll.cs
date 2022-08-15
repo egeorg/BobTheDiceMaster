@@ -3,19 +3,15 @@ using System.Linq;
 
 namespace BobTheDiceMaster
 {
-  public class Reroll : IDecision
+  public class Reroll : Decision
   {
-    public SortedSet<DecisionInfoVerbose> RatedDecisionInfo { get; }
-
     public List<int> DiceToReroll { get; }
 
     public Reroll(
       IEnumerable<int> diceToReroll,
-      IEnumerable<DecisionInfoVerbose> ratedDecisionInfo = null)
+      IEnumerable<DecisionInfoVerbose> decisionInfos = null)
+      : base(decisionInfos)
     {
-      RatedDecisionInfo = new SortedSet<DecisionInfoVerbose>(
-        ratedDecisionInfo,
-        new DecisionInfoInverseByValueComparer());
       DiceToReroll = diceToReroll.ToList();
     }
 

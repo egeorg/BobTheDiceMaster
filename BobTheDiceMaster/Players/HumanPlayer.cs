@@ -6,12 +6,12 @@ namespace BobTheDiceMaster
 {
   internal class HumanPlayer : IPlayer
   {
-    public IDecision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerloosLeft)
+    public Decision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerloosLeft)
     {
       Console.WriteLine(
         $"Current roll: [1]={currentRoll[0]}, [2]={currentRoll[1]}, [3]={currentRoll[2]}, [4]={currentRoll[3]}, [5]={currentRoll[4]}");
       Console.WriteLine($"Available combinations: {availableCombinations}");
-      IDecision inputDecision = null;
+      Decision inputDecision = null;
       while (inputDecision == null)
       {
         Console.WriteLine("Select what to do next: roll (r), score (s) or cross our (c)");

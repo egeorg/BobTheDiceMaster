@@ -7,7 +7,7 @@ namespace BobTheDiceMaster
     Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, DecisionInfo>>> decisionCache
        = new Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, DecisionInfo>>>();
 
-    public IDecision DecideOnRoll(
+    public Decision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)

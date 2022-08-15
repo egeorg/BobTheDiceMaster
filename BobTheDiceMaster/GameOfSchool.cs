@@ -71,7 +71,7 @@ namespace BobTheDiceMaster
       while (rollsLeft > 0)
       {
         Console.WriteLine($"Considering roll {roll}. Waiting for a decision.");
-        IDecision decision = player.DecideOnRoll(allowedCombinationTypes, roll, rollsLeft);
+        Decision decision = player.DecideOnRoll(allowedCombinationTypes, roll, rollsLeft);
 
         Console.WriteLine(
           $"Best combinations are: {Environment.NewLine}" +

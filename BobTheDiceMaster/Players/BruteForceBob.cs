@@ -4,7 +4,7 @@ namespace BobTheDiceMaster
 {
   class BruteForceBob : IPlayer
   {
-    public IDecision DecideOnRoll(
+    public Decision DecideOnRoll(
       CombinationTypes availableCombinations, DiceRoll currentRoll, int rollsLeft)
     {
       double firstRollScore;

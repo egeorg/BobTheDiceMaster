@@ -8,7 +8,7 @@ namespace BobTheDiceMaster
     Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>> ratedDecisionsCache
        = new Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>>();
 
-    public IDecision DecideOnRoll(
+    public Decision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)
@@ -19,7 +19,7 @@ namespace BobTheDiceMaster
         rerollsLeft);
     }
 
-    public IDecision DecideOnRollRatedDecisions(
+    public Decision DecideOnRollRatedDecisions(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)

@@ -2,18 +2,15 @@
 
 namespace BobTheDiceMaster
 {
-  public class CrossOut : IDecision
+  public class CrossOut : Decision
   {
     public CombinationTypes Combination { get; }
-    public SortedSet<DecisionInfoVerbose> RatedDecisionInfo { get; }
 
     public CrossOut(
       CombinationTypes combination,
-      IEnumerable<DecisionInfoVerbose> ratedDecisionInfo = null)
+      IEnumerable<DecisionInfoVerbose> decisionInfos = null)
+      : base(decisionInfos)
     {
-      RatedDecisionInfo = new SortedSet<DecisionInfoVerbose>(
-        ratedDecisionInfo,
-        new DecisionInfoInverseByValueComparer());
       Combination = combination;
     }
 

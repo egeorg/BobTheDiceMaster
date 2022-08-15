@@ -2,7 +2,7 @@
 {
   public interface IPlayer
   {
-    IDecision DecideOnRoll(
+    Decision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft);

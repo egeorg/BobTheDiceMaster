@@ -62,7 +62,7 @@ namespace BobTheDiceMaster
     {
       VerboseBruteForceBob bob = new VerboseBruteForceBob();
 
-      IDecision decision = bob.DecideOnRoll(
+      Decision decision = bob.DecideOnRoll(
         availableCombinations: (CombinationTypes)(CombinationTypes.All - CombinationTypes.Grade2),
         currentRoll: new DiceRoll(new[] { 1, 1, 2, 5, 6 }),
         rerollsLeft: 3);
