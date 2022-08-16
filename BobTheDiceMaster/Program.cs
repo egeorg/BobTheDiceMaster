@@ -12,19 +12,16 @@ namespace BobTheDiceMaster
       //  Console.WriteLine($"{combination}: {DiceRoll.AverageScore(combination)}");
       //}
 
-      Console.WriteLine("Press any key to start a game...");
-
-      Console.ReadKey();
       Console.WriteLine("Starting a game...");
       //GameOfSchool game = new GameOfSchool(new HumanPlayer());
-      GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob(), new D6Console());
+      GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
 
-      while (!game.IsOver)
+      while (!game.IsGameOver)
       {
         Console.WriteLine();
         Console.WriteLine("Performing next step");
-        game.NextStep();
-        if (!game.IsOver)
+        PerformNextStep(game);
+        if (!game.IsGameOver)
         {
           Console.WriteLine($"Scored. Current score: {game.Score}");
         }
@@ -33,6 +30,27 @@ namespace BobTheDiceMaster
           Console.WriteLine($"Game over! Score is {game.Score}");
         }
         Console.ReadKey();
+      }
+    }
+
+    public static void PerformNextStep(GameOfSchool game)
+    {
+      DiceRoll roll = game.GenerateRoll();
+      while (!game.IsTurnOver)
+      {
+        Console.WriteLine($"Considering roll {roll}. Waiting for a decision.");
+
+        Decision decision = game.GenerateAndApplyDecision();
+
+        Console.WriteLine();
+        Console.WriteLine($"Decision is {decision}.");
+        Console.WriteLine(
+          $"Best combinations are: {Environment.NewLine}" +
+          $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo.Take(3))}");
+        if (decision is Reroll)
+        {
+          game.GenerateAndApplyReroll();
+        }
       }
     }
 
