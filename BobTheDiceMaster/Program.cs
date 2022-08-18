@@ -11,7 +11,8 @@ namespace BobTheDiceMaster
       //{
       //  Console.WriteLine($"{combination}: {DiceRoll.AverageScore(combination)}");
       //}
-
+      TestVerboseBob();
+      Console.ReadLine();
       Console.WriteLine("Starting a game...");
       //GameOfSchool game = new GameOfSchool(new HumanPlayer());
       GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
@@ -42,10 +43,10 @@ namespace BobTheDiceMaster
 
         Decision decision = game.GenerateAndApplyDecision();
 
-        Console.WriteLine();
-        Console.WriteLine($"Decision is {decision}.");
         Console.WriteLine(
-          $"Best combinations are: {Environment.NewLine}" +
+          Environment.NewLine + 
+          $"Decision is {decision}" + Environment.NewLine +
+          $"Best combinations are:" + Environment.NewLine +
           $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo.Take(3))}");
         if (decision is Reroll)
         {
@@ -81,13 +82,23 @@ namespace BobTheDiceMaster
       VerboseBruteForceBob bob = new VerboseBruteForceBob();
 
       Decision decision = bob.DecideOnRoll(
-        availableCombinations: (CombinationTypes)(CombinationTypes.All - CombinationTypes.Grade2),
-        currentRoll: new DiceRoll(new[] { 1, 1, 2, 5, 6 }),
+        availableCombinations: (CombinationTypes)(CombinationTypes.All
+        - CombinationTypes.Grade1
+        - CombinationTypes.Grade2
+        - CombinationTypes.Grade3
+        - CombinationTypes.Grade6
+        - CombinationTypes.Grade4
+        - CombinationTypes.Poker
+        - CombinationTypes.Full
+        - CombinationTypes.TwoPairs
+        - CombinationTypes.Set
+        - CombinationTypes.Trash),
+        currentRoll: new DiceRoll(new[] { 2, 2, 4, 4, 6 }),
         rerollsLeft: 3);
 
       Console.WriteLine(
         $"Best combinations are: {Environment.NewLine}" +
-        $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo.Take(3))}");
+        $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo)}");
 
       Console.WriteLine(decision);
     }
