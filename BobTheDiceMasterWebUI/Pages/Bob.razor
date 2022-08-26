@@ -1,11 +1,53 @@
 ﻿@page "/bob"
 
 <body>
-    <Die Value="2" Id="die1" />
-    <Die Value="2" Id="die2" />
-    <Die Value="4" Id="die3" />
-    <Die Value="4" Id="die4" />
-    <Die Value="6" Id="die5" />
+    <div style="margin:10px">
+        <div style="width:200px; display:inline-block">
+            <Die Value="2" Id="die1" />
+            <Die Value="2" Id="die2" />
+            <Die Value="4" Id="die3" />
+            <Die Value="4" Id="die4" />
+            <Die Value="6" Id="die5" />
+        </div>
+        <button>Roll</button>
+    </div>
+    <div style="margin:10px">
+        <select id="ScoreCombination" style="width:200px">
+            <option value="trash">Trash</option>
+            <option value="pair">Pair</option>
+            <option value="twoPairs">TwoPairs</option>
+        </select>
+        <button>Score</button>
+    </div>
+    <div style="margin:10px">
+        <select id="CrossOutCombination" style="width:200px">
+            <option value="poker">Poker</option>
+            <option value="care">Care</option>
+            <option value="full">Full</option>
+        </select>
+        <button>Cross out</button>
+    </div>
+    <div style="margin:10px">
+        <table>
+            <tr><td>Player</td><td>Bob</td><td>Human</td></tr>
+            <tr><td>1</td><td>-3</td><td>-</td></tr>
+            <tr><td>2</td><td>-</td><td>-</td></tr>
+            <tr><td>3</td><td>-</td><td>-</td></tr>
+            <tr><td>4</td><td>-</td><td>-</td></tr>
+            <tr><td>5</td><td>-10</td><td>-</td></tr>
+            <tr><td>6</td><td>-6</td><td>-</td></tr>
+            <tr><td>Pair</td><td>-</td><td>-</td></tr>
+            <tr><td>Two pairs</td><td>-</td><td>-</td></tr>
+            <tr><td>Set</td><td>18</td><td>-</td></tr>
+            <tr><td>Full</td><td>28</td><td>-</td></tr>
+            <tr><td>Small street</td><td>20</td><td>-</td></tr>
+            <tr><td>Big street</td><td>30</td><td>-</td></tr>
+            <tr><td>Care</td><td>-</td><td>-</td></tr>
+            <tr><td>Poker</td><td>-</td><td>-</td></tr>
+            <tr><td>Trash</td><td>-</td><td>-</td></tr>
+            <tr><td>Total</td><td>77</td><td>-</td></tr>
+        </table>
+    </div>
 </body>
 
 @code {
