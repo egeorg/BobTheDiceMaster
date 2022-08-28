@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 
-namespace BobTheDiceMaster
+using BobTheDiceMaster;
+
+namespace BobTheDiceMasterConsoleUI
 {
   class Program
   {
@@ -44,7 +46,7 @@ namespace BobTheDiceMaster
         Decision decision = game.GenerateAndApplyDecision();
 
         Console.WriteLine(
-          Environment.NewLine + 
+          Environment.NewLine +
           $"Decision is {decision}" + Environment.NewLine +
           $"Best combinations are:" + Environment.NewLine +
           $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo.Take(3))}");
