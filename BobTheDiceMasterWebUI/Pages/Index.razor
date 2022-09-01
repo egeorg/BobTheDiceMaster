@@ -3,13 +3,13 @@
 <body>
     <div style="margin:10px">
         <div style="width:200px; display:inline-block">
-            <Die Value="2" Id="die1" />
-            <Die Value="2" Id="die2" />
-            <Die Value="4" Id="die3" />
-            <Die Value="4" Id="die4" />
-            <Die Value="6" Id="die5" />
+            <Die Value="@currentRoll[0]" Id="die1" @bind-IsSelected="@diceSelected[0]" />
+            <Die Value="@currentRoll[1]" Id="die2" @bind-IsSelected="@diceSelected[1]" />
+            <Die Value="@currentRoll[2]" Id="die3" @bind-IsSelected="@diceSelected[2]" />
+            <Die Value="@currentRoll[3]" Id="die4" @bind-IsSelected="@diceSelected[3]" />
+            <Die Value="@currentRoll[4]" Id="die5" @bind-IsSelected="@diceSelected[4]" />
         </div>
-        <button>Roll</button>
+        <button @onclick="@(() => Roll())">Roll</button>
     </div>
     <div style="margin:10px">
         <select id="ScoreCombination" style="width:200px">
@@ -51,5 +51,45 @@
 </body>
 
 @code {
+  private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
+  public bool[] diceSelected = new[] { false, false, false, false, false };
+
+  private static D6 d6 = new D6(1);
+
+  public static void DiceSelectionChanged()
+  {
+      DiceRoll currentRoll = DiceRoll.GenerateNew(d6);
+  }
+
+  public void Roll()
+  {
+      currentRoll.Reroll(
+        Enumerable.Range(0, DiceRoll.MaxDiceAmount)
+          .Where(i => diceSelected[i])
+          .ToArray(),
+        d6);
+  }
+
+  //public void Roll()
+  //{
+  //    int[] diceToReroll = Enumerable.Range(1, DiceRoll.MaxDiceAmount)
+  //        .Where(i => diceSelected[i])
+  //        .ToArray();
+
+  //    currentRoll.Reroll(diceToReroll, new D6());
+
+  //    for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+  //    {
+  //        diceValues[i] = currentRoll[i];
+  //    }
+
+  //    for (int i = 4; i > 0; --i)
+  //    {
+  //        int iThDiePlace = rng.Next(0, i);
+  //        int tmp = diceValues[i];
+  //        diceValues[i] = diceValues[iThDiePlace];
+  //        diceValues[iThDiePlace] = tmp;
+  //    }
+  //}
 }

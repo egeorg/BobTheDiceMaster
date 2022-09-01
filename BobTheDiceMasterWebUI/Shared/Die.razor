@@ -6,14 +6,26 @@
     </div>
     <div style="display:flex; justify-content:center">
         <div>
-            <input type="checkbox" id="@Id" />
+            <input
+                   type="checkbox"
+                   id="@Id"
+                   @oninput="UpdateIsSelectedFromChild"/>
         </div>
     </div>
 </div>
 
 @code {
-  [ParameterAttribute]
+  [Parameter]
+  public bool IsSelected { get; set; }
+  [Parameter]
+  public EventCallback<bool> IsSelectedChanged { get; set; }
+  [Parameter]
   public int Value { get; set; }
-  [ParameterAttribute]
+  [Parameter]
   public string Id { get; set; }
+
+  private async Task UpdateIsSelectedFromChild(ChangeEventArgs e)
+  {
+      await IsSelectedChanged.InvokeAsync((bool)e.Value);
+  }
 }

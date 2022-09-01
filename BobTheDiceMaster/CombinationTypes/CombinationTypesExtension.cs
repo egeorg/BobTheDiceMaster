@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BobTheDiceMaster
 {
-  static class CombinationTypesExtension
+  public static class CombinationTypesExtension
   {
     public static IReadOnlyList<CombinationTypes> ElementaryCombinations =>
       new List<CombinationTypes>

@@ -11,7 +11,7 @@ namespace BobTheDiceMasterConsoleUI
     {
       //foreach (var combination in CombinationTypesExtension.ElementaryCombinations)
       //{
-      //  Console.WriteLine($"{combination}: {DiceRoll.AverageScore(combination)}");
+      //  Console.WriteLine($"{{{combination}, {DiceRoll.AverageScore(combination):R}}}");
       //}
       TestVerboseBob();
       Console.ReadLine();

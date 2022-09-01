@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BobTheDiceMaster
 {
-  public class DiceRoll
+  public class DiceRoll : IDiceRoll<DiceRoll>
   {
     #region private fields
     private int[] dice;
@@ -30,10 +30,28 @@ namespace BobTheDiceMaster
     static DiceRoll()
     {
       InitRollResults();
-      foreach (var elementaryCombination in CombinationTypesExtension.ElementaryCombinations)
+      //foreach (var elementaryCombination in CombinationTypesExtension.ElementaryCombinations)
+      //{
+      //  averageScore.Add(elementaryCombination, AverageScore(elementaryCombination));
+      //}
+      averageScore = new Dictionary<CombinationTypes, double>
       {
-        averageScore.Add(elementaryCombination, AverageScore(elementaryCombination));
-      }
+        {CombinationTypes.Grade1, 2.1064814814814756},
+        {CombinationTypes.Grade2, 4.2129629629629575},
+        {CombinationTypes.Grade3, 6.3194444444444455},
+        {CombinationTypes.Grade4, 8.425925925925913},
+        {CombinationTypes.Grade5, 10.532407407407392},
+        {CombinationTypes.Grade6, 12.6388888888889},
+        {CombinationTypes.Pair, 15.865270870457234},
+        {CombinationTypes.Set, 11.619899714332302},
+        {CombinationTypes.TwoPairs, 16.37926613378522},
+        {CombinationTypes.Full, 7.702210020138647},
+        {CombinationTypes.Care, 4.853220771449692},
+        {CombinationTypes.SmallStreet, 4.2452235691873},
+        {CombinationTypes.BigStreet, 6.367835353780939},
+        {CombinationTypes.Poker, 0.8804221388169133},
+        {CombinationTypes.Trash, 35.100630144032884}
+      };
     }
     public DiceRoll(int[] dice)
     {
@@ -88,7 +106,29 @@ namespace BobTheDiceMaster
       Array.Sort(dice);
     }
 
-    public DiceRoll ApplyReroll(int[] diceToReroll, DiceRoll rerollResult)
+    public void RerollByValue(int[] valuesToReroll, IDie die)
+    {
+      //TODO[GE]: copy?
+      Array.Sort(valuesToReroll);
+
+      int[] diceToReroll = new int[valuesToReroll.Length];
+
+      int rollCounter = 0;
+      int rerollCounter = 0;
+
+      while (rerollCounter < valuesToReroll.Length
+        && rollCounter < MaxDiceAmount)
+      {
+        if (valuesToReroll[rerollCounter] == dice[rollCounter])
+        {
+          diceToReroll[rerollCounter] = rollCounter;
+        }
+      }
+
+      Reroll(diceToReroll, die);
+    }
+
+    public DiceRoll ApplyReroll(int[] diceToReroll, IDiceRoll<DiceRoll> rerollResult)
     {
       if (diceToReroll.Length != rerollResult.DiceAmount)
       {
@@ -97,6 +137,50 @@ namespace BobTheDiceMaster
       }
       int[] newRollDice = new int[MaxDiceAmount];
       int rerollCounter = 0;
+      for (int i = 0; i < MaxDiceAmount; ++i)
+      {
+        // Indices in DiceRoll.Rerolls are in ascending order
+        if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
+        {
+          newRollDice[i] = rerollResult[rerollCounter++];
+        }
+        else
+        {
+          newRollDice[i] = dice[i];
+        }
+      }
+      return new DiceRoll(newRollDice);
+    }
+
+    public DiceRoll ApplyRerollByValue(int[] valuesToReroll, DiceRoll rerollResult)
+    {
+      if (valuesToReroll.Length != rerollResult.DiceAmount)
+      {
+        throw new ArgumentException(
+          $"Dice to reroll and dice result has to be of the same length, but was: diceToReroll({valuesToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
+      }
+
+      //TODO[GE]: copy?
+      Array.Sort(valuesToReroll);
+
+      int[] diceToReroll = new int[valuesToReroll.Length];
+
+      int rollCounter = 0;
+      int rerollCounter = 0;
+
+      int[] newRollDice = (int[])dice.Clone();
+
+      while (rerollCounter < valuesToReroll.Length
+        && rollCounter < MaxDiceAmount)
+      {
+        if (valuesToReroll[rerollCounter] == dice[rollCounter])
+        {
+          newRollDice[rollCounter] = rerollResult[rerollCounter];
+        }
+      }
+
+      rerollCounter = 0;
+      
       for (int i = 0; i < MaxDiceAmount; ++i)
       {
         // Indices in DiceRoll.Rerolls are in ascending order

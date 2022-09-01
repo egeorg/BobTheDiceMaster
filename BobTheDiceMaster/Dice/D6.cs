@@ -17,6 +17,10 @@ namespace BobTheDiceMaster
     {
       rng = new Random();
     }
+    public D6(int seed)
+    {
+      rng = new Random(seed);
+    }
 
     public int Roll()
     {
