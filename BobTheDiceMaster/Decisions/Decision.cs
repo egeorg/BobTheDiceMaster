@@ -8,8 +8,11 @@ namespace BobTheDiceMaster
 
     public Decision(IEnumerable<DecisionInfoVerbose> decisionInfos)
     {
-      RatedDecisionInfo = new SortedSet<DecisionInfoVerbose>(
-        decisionInfos, new DecisionInfoInverseByValueComparer());
+      if (decisionInfos != null)
+      {
+        RatedDecisionInfo = new SortedSet<DecisionInfoVerbose>(
+          decisionInfos, new DecisionInfoInverseByValueComparer());
+      }
     }
   }
 }

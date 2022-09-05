@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BobTheDiceMaster
 {
@@ -120,7 +121,7 @@ namespace BobTheDiceMaster
       }
       else
       {
-        return new Reroll(bestFirstReroll);
+        return new Reroll(bestFirstReroll.Select(i => currentRoll[i]));
       }
     }
 

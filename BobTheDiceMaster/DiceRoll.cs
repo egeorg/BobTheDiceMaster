@@ -53,6 +53,7 @@ namespace BobTheDiceMaster
         {CombinationTypes.Trash, 35.100630144032884}
       };
     }
+
     public DiceRoll(int[] dice)
     {
       this.dice = (int[])dice.Clone();

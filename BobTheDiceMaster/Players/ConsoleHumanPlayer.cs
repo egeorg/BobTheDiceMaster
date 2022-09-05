@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BobTheDiceMaster
 {
-  internal class HumanPlayer : IPlayer
+  public class ConsoleHumanPlayer : IPlayer
   {
     public Decision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerloosLeft)
     {

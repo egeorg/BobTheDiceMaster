@@ -52,6 +52,7 @@ namespace BobTheDiceMasterConsoleUI
           $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo.Take(3))}");
         if (decision is Reroll)
         {
+          //TODO[GE]: now it's incorrect. reroll now returns values, and this method treats them as dice ids.
           game.GenerateAndApplyReroll();
         }
       }

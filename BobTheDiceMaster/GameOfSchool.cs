@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BobTheDiceMaster
 {
@@ -10,13 +12,21 @@ namespace BobTheDiceMaster
     private const int RollsPerTurn = 3;
 
     #region current game state
-    private DiceRoll currentRoll;
+    private DiceRollDistinct currentRoll;
     private int[] diceToReroll;
     private int rollsLeft;
     private int totalScore;
     private CombinationTypes allowedCombinationTypes;
     private bool isSchoolFinished;
     #endregion
+
+    public DiceRollDistinct CurrentRoll => currentRoll;
+    public IEnumerable<CombinationTypes> AllowedCombinationTypes =>
+      allowedCombinationTypes.GetElementaryCombinationTypes();
+    public IEnumerable<CombinationTypes> CrossOutCombinationTypes =>
+      AllowedCombinationTypes.Where(x => !x.IsFromSchool());
+    public IEnumerable<CombinationTypes> ScoreCombinationTypes =>
+      AllowedCombinationTypes.Where(x => currentRoll.Roll.Score(x) != null);
 
     private GameOfSchoolState state;
 
@@ -91,48 +101,86 @@ namespace BobTheDiceMaster
 
     public void Reset()
     {
+      currentRoll = new DiceRollDistinct(d6.Roll(DiceRoll.MaxDiceAmount));
       allowedCombinationTypes = CombinationTypes.School;
       isSchoolFinished = false;
       totalScore = 0;
       state = GameOfSchoolState.Idle;
     }
 
-    public DiceRoll GenerateRoll()
+    public DiceRollDistinct GenerateRoll()
     {
       VerifyState(GameOfSchoolState.Idle);
       rollsLeft = RollsPerTurn;
-      currentRoll = DiceRoll.GenerateNew(d6);
+      currentRoll = new DiceRollDistinct(d6.Roll(DiceRoll.MaxDiceAmount));
       state = GameOfSchoolState.Rolled;
       return currentRoll;
     }
 
-    public void SetRoll(DiceRoll roll)
+    public void SetRoll(DiceRollDistinct roll)
     {
       VerifyState(GameOfSchoolState.Idle);
       this.currentRoll = roll;
       state = GameOfSchoolState.Rolled;
     }
 
-    public DiceRoll GenerateAndApplyReroll()
+    //TODO[GE]: obsolete
+    public int[] GenerateAndApplyReroll()
     {
       VerifyState(GameOfSchoolState.Rolled);
+      int[] reroll = d6.Roll(diceToReroll.Length);
       //TODO[GE]: Make DiceRoll immutable
-      currentRoll.Reroll(diceToReroll, d6);
-      return currentRoll;
+      currentRoll = currentRoll.ApplyReroll(diceToReroll, reroll);
+      return reroll;
     }
 
-    public void ApplyReroll(DiceRoll roll)
+    public void GenerateAndApplyReroll(int[] diceToReroll)
     {
       VerifyState(GameOfSchoolState.Rolled);
-      currentRoll = currentRoll.ApplyReroll(diceToReroll, roll);
+      int[] reroll = d6.Roll(diceToReroll.Length);
+      currentRoll = currentRoll.ApplyReroll(diceToReroll, reroll);
+      --rollsLeft;
+    }
+
+    public void ApplyReroll(int[] reroll)
+    {
+      VerifyState(GameOfSchoolState.Rolled);
+      currentRoll = currentRoll.ApplyReroll(diceToReroll, reroll);
     }
 
     public Decision GenerateAndApplyDecision()
     {
       VerifyState(GameOfSchoolState.Rolled);
-      Decision decision = player.DecideOnRoll(allowedCombinationTypes, currentRoll, rollsLeft);
+      Decision decision = player.DecideOnRoll(
+        allowedCombinationTypes, currentRoll.Roll, rollsLeft);
       ApplyDecision(decision);
       return decision;
+    }
+
+    private int[] GetDiceToReroll(IReadOnlyCollection<int> diceValuesToReroll)
+    {
+      int[] diceToReroll = new int[diceValuesToReroll.Count];
+      int diceCounter = 0;
+      int rerollCounter = 0;
+      foreach (var dieValue in diceValuesToReroll.OrderBy(x => x))
+      {
+        while (diceCounter < DiceRoll.MaxDiceAmount)
+        {
+          if (currentRoll[diceCounter++] == dieValue)
+          {
+            diceToReroll[rerollCounter++] = diceCounter;
+            continue;
+          }
+        }
+      }
+
+      if (rerollCounter < diceValuesToReroll.Count)
+      {
+        throw new InvalidOperationException(
+          $"Current roll {currentRoll} does not contain all of the reroll values: {String.Join(",", diceValuesToReroll)}");
+      }
+
+      return diceToReroll;
     }
 
     public void ApplyDecision(Decision decision)
@@ -142,7 +190,7 @@ namespace BobTheDiceMaster
       {
         case Reroll reroll:
           --rollsLeft;
-          diceToReroll = reroll.DiceToReroll.ToArray();
+          diceToReroll = GetDiceToReroll(reroll.DiceValuesToReroll);
           break;
         case Score score:
           if (!allowedCombinationTypes.HasFlag(score.CombinationToScore))
@@ -150,7 +198,7 @@ namespace BobTheDiceMaster
             throw new InvalidOperationException(
               $"Combination {score.CombinationToScore} is already used");
           }
-          if (currentRoll.Score(score.CombinationToScore) == null)
+          if (currentRoll.Roll.Score(score.CombinationToScore) == null)
           {
             throw new InvalidOperationException(
               $"Combination {score.CombinationToScore} can't be scored for roll {currentRoll}");
@@ -158,11 +206,33 @@ namespace BobTheDiceMaster
           if (rollsLeft == RollsPerTurn
             && !score.CombinationToScore.IsFromSchool())
           {
-            totalScore += currentRoll.Score(score.CombinationToScore).Value * 2;
+            totalScore += currentRoll.Roll.Score(score.CombinationToScore).Value * 2;
           }
           else
           {
-            totalScore += currentRoll.Score(score.CombinationToScore).Value;
+            totalScore += currentRoll.Roll.Score(score.CombinationToScore).Value;
+            //TODO[GE]: move somewhere
+            switch (score.CombinationToScore)
+            {
+              case CombinationTypes.Grade1:
+                totalScore -= 5;
+                break;
+              case CombinationTypes.Grade2:
+                totalScore -= 10;
+                break;
+              case CombinationTypes.Grade3:
+                totalScore -= 15;
+                break;
+              case CombinationTypes.Grade4:
+                totalScore -= 20;
+                break;
+              case CombinationTypes.Grade5:
+                totalScore -= 25;
+                break;
+              case CombinationTypes.Grade6:
+                totalScore -= 30;
+                break;
+            }
           }
           allowedCombinationTypes -= score.CombinationToScore;
           state = GameOfSchoolState.Idle;
