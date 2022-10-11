@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMaster", "BobTheD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterWebUI", "..\BobTheDiceMasterWebUI\BobTheDiceMasterWebUI.csproj", "{5FCE8692-8038-43B7-A8A1-D3D5B440FE3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BobTheDiceMasterConsoleUI", "..\BobTheDiceMasterConsoleUI\BobTheDiceMasterConsoleUI.csproj", "{876CC04A-E7DE-4404-A5CD-66468270037A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterConsoleUI", "..\BobTheDiceMasterConsoleUI\BobTheDiceMasterConsoleUI.csproj", "{876CC04A-E7DE-4404-A5CD-66468270037A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

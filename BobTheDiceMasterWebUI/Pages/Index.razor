@@ -85,6 +85,7 @@
   protected override void OnInitialized()
   {
       currentRoll = game.GenerateRoll();
+      //Initialize selected items in combo boxes
       CombinationToScore = game.ScoreCombinationTypes.FirstOrDefault().ToString();
       CombinationToCrossOut = game.CrossOutCombinationTypes.FirstOrDefault().ToString();
   }

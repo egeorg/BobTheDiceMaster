@@ -1,0 +1,38 @@
+﻿<h3>CheckboxComponent3</h3>
+<input type="checkbox" @bind="@InnerCheckboxValue" name="@Name" @oninput="@UpdateCheckboxValue">
+@Name InnerCheckboxValue value is @InnerCheckboxValue
+<br />
+@Name CheckboxValue value is @CheckboxValue
+<br />
+
+@code {
+  private bool InnerCheckboxValue { get; set; } = true;
+
+  [Parameter]
+  public string Name { get; set; } = "Default";
+  [Parameter]
+  public bool CheckboxValue {
+      get
+      {
+          return checkboxValue;
+      }
+      set
+      {
+          checkboxValue = value;
+          InnerCheckboxValue = checkboxValue;
+      }
+  }
+  private bool checkboxValue;
+  [Parameter]
+  public EventCallback<bool> CheckboxValueChanged { get; set; }
+  async Task UpdateCheckboxValue(ChangeEventArgs e)
+  {
+      CheckboxValue = (bool)e.Value;
+      await CheckboxValueChanged.InvokeAsync((bool)e.Value);
+  }
+  async Task UpdateCheckboxValue2()
+  {
+      CheckboxValue = InnerCheckboxValue;
+      await CheckboxValueChanged.InvokeAsync(InnerCheckboxValue);
+  }
+}

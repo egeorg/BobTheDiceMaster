@@ -1,0 +1,9 @@
+﻿<h3>CheckboxComponent2</h3>
+<input type="checkbox" name="@Name" @bind="@CheckboxValue">
+Checkbox component 2 value is @CheckboxValue
+@code {
+  [Parameter]
+  public string Name { get; set; } = "Default";
+  [Parameter]
+  public bool CheckboxValue { get; set; } = true;
+}
