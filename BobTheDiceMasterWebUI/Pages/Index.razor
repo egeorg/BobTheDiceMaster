@@ -58,6 +58,13 @@
         <tr><td>Total</td><td>77</td><td>-</td></tr>
     </!--table>-->
     </div>
+    <div style="margin:10px">
+        Combinations left:<br />
+        @foreach(CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
+        {
+            @allowedCombination<br />
+        }
+    </div>
 </body>
 
 @code {
