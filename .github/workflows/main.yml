@@ -7,7 +7,7 @@ jobs:
   deploy-to-github-pages:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v23
+    - uses: actions/checkout@v2
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
