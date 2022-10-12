@@ -12,3 +12,6 @@
 /BobTheDiceMaster/bin/Debug/netstandard2.1
 /BobTheDiceMasterConsoleUI/bin/Debug/net5.0
 /BobTheDiceMasterConsoleUI/obj
+/release
+/BobTheDiceMasterWebUI/bin/Release/net5.0
+/BobTheDiceMaster/bin/Release/netstandard2.1
