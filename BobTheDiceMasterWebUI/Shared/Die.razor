@@ -1,7 +1,7 @@
 ﻿<div style="width: 36px; display: inline-block">
     <div>
         <label for="@Id" style="display:flex; justify-content:center;">
-            @Value
+            <img src="@diceImages[@Value - 1]">
         </label>
     </div>
     <div style="display:flex; justify-content:center">
@@ -24,6 +24,16 @@
   public int Value { get; set; }
   [Parameter]
   public string Id { get; set; }
+
+  private string[] diceImages = new []
+    {
+        "./img/dieResult1.png",
+        "./img/dieResult2.png",
+        "./img/dieResult3.png",
+        "./img/dieResult4.png",
+        "./img/dieResult5.png",
+        "./img/dieResult6.png"
+    };
 
   private async Task UpdateIsSelectedFromChild(ChangeEventArgs e)
   {
