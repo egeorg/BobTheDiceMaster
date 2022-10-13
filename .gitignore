@@ -4,14 +4,14 @@
 
 /BobTheDiceMaster/obj
 /.vs
-/BobTheDiceMaster/bin/Debug/net5.0
+/BobTheDiceMaster/bin
 /BobTheDiceMaster/.vs/BobTheDiceMaster
-/BobTheDiceMasterWebUI/bin/Debug/net5.0
+/BobTheDiceMasterWebUI/bin
 /BobTheDiceMasterWebUI/obj
 /BobTheDiceMasterWebUI/Properties/PublishProfiles
-/BobTheDiceMaster/bin/Debug/netstandard2.1
-/BobTheDiceMasterConsoleUI/bin/Debug/net5.0
+/BobTheDiceMaster/bin
+/BobTheDiceMasterConsoleUI/bin
 /BobTheDiceMasterConsoleUI/obj
 /release
-/BobTheDiceMasterWebUI/bin/Release/net5.0
-/BobTheDiceMaster/bin/Release/netstandard2.1
+/BobTheDiceMasterWebUI/bin
+/BobTheDiceMaster/bin

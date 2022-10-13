@@ -4,6 +4,7 @@
     <RazorPage_SelectedScaffolderID>RazorPageScaffolder</RazorPage_SelectedScaffolderID>
     <RazorPage_SelectedScaffolderCategoryPath>root/Common/RazorPage</RazorPage_SelectedScaffolderCategoryPath>
     <ActiveDebugProfile>BobTheDiceMasterWebUI</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\GE\source\repos\BobTheDiceMaster\BobTheDiceMasterWebUI\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
