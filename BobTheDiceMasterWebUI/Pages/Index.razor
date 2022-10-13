@@ -38,31 +38,19 @@
     </div>
     <div style="margin:10px">
         Score: @game.Score
-        <!--<table>
-        <tr><td>Player</td><td>Bob</td><td>Human</td></tr>
-        <tr><td>1</td><td>-3</td><td>-</td></tr>
-        <tr><td>2</td><td>-</td><td>-</td></tr>
-        <tr><td>3</td><td>-</td><td>-</td></tr>
-        <tr><td>4</td><td>-</td><td>-</td></tr>
-        <tr><td>5</td><td>-10</td><td>-</td></tr>
-        <tr><td>6</td><td>-6</td><td>-</td></tr>
-        <tr><td>Pair</td><td>-</td><td>-</td></tr>
-        <tr><td>Two pairs</td><td>-</td><td>-</td></tr>
-        <tr><td>Set</td><td>18</td><td>-</td></tr>
-        <tr><td>Full</td><td>28</td><td>-</td></tr>
-        <tr><td>Small street</td><td>20</td><td>-</td></tr>
-        <tr><td>Big street</td><td>30</td><td>-</td></tr>
-        <tr><td>Care</td><td>-</td><td>-</td></tr>
-        <tr><td>Poker</td><td>-</td><td>-</td></tr>
-        <tr><td>Trash</td><td>-</td><td>-</td></tr>
-        <tr><td>Total</td><td>77</td><td>-</td></tr>
-    </!--table>-->
     </div>
     <div style="margin:10px">
-        Combinations left:<br />
-        @foreach(CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
+        @if (@game.AllowedCombinationTypes.Any())
         {
-            @allowedCombination<br />
+            <p>Combinations left:</p><br />
+            @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
+            {
+                @allowedCombination<br />
+            }
+        }
+        else
+        {
+            <p>Game over!</p>
         }
     </div>
 </body>
