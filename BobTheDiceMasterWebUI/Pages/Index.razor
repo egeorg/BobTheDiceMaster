@@ -11,10 +11,10 @@
         </div>
         <div style="display:inline-block">
             <div>
-                <button @onclick="@Reroll">Reroll</button>
+                <button @onclick="@Reroll" disabled="@IsRerollDisabled">Reroll</button>
             </div>
             <div>
-                <button @onclick="@Roll">Roll</button>
+                <button @onclick="@Roll" disabled="@IsRollDisabled">Roll</button>
             </div>
         </div>
     </div>
@@ -25,7 +25,7 @@
                 <option value="@combinationType">@combinationType</option>
             }
         </select>
-        <button @onclick="Score">Score</button>
+        <button @onclick="Score" disabled="@IsScoreDisabled">Score</button>
     </div>
     <div style="margin:10px">
         <select id="CrossOutCombination" style="width:200px" @bind="@CombinationToCrossOut">
@@ -34,7 +34,7 @@
                 <option value="@combinationType">@combinationType</option>
             }
         </select>
-        <button @onclick="CrossOut">Cross out</button>
+        <button @onclick="CrossOut"  disabled="@IsCrossOutDisabled">Cross out</button>
     </div>
     <div style="margin:10px">
         Score: @game.Score
@@ -62,6 +62,14 @@
 
   private string CombinationToScore { get; set; }
   private string CombinationToCrossOut { get; set; }
+  private bool IsRerollDisabled => game.State != GameOfSchoolState.Rolled
+      || game.RollsLeft <= 1
+      || !diceSelected.Any(x => x);
+  private bool IsRollDisabled => game.State != GameOfSchoolState.Idle;
+  private bool IsScoreDisabled => game.State != GameOfSchoolState.Rolled
+      || !game.ScoreCombinationTypes.Any();
+  private bool IsCrossOutDisabled => game.State != GameOfSchoolState.Rolled
+      || !game.CrossOutCombinationTypes.Any();
 
   public bool[] diceSelected = new[] { false, false, false, false, false };
 
@@ -105,11 +113,6 @@
 
       //TODO: do I need a currentRoll local variable ora can I bind to game.CurrentRoll directly?
       currentRoll = game.CurrentRoll;
-      //currentRoll.Reroll(
-      //  Enumerable.Range(0, DiceRoll.MaxDiceAmount)
-      //    .Where(i => diceSelected[i])
-      //    .ToArray(),
-      //  d6);
   }
 
   public void Score()
@@ -127,26 +130,4 @@
       game.ApplyDecision(new CrossOut(combinationToCrossOut));
       ResetRolls();
   }
-
-  //public void Roll()
-  //{
-  //    int[] diceToReroll = Enumerable.Range(1, DiceRoll.MaxDiceAmount)
-  //        .Where(i => diceSelected[i])
-  //        .ToArray();
-
-  //    currentRoll.Reroll(diceToReroll, new D6());
-
-  //    for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
-  //    {
-  //        diceValues[i] = currentRoll[i];
-  //    }
-
-  //    for (int i = 4; i > 0; --i)
-  //    {
-  //        int iThDiePlace = rng.Next(0, i);
-  //        int tmp = diceValues[i];
-  //        diceValues[i] = diceValues[iThDiePlace];
-  //        diceValues[iThDiePlace] = tmp;
-  //    }
-  //}
 }

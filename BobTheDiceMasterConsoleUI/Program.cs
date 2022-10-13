@@ -38,7 +38,7 @@ namespace BobTheDiceMasterConsoleUI
 
     public static void PerformNextStep(GameOfSchool game)
     {
-      DiceRoll roll = game.GenerateRoll();
+      DiceRoll roll = game.GenerateRoll().Roll;
       while (!game.IsTurnOver)
       {
         Console.WriteLine($"Considering roll {roll}. Waiting for a decision.");

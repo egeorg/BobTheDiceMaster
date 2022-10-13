@@ -18,6 +18,7 @@ namespace BobTheDiceMaster
     private int totalScore;
     private CombinationTypes allowedCombinationTypes;
     private bool isSchoolFinished;
+    private GameOfSchoolState state;
     #endregion
 
     public DiceRollDistinct CurrentRoll => currentRoll;
@@ -28,7 +29,7 @@ namespace BobTheDiceMaster
     public IEnumerable<CombinationTypes> ScoreCombinationTypes =>
       AllowedCombinationTypes.Where(x => currentRoll.Roll.Score(x) != null);
 
-    private GameOfSchoolState state;
+    public GameOfSchoolState State => state;
 
     #endregion
 

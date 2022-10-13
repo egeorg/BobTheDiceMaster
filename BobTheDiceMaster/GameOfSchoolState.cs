@@ -1,6 +1,6 @@
 ﻿namespace BobTheDiceMaster
 {
-  internal enum GameOfSchoolState
+  public enum GameOfSchoolState
   {
     None = 0,
     Idle,
