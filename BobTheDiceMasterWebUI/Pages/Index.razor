@@ -20,7 +20,7 @@
     </div>
     <div style="margin:10px">
         <select id="ScoreCombination" style="width:200px" @bind="@CombinationToScore">
-            @foreach (CombinationTypes combinationType in @game.ScoreCombinationTypes)
+            @foreach (CombinationTypes combinationType in @ScoreCombinationTypes)
             {
                 <option value="@combinationType">@combinationType</option>
             }
@@ -29,7 +29,7 @@
     </div>
     <div style="margin:10px">
         <select id="CrossOutCombination" style="width:200px" @bind="@CombinationToCrossOut">
-            @foreach (CombinationTypes combinationType in @game.CrossOutCombinationTypes)
+            @foreach (CombinationTypes combinationType in @CrossOutCombinationTypes)
             {
                 <option value="@combinationType">@combinationType</option>
             }
@@ -71,9 +71,29 @@
   private bool IsCrossOutDisabled => game.State != GameOfSchoolState.Rolled
       || !game.CrossOutCombinationTypes.Any();
 
+  private List<CombinationTypes> ScoreCombinationTypes { get; set; }
+  private List<CombinationTypes> CrossOutCombinationTypes { get; set; }
+
   public bool[] diceSelected = new[] { false, false, false, false, false };
 
   private static D6 d6 = new D6(1);
+
+  /// <summary>
+  /// Initialize content and selected items in combo boxes (combinations available to score
+  /// and combinations available to cross out).
+  /// </summary>
+  private void ResetComboBoxes()
+  {
+      // game.ScoreCombinationTypes and game.CrossOutCombinationTypes were used directly at first.
+      // But, probably due to some specifics of page rendering, they were obsolete at this point
+      // and could possibly override currently selected items, so that already not available item
+      // became selected and was used if user did not select another item explicitly. Use separate
+      // properties in attempt to make rendering timing time more intuitively.
+      ScoreCombinationTypes = game.ScoreCombinationTypes.ToList();
+      CrossOutCombinationTypes = game.CrossOutCombinationTypes.ToList();
+      CombinationToScore = ScoreCombinationTypes.FirstOrDefault().ToString();
+      CombinationToCrossOut = CrossOutCombinationTypes.FirstOrDefault().ToString();
+  }
 
   private void ResetRolls()
   {
@@ -81,16 +101,13 @@
       {
           diceSelected[i] = false;
       }
-      CombinationToScore = game.ScoreCombinationTypes.FirstOrDefault().ToString();
-      CombinationToCrossOut = game.CrossOutCombinationTypes.FirstOrDefault().ToString();
+      ResetComboBoxes();
   }
 
   protected override void OnInitialized()
   {
       currentRoll = game.GenerateRoll();
-      //Initialize selected items in combo boxes
-      CombinationToScore = game.ScoreCombinationTypes.FirstOrDefault().ToString();
-      CombinationToCrossOut = game.CrossOutCombinationTypes.FirstOrDefault().ToString();
+      ResetComboBoxes();
   }
 
   public static void DiceSelectionChanged()
@@ -102,6 +119,8 @@
   {
       game.GenerateRoll();
       currentRoll = game.CurrentRoll;
+
+      ResetComboBoxes();
   }
 
   public void Reroll()
@@ -113,6 +132,8 @@
 
       //TODO: do I need a currentRoll local variable ora can I bind to game.CurrentRoll directly?
       currentRoll = game.CurrentRoll;
+
+      ResetComboBoxes();
   }
 
   public void Score()
