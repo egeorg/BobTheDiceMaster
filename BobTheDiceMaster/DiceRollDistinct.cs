@@ -88,5 +88,10 @@ namespace BobTheDiceMaster
     public int DiceAmount => dice.Length;
 
     public int this[int i] => dice[i];
+
+    public override string ToString()
+    {
+      return Roll.ToString();
+    }
   }
 }

@@ -125,7 +125,6 @@ namespace BobTheDiceMaster
       state = GameOfSchoolState.Rolled;
     }
 
-    //TODO[GE]: obsolete
     public int[] GenerateAndApplyReroll()
     {
       VerifyState(GameOfSchoolState.Rolled);
@@ -161,16 +160,17 @@ namespace BobTheDiceMaster
     private int[] GetDiceToReroll(IReadOnlyCollection<int> diceValuesToReroll)
     {
       int[] diceToReroll = new int[diceValuesToReroll.Count];
-      int diceCounter = 0;
       int rerollCounter = 0;
-      foreach (var dieValue in diceValuesToReroll.OrderBy(x => x))
+      bool[] dieUsed = new bool[DiceRoll.MaxDiceAmount];
+      foreach (int dieValue in diceValuesToReroll)
       {
-        while (diceCounter < DiceRoll.MaxDiceAmount)
+        for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
         {
-          if (currentRoll[diceCounter++] == dieValue)
+          if (!dieUsed[i] && currentRoll[i] == dieValue)
           {
-            diceToReroll[rerollCounter++] = diceCounter;
-            continue;
+            diceToReroll[rerollCounter++] = i;
+            dieUsed[i] = true;
+            break;
           }
         }
       }

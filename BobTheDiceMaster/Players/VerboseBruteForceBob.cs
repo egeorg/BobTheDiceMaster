@@ -34,7 +34,12 @@ namespace BobTheDiceMaster
 
       if (bestDecisionInfo.Reroll != null)
       {
-        return new Reroll(bestDecisionInfo.Reroll, ratedDecisionsInfo);
+        int[] diceToReroll = new int[bestDecisionInfo.Reroll.Length];
+        for (int i = 0; i < bestDecisionInfo.Reroll.Length; ++i)
+        {
+          diceToReroll[i] = currentRoll[bestDecisionInfo.Reroll[i]];
+        }
+        return new Reroll(diceToReroll, ratedDecisionsInfo);
       }
 
       if (currentRoll.Score(bestDecisionInfo.Combination) != null)

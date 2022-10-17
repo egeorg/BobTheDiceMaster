@@ -10,12 +10,15 @@
                    type="checkbox"
                    id="@Id"
                    @oninput="UpdateIsSelectedFromChild"
-                   @bind="@IsSelected"/>
+                   @bind="@IsSelected"
+                   disabled="@IsDisabled"/>
         </div>
     </div>
 </div>
 
 @code {
+  [Parameter]
+  public bool IsDisabled { get; set; } = false;
   [Parameter]
   public bool IsSelected { get; set; }
   [Parameter]
