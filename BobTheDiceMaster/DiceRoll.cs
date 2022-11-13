@@ -1,9 +1,12 @@
-﻿using System;
+﻿using BobTheDiceMaster.JsonConverters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace BobTheDiceMaster
 {
+  [JsonConverter(typeof(DiceRollJsonConverter))]
   public class DiceRoll : IDiceRoll<DiceRoll>
   {
     #region private fields

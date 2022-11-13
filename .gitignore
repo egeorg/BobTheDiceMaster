@@ -5,7 +5,7 @@
 /BobTheDiceMaster/obj
 /.vs
 /BobTheDiceMaster/bin
-/BobTheDiceMaster/.vs/BobTheDiceMaster
+/BobTheDiceMaster/.vs
 /BobTheDiceMasterWebUI/bin
 /BobTheDiceMasterWebUI/obj
 /BobTheDiceMasterWebUI/Properties/PublishProfiles
@@ -15,3 +15,7 @@
 /release
 /BobTheDiceMasterWebUI/bin
 /BobTheDiceMaster/bin
+/BobTheDiceMaster/.vs
+/BobTheDiceMasterAwsLambdaApi/src/BobTheDiceMasterAwsLambdaApi/bin
+/BobTheDiceMasterAwsLambdaApi/src/BobTheDiceMasterAwsLambdaApi/obj
+/HelloWorld/src/HelloWorld/.vs
