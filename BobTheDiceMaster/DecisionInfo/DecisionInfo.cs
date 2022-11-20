@@ -22,7 +22,7 @@
       Reroll = reroll;
     }
 
-    protected DecisionInfo()
+    public DecisionInfo()
     {
       //do nothing
     }
