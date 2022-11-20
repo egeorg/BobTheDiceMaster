@@ -16,6 +16,14 @@ namespace BobTheDiceMaster
     /// </summary>
     public bool IsScored { get; }
 
+    /// <remarks>
+    /// Parameterless constructor is required only to make it serializable.
+    /// </remarks>
+    public OutcomeInfo()
+    {
+      //do nothing
+    }
+
     public OutcomeInfo(
       double value,
       CombinationTypes combination,
