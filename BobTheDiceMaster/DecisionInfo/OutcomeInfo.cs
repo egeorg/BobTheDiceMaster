@@ -8,13 +8,23 @@ namespace BobTheDiceMaster
   /// </remarks>
   public class OutcomeInfo : IComparable<OutcomeInfo>
   {
-    public double Value { get; private set; }
-    public double Probability { get; private set; }
-    public CombinationTypes Combination { get; }
+    /// <remarks>
+    /// Public setter is required only to make it serializable, it can be private.
+    /// </remarks>
+    public double Value { get; set; }
+    /// <remarks>
+    /// Public setter is required only to make it serializable, it can be private.
+    /// </remarks>
+    public double Probability { get; set; }
+    /// <remarks>
+    /// Public setter is required only to make it serializable.
+    /// </remarks>
+    public CombinationTypes Combination { get; set; }
+
     /// <summary>
     /// True if the combination is scored (and not crossed out) in this outcome.
     /// </summary>
-    public bool IsScored { get; }
+    public bool IsScored { get; set; }
 
     /// <remarks>
     /// Parameterless constructor is required only to make it serializable.
