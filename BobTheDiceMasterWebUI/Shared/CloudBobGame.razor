@@ -68,6 +68,12 @@
         currentRoll = game.GenerateRoll();
     }
 
+    private void AddMessage(string message)
+    {
+        messages.Add(message);
+        StateHasChanged();
+    }
+
     public async Task Next()
     {
         List<string> newMessages = new List<string>();
@@ -103,10 +109,15 @@
                 newMessage += $" {decision}.";
                 newMessages.Add(newMessage);
 
+                messages = newMessages;
+
+                AddMessage($"Game state before applying decision: {game.State}");
                 game.ApplyDecision(decision);
+                AddMessage($"Game state after applying decision: {game.State}");
                 if (decision is Reroll)
                 {
                     game.GenerateAndApplyReroll();
+                    AddMessage($"Game state after generating and applying reroll: {game.State}");
                 }
             }
             catch (Exception e)
@@ -116,11 +127,12 @@
                 hasError = true;
             }
         }
-        messages = newMessages;
 
         if (!game.IsGameOver)
         {
+            AddMessage($"Game state before generating a new roll: {game.State}");
             currentRoll = game.GenerateRoll();
+            AddMessage($"Game state after generating a new roll: {game.State}");
         }
     }
 }
