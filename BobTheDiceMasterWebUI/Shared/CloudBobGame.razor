@@ -78,6 +78,8 @@
     {
         List<string> newMessages = new List<string>();
         bool hasError = false;
+        AddMessage($"game.IsTurnOver: {game.IsTurnOver}");
+        AddMessage($"!game.IsTurnOver && !hasError: {!game.IsTurnOver && !hasError}");
         while (!game.IsTurnOver && !hasError)
         {
             string newMessage = $"For {game.CurrentRoll} I decide to ";
@@ -101,11 +103,14 @@
             System.IO.StreamReader sr = new System.IO.StreamReader(s);
 
             string decisionJson = sr.ReadToEnd();
+            AddMessage(decisionJson);
 
             try
             {
                 DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
+                AddMessage($"Received a DecisionWrapper: {typedDecision}");
                 Decision decision = typedDecision.Decision;
+                AddMessage($"Received a Decision: {decision}");
                 newMessage += $" {decision}.";
                 newMessages.Add(newMessage);
 
@@ -122,8 +127,7 @@
             }
             catch (Exception e)
             {
-                newMessages.Add(e.ToString());
-                newMessages.Add(decisionJson);
+                newMessages.Add($"An exception occurred: {Environment.NewLine}{e}");
                 hasError = true;
             }
         }
