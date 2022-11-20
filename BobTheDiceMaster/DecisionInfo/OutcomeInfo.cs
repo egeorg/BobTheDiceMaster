@@ -1,6 +1,12 @@
-﻿namespace BobTheDiceMaster
+﻿using System;
+using System.Collections.Generic;
+
+namespace BobTheDiceMaster
 {
-  public class OutcomeInfo
+  /// <remarks>
+  /// IComparable interface is required only to make it serializable.
+  /// </remarks>
+  public class OutcomeInfo : IComparable<OutcomeInfo>
   {
     public double Value { get; private set; }
     public double Probability { get; private set; }
@@ -30,6 +36,20 @@
     public void IncreaseProbability(double increment)
     {
       Probability += increment;
+    }
+
+    /// <summary>
+    /// TODO[GE]: remove OutcomeInfoInverseByValueComparer?
+    /// </summary>
+    /// <remarks>
+    /// Used only by AWS deserializer.
+    /// </remarks>
+    public int CompareTo(OutcomeInfo other)
+    {
+        int compareResult = Comparer<double>.Default.Compare(other.Value, Value);
+        // Eliminate 0 to make sure duplicates are not removed.
+        // Order of equal values does not mater
+        return compareResult == 0 ? 1 : compareResult;
     }
 
     public override string ToString()

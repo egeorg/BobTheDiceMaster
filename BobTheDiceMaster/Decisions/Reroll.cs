@@ -3,9 +3,18 @@ using System.Linq;
 
 namespace BobTheDiceMaster
 {
-  public class Reroll : Decision
+    public class Reroll : Decision
   {
-    public List<int> DiceValuesToReroll { get; }
+    /// <remarks>
+    /// Public setter is required only to make it serializable, otherwise setter can be removed.
+    /// </remarks>
+    public List<int> DiceValuesToReroll { get; set; }
+
+    /// <remarks>
+    /// Parameterless constructor is required only to make it serializable.
+    /// </remarks>
+    public Reroll()
+    { }
 
     public Reroll(
       IEnumerable<int> diceToReroll,

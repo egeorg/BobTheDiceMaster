@@ -2,9 +2,18 @@
 
 namespace BobTheDiceMaster
 {
-  public class CrossOut : Decision
+    public class CrossOut : Decision
   {
-    public CombinationTypes Combination { get; }
+    /// <remarks>
+    /// Public setter is required only to make it serializable, otherwise setter can be removed.
+    /// </remarks>
+    public CombinationTypes Combination { get; set; }
+
+    /// <remarks>
+    /// Parameterless constructor is required only to make it serializable.
+    /// </remarks>
+    public CrossOut()
+    { }
 
     public CrossOut(
       CombinationTypes combination,

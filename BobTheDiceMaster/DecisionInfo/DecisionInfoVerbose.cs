@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BobTheDiceMaster
@@ -8,8 +9,17 @@ namespace BobTheDiceMaster
   /// - Average value that the decision yields.
   /// - List of possible outcomes, sorted by their contribution to the decision value.
   /// </summary>
-  public class DecisionInfoVerbose : DecisionInfo
+  /// <remarks>
+  /// IComparable interface is required only to make it serializable.
+  /// </remarks>
+  public class DecisionInfoVerbose : DecisionInfo, IComparable<DecisionInfoVerbose>
   {
+    /// <remarks>
+    /// Parameterless constructor is required only to make it serializable.
+    /// </remarks>
+    public DecisionInfoVerbose()
+    { }
+
     public DecisionInfoVerbose(
       double value,
       IEnumerable<OutcomeInfo> outcomes,
@@ -22,10 +32,27 @@ namespace BobTheDiceMaster
     }
 
     /// <summary>
+    /// TODO[GE]: remove DecisionInfoInverseByValueComparer?
+    /// </summary>
+    /// <remarks>
+    /// Used only by AWS deserializer.
+    /// </remarks>
+    public int CompareTo(DecisionInfoVerbose other)
+    {
+        int doubleCompareResult = Comparer<double>.Default.Compare(other.Value, Value);
+        // Eliminate 0 to make sure duplicates are not removed.
+        // Order of equal values does not mater
+        return doubleCompareResult == 0 ? 1 : doubleCompareResult;
+    }
+
+    /// <summary>
     /// Sum of probabilities by all outcomes has to be 1.
     /// Sum of values by all outcomes has to be <see cref="Value">.
-    /// </summary> 
-    public SortedSet<OutcomeInfo> Outcomes { get; }
+    /// </summary>
+    /// <remarks>
+    /// Public setter is required only to make it serializable, otherwise setter can be removed.
+    /// </remarks>
+    public SortedSet<OutcomeInfo> Outcomes { get; set; }
 
     public override string ToString()
     {

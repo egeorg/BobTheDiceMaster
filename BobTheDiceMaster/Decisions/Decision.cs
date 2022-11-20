@@ -2,9 +2,18 @@
 
 namespace BobTheDiceMaster
 {
-  public abstract class Decision
+    public class Decision
   {
-    public SortedSet<DecisionInfoVerbose> RatedDecisionInfo { get; }
+    /// <remarks>
+    /// Public setter is required only to make it serializable, otherwise setter can be removed.
+    /// </remarks>
+    public SortedSet<DecisionInfoVerbose> RatedDecisionInfo { get; set; }
+
+    /// <remarks>
+    /// Parameterless constructor is required only to make it serializable.
+    /// </remarks>
+    public Decision()
+    { }
 
     public Decision(IEnumerable<DecisionInfoVerbose> decisionInfos)
     {

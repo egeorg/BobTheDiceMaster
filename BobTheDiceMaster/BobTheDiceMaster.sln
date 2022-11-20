@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterWebUI", "..
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterConsoleUI", "..\BobTheDiceMasterConsoleUI\BobTheDiceMasterConsoleUI.csproj", "{876CC04A-E7DE-4404-A5CD-66468270037A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BobTheDiceMasterAwsLambdaApi", "..\BobTheDiceMasterAwsLambdaApi\src\BobTheDiceMasterAwsLambdaApi\BobTheDiceMasterAwsLambdaApi.csproj", "{11249469-A75A-4570-980E-29CC171122A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterAwsLambdaApi", "..\BobTheDiceMasterAwsLambdaApi\src\BobTheDiceMasterAwsLambdaApi\BobTheDiceMasterAwsLambdaApi.csproj", "{11249469-A75A-4570-980E-29CC171122A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

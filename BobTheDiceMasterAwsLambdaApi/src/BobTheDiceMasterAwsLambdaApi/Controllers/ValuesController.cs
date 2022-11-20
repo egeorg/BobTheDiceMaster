@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BobTheDiceMaster;
+using BobTheDiceMaster.Decisions;
 
 namespace BobTheDiceMasterAwsLambdaApi.Controllers
 {
@@ -15,12 +16,12 @@ namespace BobTheDiceMasterAwsLambdaApi.Controllers
 
         // POST api/values
         [HttpPost]
-        public Decision Post([FromBody] GameOfSchoolContext gameContext)
+        public DecisionWrapper Post([FromBody] GameOfSchoolContext gameContext)
         {
             IPlayer aiPlayer = new VerboseBruteForceBob();
             Decision decision = aiPlayer.DecideOnRoll(
                 gameContext.AvailableCombinations, gameContext.DiceRoll, gameContext.RollsLeft);
-            return decision;
+            return new DecisionWrapper { Decision = decision };
         }
     }
 }
