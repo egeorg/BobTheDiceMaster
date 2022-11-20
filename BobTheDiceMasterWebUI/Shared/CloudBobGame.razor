@@ -108,6 +108,12 @@
 
             try
             {
+                var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
+                var decisionJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(Decision));
+                AddMessage($"DecisionWrapper JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper))}");
+                AddMessage($"Decision JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(Decision))}");
+                AddMessage($"SortedSet<OutcomeInfo> JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<OutcomeInfo>))}");
+                AddMessage($"Runtime: {System.Environment.Version}");
                 DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
                 AddMessage($"Received a DecisionWrapper: {typedDecision}");
                 Decision decision = typedDecision.Decision;
