@@ -2,7 +2,7 @@
 
 namespace BobTheDiceMaster
 {
-    public class Decision
+  public class Decision
   {
     /// <remarks>
     /// Public setter is required only to make it serializable, otherwise setter can be removed.

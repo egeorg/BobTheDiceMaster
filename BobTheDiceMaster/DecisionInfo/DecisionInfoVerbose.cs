@@ -27,8 +27,9 @@ namespace BobTheDiceMaster
     {
       Value = value;
       Reroll = reroll;
-      Outcomes = new SortedSet<OutcomeInfo>(outcomes, new OutcomeInfoInverseByValueComparer());
-      Combination = Outcomes.First().Combination;
+      //Outcomes = new SortedSet<OutcomeInfo>(outcomes, new OutcomeInfoInverseByValueComparer());
+      //Combination = Outcomes.First().Combination;
+      Combination = outcomes.First().Combination;
     }
 
     /// <summary>
@@ -52,17 +53,17 @@ namespace BobTheDiceMaster
     /// <remarks>
     /// Public setter is required only to make it serializable, otherwise setter can be removed.
     /// </remarks>
-    public SortedSet<OutcomeInfo> Outcomes { get; set; }
+    //public SortedSet<OutcomeInfo> Outcomes { get; set; }
 
     public override string ToString()
     {
       if (Reroll != null)
       {
         return
-          $"C={Combination};V={Value};R={string.Join(",", Reroll)};O={string.Join(",", Outcomes)}";
+          $"C={Combination};V={Value};R={string.Join(",", Reroll)};O={string.Join(",", "Outcomes")}";
       }
       return
-        $"C={Combination};V={Value};O={string.Join(",", Outcomes)}";
+        $"C={Combination};V={Value};O={string.Join(",", "Outcomes")}";
     }
   }
 }
