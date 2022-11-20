@@ -127,7 +127,7 @@
             }
             catch (Exception e)
             {
-                newMessages.Add($"An exception occurred: {Environment.NewLine}{e}");
+                AddMessage($"An exception occurred: {Environment.NewLine}{e}");
                 hasError = true;
             }
         }
