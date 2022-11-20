@@ -76,8 +76,9 @@
 
     public async Task Next()
     {
-        List<string> newMessages = new List<string>();
+        messages.Clear();
         bool hasError = false;
+        AddMessage($"Runtime: {System.Environment.Version}");
         AddMessage($"game.IsTurnOver: {game.IsTurnOver}");
         AddMessage($"!game.IsTurnOver && !hasError: {!game.IsTurnOver && !hasError}");
         while (!game.IsTurnOver && !hasError)
@@ -112,9 +113,7 @@
                 Decision decision = typedDecision.Decision;
                 AddMessage($"Received a Decision: {decision}");
                 newMessage += $" {decision}.";
-                newMessages.Add(newMessage);
-
-                messages = newMessages;
+                AddMessage(newMessage);
 
                 AddMessage($"Game state before applying decision: {game.State}");
                 game.ApplyDecision(decision);
