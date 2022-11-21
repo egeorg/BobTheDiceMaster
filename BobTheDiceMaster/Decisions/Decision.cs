@@ -8,7 +8,7 @@ namespace BobTheDiceMaster
     /// <remarks>
     /// Public setter is required only to make it serializable, otherwise setter can be removed.
     /// </remarks>
-    public SoredSet<DecisionInfoVerbose> RatedDecisionInfo { get; set; }
+    public SortedSet<DecisionInfoVerbose> RatedDecisionInfo { get; set; }
     public SortedSet<int> SortedInts { get; set; }
 
     /// <remarks>
