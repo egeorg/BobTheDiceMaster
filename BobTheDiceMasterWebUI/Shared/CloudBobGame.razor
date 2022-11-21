@@ -84,14 +84,14 @@
         System.IO.StreamReader sr0 = new System.IO.StreamReader(s0);
 
         string sortedSetJson = sr0.ReadToEnd();
-        AddMessage($"SortedSet JSON from AWS: {sortedSetJson}");
+        //AddMessage($"SortedSet JSON from AWS: {sortedSetJson}");
         SortedSet<int> sortedSetExample = new SortedSet<int> { 1, 11, 9, 5, 13 };
         string sortedSetDefaultSerialized = JsonSerializer.Serialize(sortedSetExample);
-        AddMessage($"SortedSet JSON using default serialzier: {sortedSetDefaultSerialized}");
+        //AddMessage($"SortedSet JSON using default serialzier: {sortedSetDefaultSerialized}");
         try
         {
             SortedSet<int> sortedSetDefaultDeserialized = JsonSerializer.Deserialize<SortedSet<int>>(sortedSetDefaultSerialized);
-            AddMessage(String.Join(", ", sortedSetDefaultDeserialized));
+            //AddMessage(String.Join(", ", sortedSetDefaultDeserialized));
         }
         catch (Exception e)
         {
@@ -101,7 +101,7 @@
         try
         {
             SortedSet<int> sortedSetDeserialized = JsonSerializer.Deserialize<SortedSet<int>>(sortedSetJson);
-            AddMessage(String.Join(", ", sortedSetDeserialized));
+            //AddMessage(String.Join(", ", sortedSetDeserialized));
         }
         catch (Exception e)
         {
@@ -150,12 +150,12 @@
                 var decisionJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(Decision));
                 //AddMessage($"DecisionWrapper JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper))}");
                 //AddMessage($"Decision JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(Decision))}");
-                AddMessage($"SortedSet<OutcomeInfo> JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<OutcomeInfo>))}");
-                AddMessage($"Runtime: {System.Environment.Version}");
+                //AddMessage($"SortedSet<OutcomeInfo> JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<OutcomeInfo>))}");
+                //AddMessage($"Runtime: {System.Environment.Version}");
                 DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
-                AddMessage($"Received a DecisionWrapper: {typedDecision}");
+                //AddMessage($"Received a DecisionWrapper: {typedDecision}");
                 Decision decision = typedDecision.Decision;
-                AddMessage($"Received a Decision: {decision}");
+                //AddMessage($"Received a Decision: {decision}");
                 newMessage += $" {decision}.";
                 AddMessage(newMessage);
 
