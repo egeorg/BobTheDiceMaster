@@ -8,7 +8,7 @@ namespace BobTheDiceMaster
     /// <remarks>
     /// Public setter is required only to make it serializable, otherwise setter can be removed.
     /// </remarks>
-    public List<DecisionInfoVerbose> RatedDecisionInfo { get; set; }
+    public SoredSet<DecisionInfoVerbose> RatedDecisionInfo { get; set; }
     public SortedSet<int> SortedInts { get; set; }
 
     /// <remarks>
@@ -22,7 +22,7 @@ namespace BobTheDiceMaster
       if (decisionInfos != null)
       {
         RatedDecisionInfo = new SortedSet<DecisionInfoVerbose>(
-          decisionInfos, new DecisionInfoInverseByValueComparer()).ToList();
+          decisionInfos, new DecisionInfoInverseByValueComparer());
       }
     }
   }
