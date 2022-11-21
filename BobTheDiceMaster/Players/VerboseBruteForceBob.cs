@@ -108,32 +108,32 @@ namespace BobTheDiceMaster
 
           rerollScore += rerollResultScore;
 
-          //foreach (OutcomeInfo nextRollOutcome in nextRollDecision.Outcomes)
-          //{
-          //  double nextRollOutcomeScore =
-          //    rerollResultProbability * nextRollOutcome.Value;
-          //  double nextRollOutcomeProbability =
-          //    rerollResultProbability * nextRollOutcome.Probability;
+          foreach (OutcomeInfo nextRollOutcome in nextRollDecision.Outcomes)
+          {
+            double nextRollOutcomeScore =
+              rerollResultProbability * nextRollOutcome.Value;
+            double nextRollOutcomeProbability =
+              rerollResultProbability * nextRollOutcome.Probability;
 
-          //  OutcomeInfo outcome =
-          //    outcomes.FirstOrDefault(x =>
-          //      x.Combination == nextRollOutcome.Combination
-          //      && x.IsScored == nextRollOutcome.IsScored);
+            OutcomeInfo outcome =
+              outcomes.FirstOrDefault(x =>
+                x.Combination == nextRollOutcome.Combination
+                && x.IsScored == nextRollOutcome.IsScored);
 
-          //  if (outcome == null)
-          //  {
-          //    outcomes.Add(new OutcomeInfo(
-          //      nextRollOutcomeScore,
-          //      nextRollOutcome.Combination,
-          //      nextRollOutcomeProbability,
-          //      nextRollOutcome.IsScored));
-          //  }
-          //  else
-          //  {
-          //    outcome.IncreaseValue(nextRollOutcomeScore);
-          //    outcome.IncreaseProbability(nextRollOutcomeProbability);
-          //  }
-          //}
+            if (outcome == null)
+            {
+              outcomes.Add(new OutcomeInfo(
+                nextRollOutcomeScore,
+                nextRollOutcome.Combination,
+                nextRollOutcomeProbability,
+                nextRollOutcome.IsScored));
+            }
+            else
+            {
+              outcome.IncreaseValue(nextRollOutcomeScore);
+              outcome.IncreaseProbability(nextRollOutcomeProbability);
+            }
+          }
         }
 
         ratedDecisions.Add(
