@@ -74,63 +74,23 @@
         StateHasChanged();
     }
 
-    private async Task ObtainSortedSetOfInts(HttpClient bobCloudClient)
-    {
-        var sortedSetHttpResponse = await bobCloudClient.GetAsync(
-            bobApiAddress
-        );
-        System.IO.Stream s0 = sortedSetHttpResponse.Content.ReadAsStream();
-
-        System.IO.StreamReader sr0 = new System.IO.StreamReader(s0);
-
-        string sortedSetJson = sr0.ReadToEnd();
-        AddMessage($"SortedSet JSON from AWS: {sortedSetJson}");
-        SortedSet<int> sortedSetExample = new SortedSet<int> { 1, 11, 9, 5, 13 };
-        string sortedSetDefaultSerialized = JsonSerializer.Serialize(sortedSetExample);
-        AddMessage($"SortedSet JSON using default serialzier: {sortedSetDefaultSerialized}");
-        try
-        {
-            SortedSet<int> sortedSetDefaultDeserialized = JsonSerializer.Deserialize<SortedSet<int>>(sortedSetDefaultSerialized);
-            AddMessage(String.Join(", ", sortedSetDefaultDeserialized));
-        }
-        catch (Exception e)
-        {
-            AddMessage("An exception appeared trying to deserialize a default-serialized non-empty SortedSet<int>");
-            AddMessage(e.ToString());
-        }
-        try
-        {
-            SortedSet<int> sortedSetDeserialized = JsonSerializer.Deserialize<SortedSet<int>>(sortedSetJson);
-            AddMessage(String.Join(", ", sortedSetDeserialized));
-        }
-        catch (Exception e)
-        {
-            AddMessage("An exception appeared trying to deserialize a non-empty SortedSet<int> from AWS");
-            AddMessage(e.ToString());
-        }
-    }
-
     public async Task Next()
     {
         messages.Clear();
         bool hasError = false;
-        AddMessage($"Runtime: {System.Environment.Version}");
-        AddMessage($"game.IsTurnOver: {game.IsTurnOver}");
-        AddMessage($"!game.IsTurnOver && !hasError: {!game.IsTurnOver && !hasError}");
         while (!game.IsTurnOver && !hasError)
         {
             string newMessage = $"For {game.CurrentRoll} I decide to ";
 
             HttpClient bobCloudClient = new HttpClient();
             JsonContent gameStateJsonContent = JsonContent.Create(
-                new GameOfSchoolContext(
-                    game.AllowedCombinationTypes.Aggregate(CombinationTypes.None,
-                    (a, b) => a | b),
-                game.CurrentRoll.Roll,
+                    new GameOfSchoolContext(
+                        game.AllowedCombinationTypes.Aggregate(CombinationTypes.None,
+                        (a, b) => a | b),
+                    game.CurrentRoll.Roll,
                     game.RollsLeft
                 )
             );
-            await ObtainSortedSetOfInts(bobCloudClient);
 
             var decisionHttpResponse = await bobCloudClient.PostAsync(
                 bobApiAddress,
@@ -142,30 +102,19 @@
             System.IO.StreamReader sr = new System.IO.StreamReader(s);
 
             string decisionJson = sr.ReadToEnd();
-            AddMessage(decisionJson);
 
             try
             {
                 var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
                 var decisionJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(Decision));
-                AddMessage($"DecisionWrapper JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper))}");
-                AddMessage($"Decision JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(Decision))}");
-                AddMessage($"SortedSet<OutcomeInfo> JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<OutcomeInfo>))}");
-                AddMessage($"Runtime: {System.Environment.Version}");
                 DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
-                AddMessage($"Received a DecisionWrapper: {typedDecision}");
                 Decision decision = typedDecision.Decision;
-                AddMessage($"Received a Decision: {decision}");
                 newMessage += $" {decision}.";
                 AddMessage(newMessage);
-
-                AddMessage($"Game state before applying decision: {game.State}");
                 game.ApplyDecision(decision);
-                AddMessage($"Game state after applying decision: {game.State}");
                 if (decision is Reroll)
                 {
                     game.GenerateAndApplyReroll();
-                    AddMessage($"Game state after generating and applying reroll: {game.State}");
                 }
             }
             catch (Exception e)
@@ -177,9 +126,7 @@
 
         if (!game.IsGameOver)
         {
-            AddMessage($"Game state before generating a new roll: {game.State}");
             currentRoll = game.GenerateRoll();
-            AddMessage($"Game state after generating a new roll: {game.State}");
         }
     }
 }
