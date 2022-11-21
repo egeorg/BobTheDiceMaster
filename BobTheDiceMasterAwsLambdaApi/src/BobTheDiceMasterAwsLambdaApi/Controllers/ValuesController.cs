@@ -9,9 +9,9 @@ namespace BobTheDiceMasterAwsLambdaApi.Controllers
     {
         // GET api/values
         [HttpGet]
-        public IActionResult Get()
+        public SortedSet<int> Get()
         {
-            return Ok("This is a VerboseBruteForceBob endpoint.");
+            return new SortedSet<int>() { 1, 11, 9, 5, 13 };
         }
 
         // POST api/values
@@ -21,6 +21,7 @@ namespace BobTheDiceMasterAwsLambdaApi.Controllers
             IPlayer aiPlayer = new VerboseBruteForceBob();
             Decision decision = aiPlayer.DecideOnRoll(
                 gameContext.AvailableCombinations, gameContext.DiceRoll, gameContext.RollsLeft);
+            decision.SortedInts = new SortedSet<int>() { 1, 11, 9, 5, 13 };
             return new DecisionWrapper { Decision = decision };
         }
     }

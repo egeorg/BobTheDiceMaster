@@ -94,10 +94,34 @@
                     game.RollsLeft
                 )
             );
+
+            {
+                var sortedSetHttpResponse = await bobCloudClient.GetAsync(
+                    bobApiAddress
+                );
+                System.IO.Stream s0 = sortedSetHttpResponse.Content.ReadAsStream();
+
+                System.IO.StreamReader sr0 = new System.IO.StreamReader(s0);
+
+                string sortedSetJson = sr0.ReadToEnd();
+                AddMessage(sortedSetJson);
+                try
+                {
+                    SortedSet<int> sortedSetDeserialized = JsonSerializer.Deserialize<SortedSet<int>>(sortedSetJson);
+                    AddMessage(String.Join(", ", sortedSetDeserialized));
+                }
+                catch (Exception e)
+                {
+                    AddMessage("An exception appeared trying to deserialize a non-empty SortedSet<int>");
+                    AddMessage(e.ToString());
+                }
+            }
+
             var decisionHttpResponse = await bobCloudClient.PostAsync(
                 bobApiAddress,
                 gameStateJsonContent
             );
+
 
             System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
 
