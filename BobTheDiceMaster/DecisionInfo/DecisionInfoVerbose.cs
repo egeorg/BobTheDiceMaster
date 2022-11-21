@@ -29,7 +29,7 @@ namespace BobTheDiceMaster
       Reroll = reroll;
       //Outcomes = new SortedSet<OutcomeInfo>(outcomes, new OutcomeInfoInverseByValueComparer());
       //Combination = Outcomes.First().Combination;
-      Combination = outcomes.First().Combination;
+      Combination = CombinationTypes.Grade1;//outcomes.First().Combination;
     }
 
     /// <summary>
