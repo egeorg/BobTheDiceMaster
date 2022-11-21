@@ -74,6 +74,21 @@
         StateHasChanged();
     }
 
+    private async Task ObtainSortedSet(HttpClient bobCloudClient)
+    {
+        var sortedSetHttpResponse = await bobCloudClient.GetAsync(
+            bobApiAddress
+        );
+        System.IO.Stream s0 = sortedSetHttpResponse.Content.ReadAsStream();
+
+        System.IO.StreamReader sr0 = new System.IO.StreamReader(s0);
+
+        string sortedSetJson = sr0.ReadToEnd();
+        AddMessage($"SortedSet JSON from AWS: {sortedSetJson}");
+
+        SortedSet<int> sortedSetDefaultDeserialized = JsonSerializer.Deserialize<SortedSet<int>>(sortedSetJson);
+    }
+
     public async Task Next()
     {
         messages.Clear();
@@ -83,6 +98,9 @@
             string newMessage = $"For {game.CurrentRoll} I decide to ";
 
             HttpClient bobCloudClient = new HttpClient();
+
+            await ObtainSortedSet(bobCloudClient);
+
             JsonContent gameStateJsonContent = JsonContent.Create(
                     new GameOfSchoolContext(
                         game.AllowedCombinationTypes.Aggregate(CombinationTypes.None,
