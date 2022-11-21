@@ -94,7 +94,7 @@
                 "SortedSet<int> converter before: " +
                 JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<int>)).ToString());
 
-            //JsonSerializer.Serialize(new SortedSet<int> { 1 });
+            JsonSerializer.Serialize(new SortedSet<int> { 1 });
 
             AddMessage(
                 "SortedSet<int> converter after:  " +
