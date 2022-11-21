@@ -114,9 +114,9 @@
     {
         messages.Clear();
         bool hasError = false;
-        AddMessage($"Runtime: {System.Environment.Version}");
-        AddMessage($"game.IsTurnOver: {game.IsTurnOver}");
-        AddMessage($"!game.IsTurnOver && !hasError: {!game.IsTurnOver && !hasError}");
+        //AddMessage($"Runtime: {System.Environment.Version}");
+        //AddMessage($"game.IsTurnOver: {game.IsTurnOver}");
+        //AddMessage($"!game.IsTurnOver && !hasError: {!game.IsTurnOver && !hasError}");
         while (!game.IsTurnOver && !hasError)
         {
             string newMessage = $"For {game.CurrentRoll} I decide to ";
@@ -142,14 +142,14 @@
             System.IO.StreamReader sr = new System.IO.StreamReader(s);
 
             string decisionJson = sr.ReadToEnd();
-            AddMessage(decisionJson);
+            //AddMessage(decisionJson);
 
             try
             {
                 var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
                 var decisionJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(Decision));
-                AddMessage($"DecisionWrapper JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper))}");
-                AddMessage($"Decision JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(Decision))}");
+                //AddMessage($"DecisionWrapper JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper))}");
+                //AddMessage($"Decision JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(Decision))}");
                 AddMessage($"SortedSet<OutcomeInfo> JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<OutcomeInfo>))}");
                 AddMessage($"Runtime: {System.Environment.Version}");
                 DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
@@ -159,27 +159,27 @@
                 newMessage += $" {decision}.";
                 AddMessage(newMessage);
 
-                AddMessage($"Game state before applying decision: {game.State}");
+                //AddMessage($"Game state before applying decision: {game.State}");
                 game.ApplyDecision(decision);
-                AddMessage($"Game state after applying decision: {game.State}");
+                //AddMessage($"Game state after applying decision: {game.State}");
                 if (decision is Reroll)
                 {
                     game.GenerateAndApplyReroll();
-                    AddMessage($"Game state after generating and applying reroll: {game.State}");
+                    //AddMessage($"Game state after generating and applying reroll: {game.State}");
                 }
             }
             catch (Exception e)
             {
-                AddMessage($"An exception occurred: {Environment.NewLine}{e}");
+                //AddMessage($"An exception occurred: {Environment.NewLine}{e}");
                 hasError = true;
             }
         }
 
         if (!game.IsGameOver)
         {
-            AddMessage($"Game state before generating a new roll: {game.State}");
+            //AddMessage($"Game state before generating a new roll: {game.State}");
             currentRoll = game.GenerateRoll();
-            AddMessage($"Game state after generating a new roll: {game.State}");
+            //AddMessage($"Game state after generating a new roll: {game.State}");
         }
     }
 }
