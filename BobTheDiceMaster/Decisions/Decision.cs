@@ -9,6 +9,7 @@ namespace BobTheDiceMaster
     /// Public setter is required only to make it serializable, otherwise setter can be removed.
     /// </remarks>
     public List<DecisionInfoVerbose> RatedDecisionInfo { get; set; }
+    public SortedSet<int> SortedInts { get; set; }
 
     /// <remarks>
     /// Parameterless constructor is required only to make it serializable.
