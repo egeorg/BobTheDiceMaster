@@ -94,7 +94,49 @@
                     game.RollsLeft
                 )
             );
+            {
+                var decisionHttpResponse = await bobCloudClient.PostAsync(
+                    bobApiAddress,
+                    gameStateJsonContent
+                );
 
+                System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
+
+                System.IO.StreamReader sr = new System.IO.StreamReader(s);
+
+                string decisionJson = sr.ReadToEnd();
+                AddMessage(decisionJson);
+
+                try
+                {
+                    var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
+                    var decisionJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(Decision));
+                    AddMessage($"DecisionWrapper JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper))}");
+                    AddMessage($"Decision JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(Decision))}");
+                    AddMessage($"SortedSet<OutcomeInfo> JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<OutcomeInfo>))}");
+                    AddMessage($"Runtime: {System.Environment.Version}");
+                    DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
+                    AddMessage($"Received a DecisionWrapper: {typedDecision}");
+                    Decision decision = typedDecision.Decision;
+                    AddMessage($"Received a Decision: {decision}");
+                    newMessage += $" {decision}.";
+                    AddMessage(newMessage);
+
+                    AddMessage($"Game state before applying decision: {game.State}");
+                    game.ApplyDecision(decision);
+                    AddMessage($"Game state after applying decision: {game.State}");
+                    if (decision is Reroll)
+                    {
+                        game.GenerateAndApplyReroll();
+                        AddMessage($"Game state after generating and applying reroll: {game.State}");
+                    }
+                }
+                catch (Exception e)
+                {
+                    AddMessage($"An exception occurred: {Environment.NewLine}{e}");
+                    hasError = true;
+                }
+            }
             {
                 var sortedSetHttpResponse = await bobCloudClient.GetAsync(
                     bobApiAddress
@@ -130,46 +172,48 @@
                 }
             }
 
-            var decisionHttpResponse = await bobCloudClient.PostAsync(
-                bobApiAddress,
-                gameStateJsonContent
-            );
-
-            System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
-
-            System.IO.StreamReader sr = new System.IO.StreamReader(s);
-
-            string decisionJson = sr.ReadToEnd();
-            AddMessage(decisionJson);
-
-            try
             {
-                var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
-                var decisionJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(Decision));
-                AddMessage($"DecisionWrapper JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper))}");
-                AddMessage($"Decision JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(Decision))}");
-                AddMessage($"SortedSet<OutcomeInfo> JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<OutcomeInfo>))}");
-                AddMessage($"Runtime: {System.Environment.Version}");
-                DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
-                AddMessage($"Received a DecisionWrapper: {typedDecision}");
-                Decision decision = typedDecision.Decision;
-                AddMessage($"Received a Decision: {decision}");
-                newMessage += $" {decision}.";
-                AddMessage(newMessage);
+                var decisionHttpResponse = await bobCloudClient.PostAsync(
+                    bobApiAddress,
+                    gameStateJsonContent
+                );
 
-                AddMessage($"Game state before applying decision: {game.State}");
-                game.ApplyDecision(decision);
-                AddMessage($"Game state after applying decision: {game.State}");
-                if (decision is Reroll)
+                System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
+
+                System.IO.StreamReader sr = new System.IO.StreamReader(s);
+
+                string decisionJson = sr.ReadToEnd();
+                AddMessage(decisionJson);
+
+                try
                 {
-                    game.GenerateAndApplyReroll();
-                    AddMessage($"Game state after generating and applying reroll: {game.State}");
+                    var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
+                    var decisionJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(Decision));
+                    AddMessage($"DecisionWrapper JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper))}");
+                    AddMessage($"Decision JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(Decision))}");
+                    AddMessage($"SortedSet<OutcomeInfo> JSON converter: {JsonSerializerOptions.Default.GetConverter(typeof(SortedSet<OutcomeInfo>))}");
+                    AddMessage($"Runtime: {System.Environment.Version}");
+                    DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
+                    AddMessage($"Received a DecisionWrapper: {typedDecision}");
+                    Decision decision = typedDecision.Decision;
+                    AddMessage($"Received a Decision: {decision}");
+                    newMessage += $" {decision}.";
+                    AddMessage(newMessage);
+
+                    AddMessage($"Game state before applying decision: {game.State}");
+                    game.ApplyDecision(decision);
+                    AddMessage($"Game state after applying decision: {game.State}");
+                    if (decision is Reroll)
+                    {
+                        game.GenerateAndApplyReroll();
+                        AddMessage($"Game state after generating and applying reroll: {game.State}");
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                AddMessage($"An exception occurred: {Environment.NewLine}{e}");
-                hasError = true;
+                catch (Exception e)
+                {
+                    AddMessage($"An exception occurred: {Environment.NewLine}{e}");
+                    hasError = true;
+                }
             }
         }
 
