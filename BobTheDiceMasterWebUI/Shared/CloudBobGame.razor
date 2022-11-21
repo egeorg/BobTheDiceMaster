@@ -104,7 +104,20 @@
                 System.IO.StreamReader sr0 = new System.IO.StreamReader(s0);
 
                 string sortedSetJson = sr0.ReadToEnd();
-                AddMessage(sortedSetJson);
+                AddMessage($"SortedSet JSON from AWS: {sortedSetJson}");
+                SortedSet<int> sortedSetExample = new SortedSet<int> { 1, 11, 9, 5, 13 };
+                string sortedSetDefaultSerialized = JsonSerializer.Serialize(sortedSetExample);
+                AddMessage($"SortedSet JSON using default serialzier: {sortedSetDefaultSerialized}");
+                try
+                {
+                    SortedSet<int> sortedSetDefaultDeserialized = JsonSerializer.Deserialize<SortedSet<int>>(sortedSetDefaultSerialized);
+                    AddMessage(String.Join(", ", sortedSetDefaultDeserialized));
+                }
+                catch (Exception e)
+                {
+                    AddMessage("An exception appeared trying to deserialize a default-serialized non-empty SortedSet<int>");
+                    AddMessage(e.ToString());
+                }
                 try
                 {
                     SortedSet<int> sortedSetDeserialized = JsonSerializer.Deserialize<SortedSet<int>>(sortedSetJson);
@@ -112,7 +125,7 @@
                 }
                 catch (Exception e)
                 {
-                    AddMessage("An exception appeared trying to deserialize a non-empty SortedSet<int>");
+                    AddMessage("An exception appeared trying to deserialize a non-empty SortedSet<int> from AWS");
                     AddMessage(e.ToString());
                 }
             }
@@ -121,7 +134,6 @@
                 bobApiAddress,
                 gameStateJsonContent
             );
-
 
             System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
 
