@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMaster", "BobTheDiceMaster.csproj", "{844FA376-5689-4619-BA01-8C9A84647441}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMaster", "BobTheDiceMaster\BobTheDiceMaster.csproj", "{844FA376-5689-4619-BA01-8C9A84647441}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterWebUI", "..\BobTheDiceMasterWebUI\BobTheDiceMasterWebUI.csproj", "{5FCE8692-8038-43B7-A8A1-D3D5B440FE3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterWebUI", "BobTheDiceMasterWebUI\BobTheDiceMasterWebUI.csproj", "{5FCE8692-8038-43B7-A8A1-D3D5B440FE3E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterConsoleUI", "..\BobTheDiceMasterConsoleUI\BobTheDiceMasterConsoleUI.csproj", "{876CC04A-E7DE-4404-A5CD-66468270037A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterConsoleUI", "BobTheDiceMasterConsoleUI\BobTheDiceMasterConsoleUI.csproj", "{876CC04A-E7DE-4404-A5CD-66468270037A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterAwsLambdaApi", "..\BobTheDiceMasterAwsLambdaApi\src\BobTheDiceMasterAwsLambdaApi\BobTheDiceMasterAwsLambdaApi.csproj", "{11249469-A75A-4570-980E-29CC171122A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BobTheDiceMasterAwsLambdaApi", "BobTheDiceMasterAwsLambdaApi\src\BobTheDiceMasterAwsLambdaApi\BobTheDiceMasterAwsLambdaApi.csproj", "{11249469-A75A-4570-980E-29CC171122A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
