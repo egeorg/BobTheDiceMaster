@@ -88,6 +88,11 @@
         StateHasChanged();
     }
 
+    private void MethodNeverCalled()
+    {
+        new SortedSet<int>();
+    }
+
     public async Task Next()
     {
         isWaiting = true;
@@ -104,8 +109,7 @@
                     game.RollsLeft
                 )
             );
-
-            JsonSerializer.Serialize(new SortedSet<int> { 1 });
+            
             var decisionHttpResponse = await bobCloudClient.PostAsync(
                 bobApiAddress,
                 gameStateJsonContent
