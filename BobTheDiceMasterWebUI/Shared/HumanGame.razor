@@ -52,25 +52,34 @@
 </div>
 
 @code {
+    [Parameter]
+    public bool IsActive { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnTurnCompleted { get; set; }
+
     private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
     private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
 
     private string CombinationToScore { get; set; }
     private string CombinationToCrossOut { get; set; }
-    private bool IsRerollDisabled => game.State != GameOfSchoolState.Rolled
+    private bool IsRerollDisabled => !IsActive
+        || game.State != GameOfSchoolState.Rolled
         || game.RollsLeft <= 1
         || !diceSelected.Any(x => x);
-    private bool IsRollDisabled => game.State != GameOfSchoolState.Idle;
-    private bool IsScoreDisabled => game.State != GameOfSchoolState.Rolled
+    private bool IsRollDisabled => !IsActive
+        || game.State != GameOfSchoolState.Idle;
+    private bool IsScoreDisabled => !IsActive
+        || game.State != GameOfSchoolState.Rolled
         || !game.ScoreCombinationTypes.Any();
-    private bool IsCrossOutDisabled => game.State != GameOfSchoolState.Rolled
+    private bool IsCrossOutDisabled => !IsActive
+        || game.State != GameOfSchoolState.Rolled
         || !game.CrossOutCombinationTypes.Any();
 
     private List<CombinationTypes> ScoreCombinationTypes { get; set; }
     private List<CombinationTypes> CrossOutCombinationTypes { get; set; }
 
-    public bool[] diceSelected = new[] { false, false, false, false, false };
+    private bool[] diceSelected = new[] { false, false, false, false, false };
 
     private static D6 d6 = new D6(1);
 
@@ -106,12 +115,7 @@
         ResetComboBoxes();
     }
 
-    public static void DiceSelectionChanged()
-    {
-        DiceRoll currentRoll = DiceRoll.GenerateNew(d6);
-    }
-
-    public void Roll()
+    private void Roll()
     {
         game.GenerateRoll();
         currentRoll = game.CurrentRoll;
@@ -119,7 +123,7 @@
         ResetComboBoxes();
     }
 
-    public void Reroll()
+    private void Reroll()
     {
         game.GenerateAndApplyReroll(
           Enumerable.Range(0, DiceRoll.MaxDiceAmount)
@@ -132,19 +136,21 @@
         ResetComboBoxes();
     }
 
-    public void Score()
+    private async void Score()
     {
         CombinationTypes combinationToScore =
             (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToScore);
         game.ApplyDecision(new Score(combinationToScore));
         ResetRolls();
+        await OnTurnCompleted.InvokeAsync();
     }
 
-    public void CrossOut()
+    private async void CrossOut()
     {
         CombinationTypes combinationToCrossOut =
             (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToCrossOut);
         game.ApplyDecision(new CrossOut(combinationToCrossOut));
         ResetRolls();
+        await OnTurnCompleted.InvokeAsync();
     }
 }

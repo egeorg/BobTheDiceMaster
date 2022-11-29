@@ -10,7 +10,7 @@
             </div>
         </div>
         <div style="margin:10px">
-            <button @onclick="Next" disabled="@isWaiting">Next</button>
+            <button @onclick="Next" disabled="@isNextDisabled">Next</button>
         </div>
         <div style="margin:10px">
             Score: @game.Score
@@ -52,11 +52,35 @@
 </div>
 
 @code {
+    [Parameter]
+    public bool IsActive { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnTurnCompleted { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsActive && isActive != IsActive)
+        {
+            await Next();
+        }
+        isActive = IsActive;
+    }
+
+    private void OnIsActiveChanged(ChangeEventArgs e)
+    {
+        
+        
+    }
+
+    private bool isActive;
+
     private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
     private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
 
     private bool[] diceSelected = new[] { false, false, false, false, false };
+
+    private bool isNextDisabled => !IsActive || isWaiting;
 
     private bool isWaiting { get; set; } = false;
 
@@ -109,7 +133,7 @@
                     game.RollsLeft
                 )
             );
-            
+
             var decisionHttpResponse = await bobCloudClient.PostAsync(
                 bobApiAddress,
                 gameStateJsonContent
@@ -147,5 +171,6 @@
         }
 
         isWaiting = false;
+        await OnTurnCompleted.InvokeAsync();
     }
 }

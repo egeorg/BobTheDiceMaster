@@ -40,7 +40,7 @@
 
   private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
 
-  public bool[] diceSelected = new[] { false, false, false, false, false };
+  private bool[] diceSelected = new[] { false, false, false, false, false };
 
   private static D6 d6 = new D6(1);
 
@@ -61,7 +61,7 @@
       currentRoll = game.GenerateRoll();
   }
 
-  public void Next()
+  private void Next()
   {
       List<string> newMessages = new List<string>();
       while (!game.IsTurnOver)
