@@ -79,13 +79,8 @@ namespace BobTheDiceMaster
 
       ratedDecisions.Add(noRerollRatedDecisions.First());
 
-      foreach (var reroll in DiceRoll.Rerolls)
+      foreach (var reroll in DiceRoll.NonEmptyRerolls)
       {
-        if (reroll.Length == 0)
-        {
-          continue;
-        }
-
         double rerollScore = 0;
         List<OutcomeInfo> outcomes = new List<OutcomeInfo>();
 

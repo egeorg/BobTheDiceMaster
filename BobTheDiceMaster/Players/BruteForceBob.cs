@@ -41,12 +41,8 @@ namespace BobTheDiceMaster
 
       int[] bestFirstReroll = null;
 
-      foreach (int[] firstReroll in DiceRoll.Rerolls)
+      foreach (int[] firstReroll in DiceRoll.NonEmptyRerolls)
       {
-        if (firstReroll.Length == 0)
-        {
-          continue;
-        }
         IReadOnlyList<DiceRoll> firstRerollResults = DiceRoll.RollResults[firstReroll.Length - 1];
         double firstRerollAverage = 0;
 
@@ -78,12 +74,8 @@ namespace BobTheDiceMaster
               secondRollScore = GetBestScore(
                 availableCombinations, secondRoll, isFirstRoll: false);
 
-              foreach (int[] secondReroll in DiceRoll.Rerolls)
+              foreach (int[] secondReroll in DiceRoll.NonEmptyRerolls)
               {
-                if (secondReroll.Length == 0)
-                {
-                  continue;
-                }
                 IReadOnlyList<DiceRoll> secondRerollResults = DiceRoll.RollResults[secondReroll.Length - 1];
                 double secondRerollAverage = 0;
 

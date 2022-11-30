@@ -143,7 +143,7 @@ namespace BobTheDiceMaster
       int rerollCounter = 0;
       for (int i = 0; i < MaxDiceAmount; ++i)
       {
-        // Indices in DiceRoll.Rerolls are in ascending order
+        // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
         if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
         {
           newRollDice[i] = rerollResult[rerollCounter++];
@@ -187,7 +187,7 @@ namespace BobTheDiceMaster
       
       for (int i = 0; i < MaxDiceAmount; ++i)
       {
-        // Indices in DiceRoll.Rerolls are in ascending order
+        // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
         if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
         {
           newRollDice[i] = rerollResult[rerollCounter++];
@@ -227,12 +227,8 @@ namespace BobTheDiceMaster
 
         int[] bestFirstReroll = null;
 
-        foreach (int[] firstReroll in DiceRoll.Rerolls)
+        foreach (int[] firstReroll in DiceRoll.NonEmptyRerolls)
         {
-          if (firstReroll.Length == 0)
-          {
-            continue;
-          }
           IReadOnlyList<DiceRoll> firstRerollResults = DiceRoll.RollResults[firstReroll.Length - 1];
           double firstRerollAverage = 0;
 
@@ -243,7 +239,7 @@ namespace BobTheDiceMaster
 
             for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
             {
-              // Indices in DiceRoll.Rerolls are in ascending order
+              // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
               if (firstRerollCounter < firstReroll.Length && firstReroll[firstRerollCounter] == i)
               {
                 secondRollDice[i] = firstRerollResult[firstRerollCounter++];
@@ -270,12 +266,8 @@ namespace BobTheDiceMaster
               // null indicates that current score is better than any reroll
               int[] bestSecondReroll = null;
 
-              foreach (int[] secondReroll in DiceRoll.Rerolls)
+              foreach (int[] secondReroll in DiceRoll.NonEmptyRerolls)
               {
-                if (secondReroll.Length == 0)
-                {
-                  continue;
-                }
                 IReadOnlyList<DiceRoll> secondRerollResults = DiceRoll.RollResults[secondReroll.Length - 1];
                 double secondRerollAverage = 0;
 
@@ -285,7 +277,7 @@ namespace BobTheDiceMaster
                   int secondRerollCounter = 0;
                   for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
                   {
-                    // Indices in DiceRoll.Rerolls are in ascending order
+                    // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
                     if (secondRerollCounter < secondReroll.Length && secondReroll[secondRerollCounter] == i)
                     {
                       thirdRollDice[i] = secondRerollResult[secondRerollCounter++];
@@ -637,9 +629,8 @@ namespace BobTheDiceMaster
       return null;
     }
 
-    public static readonly IReadOnlyList<int[]> Rerolls = new List<int[]>()
+    public static readonly IReadOnlyList<int[]> NonEmptyRerolls = new List<int[]>()
     {
-      Array.Empty<int>(),
       new [] { 0 }, new [] { 1 }, new [] { 2 }, new [] { 3 }, new [] { 4 },
       new [] { 0, 1 }, new [] { 0, 2 }, new [] { 0, 3 }, new [] { 0, 4 },
       new [] { 1, 2 }, new [] { 1, 3 }, new [] { 1, 4 },

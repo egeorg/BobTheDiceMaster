@@ -59,13 +59,8 @@ namespace BobTheDiceMaster
       DecisionInfo bestRerollDecision =
         new DecisionInfo(double.NegativeInfinity, CombinationTypes.None, null);
 
-      foreach (var reroll in DiceRoll.Rerolls)
+      foreach (var reroll in DiceRoll.NonEmptyRerolls)
       {
-        if (reroll.Length == 0)
-        {
-          continue;
-        }
-
         double rerollScore = 0;
         DecisionInfo bestNextRerollDecision =
           new DecisionInfo(double.NegativeInfinity, CombinationTypes.None, null);
