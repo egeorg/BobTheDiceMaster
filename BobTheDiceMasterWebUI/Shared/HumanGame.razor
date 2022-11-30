@@ -1,54 +1,56 @@
-﻿<div style="margin:10px">
-    <div style="width:200px; display:inline-block">
-        <Die Value="@currentRoll[0]" Id="die1" @bind-IsSelected="@diceSelected[0]" />
-        <Die Value="@currentRoll[1]" Id="die2" @bind-IsSelected="@diceSelected[1]" />
-        <Die Value="@currentRoll[2]" Id="die3" @bind-IsSelected="@diceSelected[2]" />
-        <Die Value="@currentRoll[3]" Id="die4" @bind-IsSelected="@diceSelected[3]" />
-        <Die Value="@currentRoll[4]" Id="die5" @bind-IsSelected="@diceSelected[4]" />
-    </div>
-    <div style="display:inline-block">
-        <div>
-            <button @onclick="@Reroll" disabled="@IsRerollDisabled">Reroll</button>
+﻿<div style="display:inline-block; vertical-align:top">
+    <div style="display:margin:10px">
+        <div style="width:200px; display:inline-block">
+            <Die Value="@currentRoll[0]" Id="die1" @bind-IsSelected="@diceSelected[0]" />
+            <Die Value="@currentRoll[1]" Id="die2" @bind-IsSelected="@diceSelected[1]" />
+            <Die Value="@currentRoll[2]" Id="die3" @bind-IsSelected="@diceSelected[2]" />
+            <Die Value="@currentRoll[3]" Id="die4" @bind-IsSelected="@diceSelected[3]" />
+            <Die Value="@currentRoll[4]" Id="die5" @bind-IsSelected="@diceSelected[4]" />
         </div>
-        <div>
-            <button @onclick="@Roll" disabled="@IsRollDisabled">Roll</button>
+        <div style="display:inline-block">
+            <div>
+                <button @onclick="@Reroll" disabled="@IsRerollDisabled">Reroll</button>
+            </div>
+            <div>
+                <button @onclick="@Roll" disabled="@IsRollDisabled">Roll</button>
+            </div>
         </div>
     </div>
-</div>
-<div style="margin:10px">
-    <select id="ScoreCombination" style="width:200px" @bind="@CombinationToScore">
-        @foreach (CombinationTypes combinationType in @ScoreCombinationTypes)
+    <div style="margin:10px">
+        <select id="ScoreCombination" style="width:200px" @bind="@CombinationToScore">
+            @foreach (CombinationTypes combinationType in @ScoreCombinationTypes)
+            {
+                <option value="@combinationType">@combinationType</option>
+            }
+        </select>
+        <button @onclick="Score" disabled="@IsScoreDisabled">Score</button>
+    </div>
+    <div style="margin:10px">
+        <select id="CrossOutCombination" style="width:200px" @bind="@CombinationToCrossOut">
+            @foreach (CombinationTypes combinationType in @CrossOutCombinationTypes)
+            {
+                <option value="@combinationType">@combinationType</option>
+            }
+        </select>
+        <button @onclick="CrossOut" disabled="@IsCrossOutDisabled">Cross out</button>
+    </div>
+    <div style="margin:10px">
+        Score: @game.Score
+    </div>
+    <div style="margin:10px">
+        @if (@game.AllowedCombinationTypes.Any())
         {
-            <option value="@combinationType">@combinationType</option>
+            <p>Combinations left:</p><br />
+            @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
+            {
+                @allowedCombination<br />
+            }
         }
-    </select>
-    <button @onclick="Score" disabled="@IsScoreDisabled">Score</button>
-</div>
-<div style="margin:10px">
-    <select id="CrossOutCombination" style="width:200px" @bind="@CombinationToCrossOut">
-        @foreach (CombinationTypes combinationType in @CrossOutCombinationTypes)
+        else
         {
-            <option value="@combinationType">@combinationType</option>
+            <p>Game over!</p>
         }
-    </select>
-    <button @onclick="CrossOut" disabled="@IsCrossOutDisabled">Cross out</button>
-</div>
-<div style="margin:10px">
-    Score: @game.Score
-</div>
-<div style="margin:10px">
-    @if (@game.AllowedCombinationTypes.Any())
-    {
-        <p>Combinations left:</p><br />
-        @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
-        {
-            @allowedCombination<br />
-        }
-    }
-    else
-    {
-        <p>Game over!</p>
-    }
+    </div>
 </div>
 
 @code {
