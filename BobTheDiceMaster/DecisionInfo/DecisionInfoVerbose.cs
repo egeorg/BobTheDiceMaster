@@ -40,10 +40,10 @@ namespace BobTheDiceMaster
     /// </remarks>
     public int CompareTo(DecisionInfoVerbose other)
     {
-        int doubleCompareResult = Comparer<double>.Default.Compare(other.Value, Value);
-        // Eliminate 0 to make sure duplicates are not removed.
-        // Order of equal values does not mater
-        return doubleCompareResult == 0 ? 1 : doubleCompareResult;
+      int doubleCompareResult = Comparer<double>.Default.Compare(other.Value, Value);
+      // Eliminate 0 to make sure duplicates are not removed.
+      // Order of equal values does not mater
+      return doubleCompareResult == 0 ? 1 : doubleCompareResult;
     }
 
     /// <summary>

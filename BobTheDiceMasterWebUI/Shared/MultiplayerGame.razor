@@ -1,23 +1,24 @@
 ﻿<div>
-    <h1>Player @playerCounter turn</h1>
+  <h1>Player @playerCounter turn</h1>
 </div>
 <div>
-    <div style="display:inline-block">
-        <HumanGame IsActive="@isPlayerActive[0]" OnTurnCompleted="NextPlayerTurn" />
-    </div>
-    <div style="display:inline-block">
-        <CloudBobGame IsActive="@isPlayerActive[1]" OnTurnCompleted="NextPlayerTurn" />
-    </div>
+  <div style="display:inline-block">
+    <HumanGame IsActive="@isPlayerActive[0]" OnTurnCompleted="NextPlayerTurn" />
+  </div>
+  <div style="display:inline-block">
+    <CloudBobGame IsActive="@isPlayerActive[1]" OnTurnCompleted="NextPlayerTurn" />
+  </div>
 </div>
-@code {
-    private int playersAmount = 2;
-    private int playerCounter = 0;
-    private bool[] isPlayerActive = new bool[] { true, false };
 
-    private void NextPlayerTurn()
-    {
-        isPlayerActive[playerCounter] = false;
-        playerCounter = ++playerCounter % playersAmount;
-        isPlayerActive[playerCounter] = true;
-    }
+@code {
+  private int playersAmount = 2;
+  private int playerCounter = 0;
+  private bool[] isPlayerActive = new bool[] { true, false };
+
+  private void NextPlayerTurn()
+  {
+    isPlayerActive[playerCounter] = false;
+    playerCounter = ++playerCounter % playersAmount;
+    isPlayerActive[playerCounter] = true;
+  }
 }

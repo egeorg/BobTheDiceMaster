@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BobTheDiceMaster
 {
-    public class Reroll : Decision
+  public class Reroll : Decision
   {
     /// <remarks>
     /// Public setter is required only to make it serializable, otherwise setter can be removed.

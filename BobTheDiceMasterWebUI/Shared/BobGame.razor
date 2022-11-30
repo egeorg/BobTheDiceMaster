@@ -1,38 +1,42 @@
 ﻿<div style="display:inline-block; vertical-align:top">
-    <div style="margin:10px">
-        <div style="width:200px; display:inline-block">
-            <Die Value="@currentRoll[0]" Id="bobDie1" @bind-IsSelected="@diceSelected[0]" IsDisabled="true" />
-            <Die Value="@currentRoll[1]" Id="bobDie2" @bind-IsSelected="@diceSelected[1]" IsDisabled="true" />
-            <Die Value="@currentRoll[2]" Id="bobDie3" @bind-IsSelected="@diceSelected[2]" IsDisabled="true" />
-            <Die Value="@currentRoll[3]" Id="bobDie4" @bind-IsSelected="@diceSelected[3]" IsDisabled="true" />
-            <Die Value="@currentRoll[4]" Id="bobDie5" @bind-IsSelected="@diceSelected[4]" IsDisabled="true" />
-        </div>
+  <div style="margin:10px">
+    <div style="width:200px; display:inline-block">
+      <Die Value="@currentRoll[0]" Id="bobDie1" @bind-IsSelected="@diceSelected[0]" IsDisabled="true" />
+      <Die Value="@currentRoll[1]" Id="bobDie2" @bind-IsSelected="@diceSelected[1]" IsDisabled="true" />
+      <Die Value="@currentRoll[2]" Id="bobDie3" @bind-IsSelected="@diceSelected[2]" IsDisabled="true" />
+      <Die Value="@currentRoll[3]" Id="bobDie4" @bind-IsSelected="@diceSelected[3]" IsDisabled="true" />
+      <Die Value="@currentRoll[4]" Id="bobDie5" @bind-IsSelected="@diceSelected[4]" IsDisabled="true" />
     </div>
-    <div style="margin:10px">
-        Bob: <br />
-        @foreach (var message in @messages)
-        {
-            <p>@message<br /></p>
-        }
-        <button @onclick="Next">Next</button>
-    </div>
-    <div style="margin:10px">
-        Score: @game.Score
-    </div>
-    <div style="margin:10px">
-        @if (@game.AllowedCombinationTypes.Any())
-        {
-            <p>Combinations left:</p><br />
-            @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
-            {
-                @allowedCombination<br />
-            }
-        }
-        else
-        {
-            <p>Game over!</p>
-        }
-    </div>
+  </div>
+  <div style="margin:10px">
+    Bob: <br />
+    @foreach (var message in @messages)
+    {
+      <p>@message<br /></p>
+    }
+    <button @onclick="Next">Next</button>
+  </div>
+  <div style="margin:10px">
+    Score: @game.Score
+  </div>
+  <div style="margin:10px">
+    @if (@game.AllowedCombinationTypes.Any())
+    {
+      <p>Combinations left:</p>
+
+      <br />
+      @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
+      {
+        @allowedCombination
+
+        <br />
+      }
+    }
+    else
+    {
+      <p>Game over!</p>
+    }
+  </div>
 </div>
 
 @code {
@@ -48,40 +52,40 @@
 
   private void ResetRolls()
   {
-      for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
-      {
-          diceSelected[i] = false;
-      }
+    for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+    {
+      diceSelected[i] = false;
+    }
   }
 
   protected override void OnInitialized()
   {
-      currentRoll = game.GenerateRoll();
+    currentRoll = game.GenerateRoll();
   }
 
   private void Next()
   {
-      List<string> newMessages = new List<string>();
-      while (!game.IsTurnOver)
+    List<string> newMessages = new List<string>();
+    while (!game.IsTurnOver)
+    {
+      string newMessage = $"For {game.CurrentRoll} I decide to ";
+
+      Decision decision = game.GenerateAndApplyDecision();
+
+      newMessage += $" {decision}.";
+
+      newMessages.Add(newMessage);
+
+      if (decision is Reroll)
       {
-          string newMessage = $"For {game.CurrentRoll} I decide to ";
-
-          Decision decision = game.GenerateAndApplyDecision();
-
-          newMessage += $" {decision}.";
-
-          newMessages.Add(newMessage);
-
-          if (decision is Reroll)
-          {
-              game.GenerateAndApplyReroll();
-          }
+        game.GenerateAndApplyReroll();
       }
-      messages = newMessages;
+    }
+    messages = newMessages;
 
-      if (!game.IsGameOver)
-      {
-          currentRoll = game.GenerateRoll();
-      }
+    if (!game.IsGameOver)
+    {
+      currentRoll = game.GenerateRoll();
+    }
   }
 }

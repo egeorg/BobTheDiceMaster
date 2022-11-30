@@ -1,158 +1,162 @@
 ﻿<div style="display:inline-block; vertical-align:top">
-    <div style="display:margin:10px">
-        <div style="width:200px; display:inline-block">
-            <Die Value="@currentRoll[0]" Id="die1" @bind-IsSelected="@diceSelected[0]" />
-            <Die Value="@currentRoll[1]" Id="die2" @bind-IsSelected="@diceSelected[1]" />
-            <Die Value="@currentRoll[2]" Id="die3" @bind-IsSelected="@diceSelected[2]" />
-            <Die Value="@currentRoll[3]" Id="die4" @bind-IsSelected="@diceSelected[3]" />
-            <Die Value="@currentRoll[4]" Id="die5" @bind-IsSelected="@diceSelected[4]" />
-        </div>
-        <div style="display:inline-block">
-            <div>
-                <button @onclick="@Reroll" disabled="@IsRerollDisabled">Reroll</button>
-            </div>
-            <div>
-                <button @onclick="@Roll" disabled="@IsRollDisabled">Roll</button>
-            </div>
-        </div>
+  <div style="display:margin:10px">
+    <div style="width:200px; display:inline-block">
+      <Die Value="@currentRoll[0]" Id="die1" @bind-IsSelected="@diceSelected[0]" />
+      <Die Value="@currentRoll[1]" Id="die2" @bind-IsSelected="@diceSelected[1]" />
+      <Die Value="@currentRoll[2]" Id="die3" @bind-IsSelected="@diceSelected[2]" />
+      <Die Value="@currentRoll[3]" Id="die4" @bind-IsSelected="@diceSelected[3]" />
+      <Die Value="@currentRoll[4]" Id="die5" @bind-IsSelected="@diceSelected[4]" />
     </div>
-    <div style="margin:10px">
-        <select id="ScoreCombination" style="width:200px" @bind="@CombinationToScore">
-            @foreach (CombinationTypes combinationType in @ScoreCombinationTypes)
-            {
-                <option value="@combinationType">@combinationType</option>
-            }
-        </select>
-        <button @onclick="Score" disabled="@IsScoreDisabled">Score</button>
+    <div style="display:inline-block">
+      <div>
+        <button @onclick="@Reroll" disabled="@IsRerollDisabled">Reroll</button>
+      </div>
+      <div>
+        <button @onclick="@Roll" disabled="@IsRollDisabled">Roll</button>
+      </div>
     </div>
-    <div style="margin:10px">
-        <select id="CrossOutCombination" style="width:200px" @bind="@CombinationToCrossOut">
-            @foreach (CombinationTypes combinationType in @CrossOutCombinationTypes)
-            {
-                <option value="@combinationType">@combinationType</option>
-            }
-        </select>
-        <button @onclick="CrossOut" disabled="@IsCrossOutDisabled">Cross out</button>
-    </div>
-    <div style="margin:10px">
-        Score: @game.Score
-    </div>
-    <div style="margin:10px">
-        @if (@game.AllowedCombinationTypes.Any())
-        {
-            <p>Combinations left:</p><br />
-            @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
-            {
-                @allowedCombination<br />
-            }
-        }
-        else
-        {
-            <p>Game over!</p>
-        }
-    </div>
+  </div>
+  <div style="margin:10px">
+    <select id="ScoreCombination" style="width:200px" @bind="@CombinationToScore">
+      @foreach (CombinationTypes combinationType in @ScoreCombinationTypes)
+      {
+        <option value="@combinationType">@combinationType</option>
+      }
+    </select>
+    <button @onclick="Score" disabled="@IsScoreDisabled">Score</button>
+  </div>
+  <div style="margin:10px">
+    <select id="CrossOutCombination" style="width:200px" @bind="@CombinationToCrossOut">
+      @foreach (CombinationTypes combinationType in @CrossOutCombinationTypes)
+      {
+        <option value="@combinationType">@combinationType</option>
+      }
+    </select>
+    <button @onclick="CrossOut" disabled="@IsCrossOutDisabled">Cross out</button>
+  </div>
+  <div style="margin:10px">
+    Score: @game.Score
+  </div>
+  <div style="margin:10px">
+    @if (@game.AllowedCombinationTypes.Any())
+    {
+      <p>Combinations left:</p>
+
+      <br />
+      @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
+      {
+        @allowedCombination
+
+        <br />
+      }
+    }
+    else
+    {
+      <p>Game over!</p>
+    }
+  </div>
 </div>
 
 @code {
-    [Parameter]
-    public bool IsActive { get; set; }
-    [Parameter]
-    public EventCallback<bool> OnTurnCompleted { get; set; }
+  [Parameter]
+  public bool IsActive { get; set; }
+  [Parameter]
+  public EventCallback<bool> OnTurnCompleted { get; set; }
 
-    private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
+  private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
-    private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
+  private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
 
-    private string CombinationToScore { get; set; }
-    private string CombinationToCrossOut { get; set; }
-    private bool IsRerollDisabled => !IsActive
-        || game.State != GameOfSchoolState.Rolled
-        || game.RollsLeft <= 1
-        || !diceSelected.Any(x => x);
-    private bool IsRollDisabled => !IsActive
-        || game.State != GameOfSchoolState.Idle;
-    private bool IsScoreDisabled => !IsActive
-        || game.State != GameOfSchoolState.Rolled
-        || !game.ScoreCombinationTypes.Any();
-    private bool IsCrossOutDisabled => !IsActive
-        || game.State != GameOfSchoolState.Rolled
-        || !game.CrossOutCombinationTypes.Any();
+  private string CombinationToScore { get; set; }
+  private string CombinationToCrossOut { get; set; }
+  private bool IsRerollDisabled => !IsActive
+      || game.State != GameOfSchoolState.Rolled
+      || game.RollsLeft <= 1
+      || !diceSelected.Any(x => x);
+  private bool IsRollDisabled => !IsActive
+      || game.State != GameOfSchoolState.Idle;
+  private bool IsScoreDisabled => !IsActive
+      || game.State != GameOfSchoolState.Rolled
+      || !game.ScoreCombinationTypes.Any();
+  private bool IsCrossOutDisabled => !IsActive
+      || game.State != GameOfSchoolState.Rolled
+      || !game.CrossOutCombinationTypes.Any();
 
-    private List<CombinationTypes> ScoreCombinationTypes { get; set; }
-    private List<CombinationTypes> CrossOutCombinationTypes { get; set; }
+  private List<CombinationTypes> ScoreCombinationTypes { get; set; }
+  private List<CombinationTypes> CrossOutCombinationTypes { get; set; }
 
-    private bool[] diceSelected = new[] { false, false, false, false, false };
+  private bool[] diceSelected = new[] { false, false, false, false, false };
 
-    private static D6 d6 = new D6(1);
+  private static D6 d6 = new D6(1);
 
-    /// <summary>
-    /// Initialize content and selected items in combo boxes (combinations available to score
-    /// and combinations available to cross out).
-    /// </summary>
-    private void ResetComboBoxes()
+  /// <summary>
+  /// Initialize content and selected items in combo boxes (combinations available to score
+  /// and combinations available to cross out).
+  /// </summary>
+  private void ResetComboBoxes()
+  {
+    // game.ScoreCombinationTypes and game.CrossOutCombinationTypes were used directly at first.
+    // But, probably due to some specifics of page rendering, they were obsolete at this point
+    // and could possibly override currently selected items, so that already not available item
+    // became selected and was used if user did not select another item explicitly. Use separate
+    // properties in attempt to make rendering timing time more intuitively.
+    ScoreCombinationTypes = game.ScoreCombinationTypes.ToList();
+    CrossOutCombinationTypes = game.CrossOutCombinationTypes.ToList();
+    CombinationToScore = ScoreCombinationTypes.FirstOrDefault().ToString();
+    CombinationToCrossOut = CrossOutCombinationTypes.FirstOrDefault().ToString();
+  }
+
+  private void ResetRolls()
+  {
+    for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
     {
-        // game.ScoreCombinationTypes and game.CrossOutCombinationTypes were used directly at first.
-        // But, probably due to some specifics of page rendering, they were obsolete at this point
-        // and could possibly override currently selected items, so that already not available item
-        // became selected and was used if user did not select another item explicitly. Use separate
-        // properties in attempt to make rendering timing time more intuitively.
-        ScoreCombinationTypes = game.ScoreCombinationTypes.ToList();
-        CrossOutCombinationTypes = game.CrossOutCombinationTypes.ToList();
-        CombinationToScore = ScoreCombinationTypes.FirstOrDefault().ToString();
-        CombinationToCrossOut = CrossOutCombinationTypes.FirstOrDefault().ToString();
+      diceSelected[i] = false;
     }
+    ResetComboBoxes();
+  }
 
-    private void ResetRolls()
-    {
-        for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
-        {
-            diceSelected[i] = false;
-        }
-        ResetComboBoxes();
-    }
+  protected override void OnInitialized()
+  {
+    currentRoll = game.GenerateRoll();
+    ResetComboBoxes();
+  }
 
-    protected override void OnInitialized()
-    {
-        currentRoll = game.GenerateRoll();
-        ResetComboBoxes();
-    }
+  private void Roll()
+  {
+    game.GenerateRoll();
+    currentRoll = game.CurrentRoll;
 
-    private void Roll()
-    {
-        game.GenerateRoll();
-        currentRoll = game.CurrentRoll;
+    ResetComboBoxes();
+  }
 
-        ResetComboBoxes();
-    }
+  private void Reroll()
+  {
+    game.GenerateAndApplyReroll(
+      Enumerable.Range(0, DiceRoll.MaxDiceAmount)
+        .Where(i => diceSelected[i])
+        .ToArray());
 
-    private void Reroll()
-    {
-        game.GenerateAndApplyReroll(
-          Enumerable.Range(0, DiceRoll.MaxDiceAmount)
-            .Where(i => diceSelected[i])
-            .ToArray());
+    //TODO: do I need a currentRoll local variable ora can I bind to game.CurrentRoll directly?
+    currentRoll = game.CurrentRoll;
 
-        //TODO: do I need a currentRoll local variable ora can I bind to game.CurrentRoll directly?
-        currentRoll = game.CurrentRoll;
+    ResetComboBoxes();
+  }
 
-        ResetComboBoxes();
-    }
+  private async void Score()
+  {
+    CombinationTypes combinationToScore =
+        (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToScore);
+    game.ApplyDecision(new Score(combinationToScore));
+    ResetRolls();
+    await OnTurnCompleted.InvokeAsync();
+  }
 
-    private async void Score()
-    {
-        CombinationTypes combinationToScore =
-            (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToScore);
-        game.ApplyDecision(new Score(combinationToScore));
-        ResetRolls();
-        await OnTurnCompleted.InvokeAsync();
-    }
-
-    private async void CrossOut()
-    {
-        CombinationTypes combinationToCrossOut =
-            (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToCrossOut);
-        game.ApplyDecision(new CrossOut(combinationToCrossOut));
-        ResetRolls();
-        await OnTurnCompleted.InvokeAsync();
-    }
+  private async void CrossOut()
+  {
+    CombinationTypes combinationToCrossOut =
+        (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToCrossOut);
+    game.ApplyDecision(new CrossOut(combinationToCrossOut));
+    ResetRolls();
+    await OnTurnCompleted.InvokeAsync();
+  }
 }

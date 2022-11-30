@@ -64,10 +64,10 @@ namespace BobTheDiceMaster
     /// </remarks>
     public int CompareTo(OutcomeInfo other)
     {
-        int compareResult = Comparer<double>.Default.Compare(other.Value, Value);
-        // Eliminate 0 to make sure duplicates are not removed.
-        // Order of equal values does not mater
-        return compareResult == 0 ? 1 : compareResult;
+      int compareResult = Comparer<double>.Default.Compare(other.Value, Value);
+      // Eliminate 0 to make sure duplicates are not removed.
+      // Order of equal values does not mater
+      return compareResult == 0 ? 1 : compareResult;
     }
 
     public override string ToString()

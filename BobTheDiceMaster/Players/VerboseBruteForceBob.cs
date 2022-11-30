@@ -163,13 +163,13 @@ namespace BobTheDiceMaster
         ratedDecisions.Add(
           new DecisionInfoVerbose(
             combinationScore,
-            new [] {
+            new[] {
               new OutcomeInfo(
                 value: combinationScore,
                 combination: combination,
                 probability: 1,
                 isScored: currentRollScore.HasValue)
-            } ));
+            }));
       }
 
       return ratedDecisions;

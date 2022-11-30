@@ -19,7 +19,8 @@ namespace BobTheDiceMaster
     #region public constants and properties
     public int this[int i]
     {
-      get {
+      get
+      {
         return dice[i];
       }
     }
@@ -184,7 +185,7 @@ namespace BobTheDiceMaster
       }
 
       rerollCounter = 0;
-      
+
       for (int i = 0; i < MaxDiceAmount; ++i)
       {
         // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
@@ -359,7 +360,7 @@ namespace BobTheDiceMaster
 
     public override string ToString()
     {
-      return $"DiceRoll({ String.Join(", ", dice) })";
+      return $"DiceRoll({String.Join(", ", dice)})";
     }
 
     public override int GetHashCode()
@@ -661,7 +662,7 @@ namespace BobTheDiceMaster
     public static IReadOnlyList<DiceRoll> Roll2Results => roll2Results;
     public static IReadOnlyList<DiceRoll> Roll1Results => roll1Results;
 
-    public static IReadOnlyList<DiceRoll>[] RollResults => new [] { roll1Results, roll2Results, roll3Results, roll4Results, roll5Results };
+    public static IReadOnlyList<DiceRoll>[] RollResults => new[] { roll1Results, roll2Results, roll3Results, roll4Results, roll5Results };
 
     public static void InitRollResults()
     {

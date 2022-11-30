@@ -6,26 +6,26 @@
 <br />
 
 @code {
-    [Parameter]
-    public string Name { get; set; } = "Default";
-    [Parameter]
-    public bool CheckboxValue
+  [Parameter]
+  public string Name { get; set; } = "Default";
+  [Parameter]
+  public bool CheckboxValue
+  {
+    get
     {
-        get
-        {
-            return checkboxValue;
-        }
-        set
-        {
-            checkboxValue = value;
-        }
+      return checkboxValue;
     }
-    private bool checkboxValue;
-    [Parameter]
-    public EventCallback<bool> CheckboxValueChanged { get; set; }
-    async Task UpdateCheckboxValue(ChangeEventArgs e)
+    set
     {
-        CheckboxValue = (bool)e.Value;
-        await CheckboxValueChanged.InvokeAsync((bool)e.Value);
+      checkboxValue = value;
     }
+  }
+  private bool checkboxValue;
+  [Parameter]
+  public EventCallback<bool> CheckboxValueChanged { get; set; }
+  async Task UpdateCheckboxValue(ChangeEventArgs e)
+  {
+    CheckboxValue = (bool)e.Value;
+    await CheckboxValueChanged.InvokeAsync((bool)e.Value);
+  }
 }

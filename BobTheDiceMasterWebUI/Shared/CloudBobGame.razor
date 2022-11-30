@@ -1,174 +1,174 @@
 ﻿<div style="display:inline-block; vertical-align:top">
-    <div style="display:inline-block">
-        <div style="margin:10px">
-            <div style="width:200px; display:inline-block">
-                <Die Value="@currentRoll[0]" Id="bobDie1" @bind-IsSelected="@diceSelected[0]" IsDisabled="true" />
-                <Die Value="@currentRoll[1]" Id="bobDie2" @bind-IsSelected="@diceSelected[1]" IsDisabled="true" />
-                <Die Value="@currentRoll[2]" Id="bobDie3" @bind-IsSelected="@diceSelected[2]" IsDisabled="true" />
-                <Die Value="@currentRoll[3]" Id="bobDie4" @bind-IsSelected="@diceSelected[3]" IsDisabled="true" />
-                <Die Value="@currentRoll[4]" Id="bobDie5" @bind-IsSelected="@diceSelected[4]" IsDisabled="true" />
-            </div>
-        </div>
-        <div style="margin:10px">
-            <button @onclick="Next" disabled="@isNextDisabled">Next</button>
-        </div>
-        <div style="margin:10px">
-            Score: @game.Score
-        </div>
-        <div style="margin:10px">
-            @if (@game.AllowedCombinationTypes.Any())
-            {
-                <p>Combinations left:</p>
-
-                <br />
-                @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
-                {
-                    @allowedCombination
-
-                    <br />
-                }
-            }
-            else
-            {
-                <p>Game over!</p>
-            }
-        </div>
+  <div style="display:inline-block">
+    <div style="margin:10px">
+      <div style="width:200px; display:inline-block">
+        <Die Value="@currentRoll[0]" Id="bobDie1" @bind-IsSelected="@diceSelected[0]" IsDisabled="true" />
+        <Die Value="@currentRoll[1]" Id="bobDie2" @bind-IsSelected="@diceSelected[1]" IsDisabled="true" />
+        <Die Value="@currentRoll[2]" Id="bobDie3" @bind-IsSelected="@diceSelected[2]" IsDisabled="true" />
+        <Die Value="@currentRoll[3]" Id="bobDie4" @bind-IsSelected="@diceSelected[3]" IsDisabled="true" />
+        <Die Value="@currentRoll[4]" Id="bobDie5" @bind-IsSelected="@diceSelected[4]" IsDisabled="true" />
+      </div>
     </div>
-    <div style ="display:inline-block; vertical-align:top">
-        Bob: <br />
-        @if (isWaiting)
-        {
-            <p>Thinking...</p>
-        }
-        else
-        {
-            <p>Waiting for yout input</p>
-        }
-        @foreach (var message in @messages)
-        {
-            <p>@message<br /></p>
-        }
+    <div style="margin:10px">
+      <button @onclick="Next" disabled="@isNextDisabled">Next</button>
     </div>
+    <div style="margin:10px">
+      Score: @game.Score
+    </div>
+    <div style="margin:10px">
+      @if (@game.AllowedCombinationTypes.Any())
+      {
+        <p>Combinations left:</p>
+
+        <br />
+        @foreach (CombinationTypes allowedCombination in @game.AllowedCombinationTypes)
+        {
+          @allowedCombination
+
+          <br />
+        }
+      }
+      else
+      {
+        <p>Game over!</p>
+      }
+    </div>
+  </div>
+  <div style="display:inline-block; vertical-align:top">
+    Bob: <br />
+    @if (isWaiting)
+    {
+      <p>Thinking...</p>
+    }
+    else
+    {
+      <p>Waiting for yout input</p>
+    }
+    @foreach (var message in @messages)
+    {
+      <p>@message<br /></p>
+    }
+  </div>
 </div>
 
 @code {
-    [Parameter]
-    public bool IsActive { get; set; }
-    [Parameter]
-    public EventCallback<bool> OnTurnCompleted { get; set; }
+  [Parameter]
+  public bool IsActive { get; set; }
+  [Parameter]
+  public EventCallback<bool> OnTurnCompleted { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+  protected override async Task OnParametersSetAsync()
+  {
+    if (IsActive && isActive != IsActive)
     {
-        if (IsActive && isActive != IsActive)
+      await Next();
+    }
+    isActive = IsActive;
+  }
+
+  private void OnIsActiveChanged(ChangeEventArgs e)
+  {
+
+
+  }
+
+  private bool isActive;
+
+  private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
+
+  private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
+
+  private bool[] diceSelected = new[] { false, false, false, false, false };
+
+  private bool isNextDisabled => !IsActive || isWaiting;
+
+  private bool isWaiting { get; set; } = false;
+
+  private static D6 d6 = new D6(1);
+
+  private List<string> messages = new List<string>();
+
+  //const string bobApiAddress = "https://epjlghh8jh.execute-api.eu-central-1.amazonaws.com/api/values";
+  const string bobApiAddress = "https://localhost:51777/api/values";
+
+  private void ResetRolls()
+  {
+    for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+    {
+      diceSelected[i] = false;
+    }
+  }
+
+  protected override void OnInitialized()
+  {
+    currentRoll = game.GenerateRoll();
+  }
+
+  private void AddMessage(string message)
+  {
+    messages.Add(message);
+    StateHasChanged();
+  }
+
+  private void MethodNeverCalled()
+  {
+    new SortedSet<int>();
+  }
+
+  public async Task Next()
+  {
+    isWaiting = true;
+    messages.Clear();
+    bool hasError = false;
+    while (!game.IsTurnOver && !hasError)
+    {
+      HttpClient bobCloudClient = new HttpClient();
+      JsonContent gameStateJsonContent = JsonContent.Create(
+          new GameOfSchoolContext(
+              game.AllowedCombinationTypes.Aggregate(CombinationTypes.None,
+              (a, b) => a | b),
+          game.CurrentRoll.Roll,
+              game.RollsLeft
+          )
+      );
+
+      var decisionHttpResponse = await bobCloudClient.PostAsync(
+          bobApiAddress,
+          gameStateJsonContent
+      );
+
+      System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
+
+      System.IO.StreamReader sr = new System.IO.StreamReader(s);
+
+      string decisionJson = sr.ReadToEnd();
+
+      try
+      {
+        var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
+        DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
+        Decision decision = typedDecision.Decision;
+        AddMessage($"For {game.CurrentRoll} I decide to {decision}.");
+
+        game.ApplyDecision(decision);
+        if (decision is Reroll)
         {
-            await Next();
+          game.GenerateAndApplyReroll();
         }
-        isActive = IsActive;
+      }
+      catch (Exception e)
+      {
+        AddMessage(e.ToString());
+        hasError = true;
+      }
     }
 
-    private void OnIsActiveChanged(ChangeEventArgs e)
+    if (!game.IsGameOver)
     {
-        
-        
+      currentRoll = game.GenerateRoll();
     }
 
-    private bool isActive;
-
-    private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
-
-    private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
-
-    private bool[] diceSelected = new[] { false, false, false, false, false };
-
-    private bool isNextDisabled => !IsActive || isWaiting;
-
-    private bool isWaiting { get; set; } = false;
-
-    private static D6 d6 = new D6(1);
-
-    private List<string> messages = new List<string>();
-
-    //const string bobApiAddress = "https://epjlghh8jh.execute-api.eu-central-1.amazonaws.com/api/values";
-    const string bobApiAddress = "https://localhost:51777/api/values";
-
-    private void ResetRolls()
-    {
-        for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
-        {
-            diceSelected[i] = false;
-        }
-    }
-
-    protected override void OnInitialized()
-    {
-        currentRoll = game.GenerateRoll();
-    }
-
-    private void AddMessage(string message)
-    {
-        messages.Add(message);
-        StateHasChanged();
-    }
-
-    private void MethodNeverCalled()
-    {
-        new SortedSet<int>();
-    }
-
-    public async Task Next()
-    {
-        isWaiting = true;
-        messages.Clear();
-        bool hasError = false;
-        while (!game.IsTurnOver && !hasError)
-        {
-            HttpClient bobCloudClient = new HttpClient();
-            JsonContent gameStateJsonContent = JsonContent.Create(
-                new GameOfSchoolContext(
-                    game.AllowedCombinationTypes.Aggregate(CombinationTypes.None,
-                    (a, b) => a | b),
-                game.CurrentRoll.Roll,
-                    game.RollsLeft
-                )
-            );
-
-            var decisionHttpResponse = await bobCloudClient.PostAsync(
-                bobApiAddress,
-                gameStateJsonContent
-            );
-
-            System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
-
-            System.IO.StreamReader sr = new System.IO.StreamReader(s);
-
-            string decisionJson = sr.ReadToEnd();
-
-            try
-            {
-                var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
-                DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
-                Decision decision = typedDecision.Decision;
-                AddMessage($"For {game.CurrentRoll} I decide to {decision}.");
-
-                game.ApplyDecision(decision);
-                if (decision is Reroll)
-                {
-                    game.GenerateAndApplyReroll();
-                }
-            }
-            catch (Exception e)
-            {
-                AddMessage(e.ToString());
-                hasError = true;
-            }
-        }
-
-        if (!game.IsGameOver)
-        {
-            currentRoll = game.GenerateRoll();
-        }
-
-        isWaiting = false;
-        await OnTurnCompleted.InvokeAsync();
-    }
+    isWaiting = false;
+    await OnTurnCompleted.InvokeAsync();
+  }
 }

@@ -11,28 +11,29 @@
   [Parameter]
   public string Name { get; set; } = "Default";
   [Parameter]
-  public bool CheckboxValue {
-      get
-      {
-          return checkboxValue;
-      }
-      set
-      {
-          checkboxValue = value;
-          InnerCheckboxValue = checkboxValue;
-      }
+  public bool CheckboxValue
+  {
+    get
+    {
+      return checkboxValue;
+    }
+    set
+    {
+      checkboxValue = value;
+      InnerCheckboxValue = checkboxValue;
+    }
   }
   private bool checkboxValue;
   [Parameter]
   public EventCallback<bool> CheckboxValueChanged { get; set; }
   async Task UpdateCheckboxValue(ChangeEventArgs e)
   {
-      CheckboxValue = (bool)e.Value;
-      await CheckboxValueChanged.InvokeAsync((bool)e.Value);
+    CheckboxValue = (bool)e.Value;
+    await CheckboxValueChanged.InvokeAsync((bool)e.Value);
   }
   async Task UpdateCheckboxValue2()
   {
-      CheckboxValue = InnerCheckboxValue;
-      await CheckboxValueChanged.InvokeAsync(InnerCheckboxValue);
+    CheckboxValue = InnerCheckboxValue;
+    await CheckboxValueChanged.InvokeAsync(InnerCheckboxValue);
   }
 }
