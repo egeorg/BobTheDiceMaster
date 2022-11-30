@@ -7,8 +7,8 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "BobTheDiceMaster.dll": "sha256-pLXKdNC4P5FylDG2pGaeGdzmcZYLkihn2hP2wRRDmd4=",
-      "BobTheDiceMasterWebUI.dll": "sha256-Ys629+LEyajdjB\/uICjYEMftFNymKo1Je8ZndIi\/JhQ=",
+      "BobTheDiceMaster.dll": "sha256-xoFBsDAnC2\/aewXgNTXpZMAKdad9jPww7utD96nSzmM=",
+      "BobTheDiceMasterWebUI.dll": "sha256-5Aww0KS4OOV95xZs6sH4Hb\/0vA0TvSkW25IJC5G41jg=",
       "Microsoft.AspNetCore.Components.dll": "sha256-Pl\/UQ0iOTeAYbdF1SW4LtYcLhOa7Y2X5LE\/JbYX0rOo=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-0FF2e7kgo+OaEpIvfajWgZrnvKTBJ+ieJfL5Q6xK0fA=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-zD6Me\/E7IFgEc8hbtU6Scr\/z5hu3zPTxoy5FcpBOPmU=",
