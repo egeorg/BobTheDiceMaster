@@ -2,9 +2,12 @@
 
 namespace BobTheDiceMaster.Combinations
 {
-  public class GradeCombinatoric
+  /// <summary>
+  /// Currenlty not used anywhere, may be used in tests.
+  /// </summary>
+  public class GradeCombinatorics
   {
-    protected int GradeNumber { get; }
+    public int GradeNumber { get; }
 
     public double GetAverageProfit()
     {

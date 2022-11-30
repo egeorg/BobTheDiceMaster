@@ -14,6 +14,15 @@ namespace BobTheDiceMaster
   /// </remarks>
   public class DecisionInfoVerbose : DecisionInfo, IComparable<DecisionInfoVerbose>
   {
+    /// <summary>
+    /// Sum of probabilities by all outcomes has to be 1.
+    /// Sum of values by all outcomes has to be <see cref="Value">.
+    /// </summary>
+    /// <remarks>
+    /// Public setter is required only to make it serializable, otherwise setter can be removed.
+    /// </remarks>
+    public SortedSet<OutcomeInfo> Outcomes { get; set; }
+
     /// <remarks>
     /// Parameterless constructor is required only to make it serializable.
     /// </remarks>
@@ -45,15 +54,6 @@ namespace BobTheDiceMaster
       // Order of equal values does not mater
       return doubleCompareResult == 0 ? 1 : doubleCompareResult;
     }
-
-    /// <summary>
-    /// Sum of probabilities by all outcomes has to be 1.
-    /// Sum of values by all outcomes has to be <see cref="Value">.
-    /// </summary>
-    /// <remarks>
-    /// Public setter is required only to make it serializable, otherwise setter can be removed.
-    /// </remarks>
-    public SortedSet<OutcomeInfo> Outcomes { get; set; }
 
     public override string ToString()
     {

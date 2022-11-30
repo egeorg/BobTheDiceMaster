@@ -63,6 +63,12 @@
   [Parameter]
   public EventCallback<bool> OnTurnCompleted { get; set; }
 
+  protected override void OnInitialized()
+  {
+    currentRoll = game.GenerateRoll();
+    ResetComboBoxes();
+  }
+
   private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
   private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
@@ -112,12 +118,6 @@
     {
       diceSelected[i] = false;
     }
-    ResetComboBoxes();
-  }
-
-  protected override void OnInitialized()
-  {
-    currentRoll = game.GenerateRoll();
     ResetComboBoxes();
   }
 

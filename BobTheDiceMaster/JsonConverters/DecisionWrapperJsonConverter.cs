@@ -7,7 +7,7 @@ namespace BobTheDiceMaster.JsonConverters
 {
   internal class DecisionWrapperJsonConverter : JsonConverter<DecisionWrapper>
   {
-    enum TypeDiscriminator
+    private enum TypeDiscriminator
     {
       None = 0,
       Reroll = 1,

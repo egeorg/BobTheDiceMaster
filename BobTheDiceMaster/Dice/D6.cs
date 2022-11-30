@@ -4,15 +4,10 @@ namespace BobTheDiceMaster
 {
   public class D6 : IDie
   {
-    #region private fields;
     private Random rng;
-    #endregion
 
-    #region public constants
     public const int MaxValue = 6;
-    #endregion
 
-    #region public methods
     public D6()
     {
       rng = new Random();
@@ -35,6 +30,5 @@ namespace BobTheDiceMaster
       }
       return result;
     }
-    #endregion
   }
 }

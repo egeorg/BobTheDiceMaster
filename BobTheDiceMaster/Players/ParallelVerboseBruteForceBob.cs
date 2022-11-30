@@ -8,12 +8,6 @@ namespace BobTheDiceMaster
 {
   public class ParallelVerboseBruteForceBob : IPlayer
   {
-    ConcurrentDictionary<CombinationTypes, ConcurrentDictionary<int, ConcurrentDictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>> ratedDecisionsCache
-       = new ConcurrentDictionary<CombinationTypes, ConcurrentDictionary<int, ConcurrentDictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>>();
-
-    int[] redundantCalculations = new int[4];
-    int[] cacheAdds = new int[4];
-
     public Decision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
@@ -56,6 +50,12 @@ namespace BobTheDiceMaster
 
       return new CrossOut(bestDecisionInfo.Combination, ratedDecisionsInfo);
     }
+
+    private ConcurrentDictionary<CombinationTypes, ConcurrentDictionary<int, ConcurrentDictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>> ratedDecisionsCache
+     = new ConcurrentDictionary<CombinationTypes, ConcurrentDictionary<int, ConcurrentDictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>>();
+
+    private int[] redundantCalculations = new int[4];
+    private int[] cacheAdds = new int[4];
 
     private SortedSet<DecisionInfoVerbose> GetRatedDecisions(
       CombinationTypes availableCombinations,

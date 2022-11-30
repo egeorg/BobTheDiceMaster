@@ -6,21 +6,6 @@ namespace BobTheDiceMaster
 {
   public class GameOfSchool
   {
-    #region private fields
-    private IPlayer player;
-    private D6 d6;
-    private const int RollsPerTurn = 3;
-
-    #region current game state
-    private DiceRollDistinct currentRoll;
-    private int[] diceToReroll;
-    private int rollsLeft;
-    private int totalScore;
-    private CombinationTypes allowedCombinationTypes;
-    private bool isSchoolFinished;
-    private GameOfSchoolState state;
-    #endregion
-
     public DiceRollDistinct CurrentRoll => currentRoll;
     public IEnumerable<CombinationTypes> AllowedCombinationTypes =>
       allowedCombinationTypes.GetElementaryCombinationTypes();
@@ -31,56 +16,6 @@ namespace BobTheDiceMaster
 
     public GameOfSchoolState State => state;
 
-    #endregion
-
-    #region private methods
-    private bool AreThreeGradesFinished(CombinationTypes combinationTypes)
-    {
-      if (!combinationTypes.IsFromSchool())
-      {
-        throw new ArgumentException($"Only grade combinations expected, but was {combinationTypes}");
-      }
-      uint gradesLeft = 0;
-      uint combinationTypesUint = (uint)combinationTypes;
-      while (combinationTypesUint != 0)
-      {
-        gradesLeft += combinationTypesUint % 2;
-        combinationTypesUint = combinationTypesUint >> 1;
-      }
-
-      if (gradesLeft > 3)
-      {
-        return false;
-      }
-      isSchoolFinished = true;
-      return true;
-    }
-
-    private void VerifyState(GameOfSchoolState requiredState)
-    {
-      if (state == requiredState)
-      {
-        return;
-      }
-
-      switch (state)
-      {
-        case GameOfSchoolState.Idle:
-          throw new InvalidOperationException(
-            "Dice were not rolled yet. Use GenerateRoll or SetRoll");
-        case GameOfSchoolState.Rolled:
-          throw new InvalidOperationException(
-            "Previous turn is not over yet. Use GenerateReroll, ApplyDecision or GenerateAndApplyDecision");
-        case GameOfSchoolState.GameOver:
-          throw new InvalidOperationException("Game is over. Start a new game.");
-        default:
-          throw new InvalidOperationException($"Unexpected game state: {state}.");
-      }
-    }
-
-    #endregion
-
-    #region public properties
     public int Score => totalScore;
 
     public bool IsGameOver => state == GameOfSchoolState.GameOver;
@@ -90,9 +25,7 @@ namespace BobTheDiceMaster
       || state == GameOfSchoolState.GameOver;
 
     public int RollsLeft => rollsLeft;
-    #endregion
 
-    #region public methods
     public GameOfSchool(IPlayer player)
     {
       this.player = player;
@@ -155,33 +88,6 @@ namespace BobTheDiceMaster
         allowedCombinationTypes, currentRoll.Roll, rollsLeft);
       ApplyDecision(decision);
       return decision;
-    }
-
-    private int[] GetDiceToReroll(IReadOnlyCollection<int> diceValuesToReroll)
-    {
-      int[] diceToReroll = new int[diceValuesToReroll.Count];
-      int rerollCounter = 0;
-      bool[] dieUsed = new bool[DiceRoll.MaxDiceAmount];
-      foreach (int dieValue in diceValuesToReroll)
-      {
-        for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
-        {
-          if (!dieUsed[i] && currentRoll[i] == dieValue)
-          {
-            diceToReroll[rerollCounter++] = i;
-            dieUsed[i] = true;
-            break;
-          }
-        }
-      }
-
-      if (rerollCounter < diceValuesToReroll.Count)
-      {
-        throw new InvalidOperationException(
-          $"Current roll {currentRoll} does not contain all of the reroll values: {String.Join(",", diceValuesToReroll)}");
-      }
-
-      return diceToReroll;
     }
 
     public void ApplyDecision(Decision decision)
@@ -261,6 +167,90 @@ namespace BobTheDiceMaster
         state = GameOfSchoolState.GameOver;
       }
     }
-    #endregion
+
+    private IPlayer player;
+    private D6 d6;
+    private const int RollsPerTurn = 3;
+
+    private DiceRollDistinct currentRoll;
+    private int[] diceToReroll;
+    private int rollsLeft;
+    private int totalScore;
+    private CombinationTypes allowedCombinationTypes;
+    private bool isSchoolFinished;
+    private GameOfSchoolState state;
+
+    private bool AreThreeGradesFinished(CombinationTypes combinationTypes)
+    {
+      if (!combinationTypes.IsFromSchool())
+      {
+        throw new ArgumentException($"Only grade combinations expected, but was {combinationTypes}");
+      }
+      uint gradesLeft = 0;
+      uint combinationTypesUint = (uint)combinationTypes;
+      while (combinationTypesUint != 0)
+      {
+        gradesLeft += combinationTypesUint % 2;
+        combinationTypesUint = combinationTypesUint >> 1;
+      }
+
+      if (gradesLeft > 3)
+      {
+        return false;
+      }
+      isSchoolFinished = true;
+      return true;
+    }
+
+    private void VerifyState(GameOfSchoolState requiredState)
+    {
+      if (state == requiredState)
+      {
+        return;
+      }
+
+      switch (state)
+      {
+        case GameOfSchoolState.Idle:
+          throw new InvalidOperationException(
+            "Dice were not rolled yet. Use GenerateRoll or SetRoll");
+        case GameOfSchoolState.Rolled:
+          throw new InvalidOperationException(
+            "Previous turn is not over yet. Use GenerateReroll, ApplyDecision or GenerateAndApplyDecision");
+        case GameOfSchoolState.GameOver:
+          throw new InvalidOperationException("Game is over. Start a new game.");
+        default:
+          throw new InvalidOperationException($"Unexpected game state: {state}.");
+      }
+    }
+
+    private int[] GetDiceToReroll(IReadOnlyCollection<int> diceValuesToReroll)
+    {
+      int[] diceToReroll = new int[diceValuesToReroll.Count];
+      int rerollCounter = 0;
+      bool[] dieUsed = new bool[DiceRoll.MaxDiceAmount];
+      foreach (int dieValue in diceValuesToReroll)
+      {
+        for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+        {
+          if (!dieUsed[i] && currentRoll[i] == dieValue)
+          {
+            diceToReroll[rerollCounter++] = i;
+            dieUsed[i] = true;
+            break;
+          }
+        }
+      }
+
+      if (rerollCounter < diceValuesToReroll.Count)
+      {
+        throw new InvalidOperationException(
+          $"Current roll {currentRoll} does not contain all of the reroll values: {String.Join(",", diceValuesToReroll)}");
+      }
+
+      return diceToReroll;
+    }
+
+
   }
 }

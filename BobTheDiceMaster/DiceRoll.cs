@@ -9,14 +9,6 @@ namespace BobTheDiceMaster
   [JsonConverter(typeof(DiceRollJsonConverter))]
   public class DiceRoll : IDiceRoll<DiceRoll>
   {
-    #region private fields
-    private int[] dice;
-
-    private static Dictionary<CombinationTypes, double> averageScore =
-      new Dictionary<CombinationTypes, double>();
-    #endregion
-
-    #region public constants and properties
     public int this[int i]
     {
       get
@@ -28,9 +20,7 @@ namespace BobTheDiceMaster
     public int DiceAmount => dice.Length;
 
     public const int MaxDiceAmount = 5;
-    #endregion
 
-    #region public methods
     static DiceRoll()
     {
       InitRollResults();
@@ -400,6 +390,26 @@ namespace BobTheDiceMaster
       return true;
     }
 
+    public static readonly IReadOnlyList<int[]> NonEmptyRerolls = new List<int[]>()
+    {
+      new [] { 0 }, new [] { 1 }, new [] { 2 }, new [] { 3 }, new [] { 4 },
+      new [] { 0, 1 }, new [] { 0, 2 }, new [] { 0, 3 }, new [] { 0, 4 },
+      new [] { 1, 2 }, new [] { 1, 3 }, new [] { 1, 4 },
+      new [] { 2, 3 }, new [] { 2, 4 },
+      new [] { 3, 4 },
+      new [] { 0, 1, 2}, new [] { 0, 1, 3}, new [] { 0, 1, 4},
+      new [] { 0, 2, 3}, new [] { 0, 2, 4},
+      new [] { 0, 3, 4},
+      new [] { 1, 2, 3}, new [] { 1, 2, 4},
+      new [] { 1, 3, 4},
+      new [] { 2, 3, 4},
+      new [] { 0, 1, 2, 3 }, new [] { 0, 1, 2, 4 },
+      new [] { 0, 1, 3, 4 },
+      new [] { 0, 2, 3, 4 },
+      new [] { 1, 2, 3, 4 },
+      new [] { 0, 1, 2, 3, 4 },
+    };
+
     private int GradeScore(int grade)
     {
       int rollScore = 0;//  -(grade * MaxDiceAmount);
@@ -430,6 +440,11 @@ namespace BobTheDiceMaster
 
       return numberOfThrows / Math.Pow(6, dice.Length);
     }
+
+    private int[] dice;
+
+    private static Dictionary<CombinationTypes, double> averageScore =
+      new Dictionary<CombinationTypes, double>();
 
     private int? PairScore()
     {
@@ -630,26 +645,7 @@ namespace BobTheDiceMaster
       return null;
     }
 
-    public static readonly IReadOnlyList<int[]> NonEmptyRerolls = new List<int[]>()
-    {
-      new [] { 0 }, new [] { 1 }, new [] { 2 }, new [] { 3 }, new [] { 4 },
-      new [] { 0, 1 }, new [] { 0, 2 }, new [] { 0, 3 }, new [] { 0, 4 },
-      new [] { 1, 2 }, new [] { 1, 3 }, new [] { 1, 4 },
-      new [] { 2, 3 }, new [] { 2, 4 },
-      new [] { 3, 4 },
-      new [] { 0, 1, 2}, new [] { 0, 1, 3}, new [] { 0, 1, 4},
-      new [] { 0, 2, 3}, new [] { 0, 2, 4},
-      new [] { 0, 3, 4},
-      new [] { 1, 2, 3}, new [] { 1, 2, 4},
-      new [] { 1, 3, 4},
-      new [] { 2, 3, 4},
-      new [] { 0, 1, 2, 3 }, new [] { 0, 1, 2, 4 },
-      new [] { 0, 1, 3, 4 },
-      new [] { 0, 2, 3, 4 },
-      new [] { 1, 2, 3, 4 },
-      new [] { 0, 1, 2, 3, 4 },
-    };
-
+    //TODO[GE]: remove?
     private static List<DiceRoll> roll5Results = new List<DiceRoll>();
     private static List<DiceRoll> roll4Results = new List<DiceRoll>();
     private static List<DiceRoll> roll3Results = new List<DiceRoll>();
@@ -664,7 +660,7 @@ namespace BobTheDiceMaster
 
     public static IReadOnlyList<DiceRoll>[] RollResults => new[] { roll1Results, roll2Results, roll3Results, roll4Results, roll5Results };
 
-    public static void InitRollResults()
+    private static void InitRollResults()
     {
       for (int i1 = 1; i1 <= 6; ++i1)
       {
@@ -687,6 +683,5 @@ namespace BobTheDiceMaster
         }
       }
     }
-    #endregion
   }
 }

@@ -117,6 +117,7 @@ namespace BobTheDiceMaster
       }
     }
 
+
     private CombinationTypes GetBestCombination(
       CombinationTypes availableCombinations, DiceRoll roll, bool isFirstRoll, out double bestScore)
     {

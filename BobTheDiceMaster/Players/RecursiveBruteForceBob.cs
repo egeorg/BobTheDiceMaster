@@ -4,9 +4,6 @@ namespace BobTheDiceMaster
 {
   public class RecursiveBruteForceBob : IPlayer
   {
-    Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, DecisionInfo>>> decisionCache
-       = new Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, DecisionInfo>>>();
-
     public Decision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
@@ -32,6 +29,9 @@ namespace BobTheDiceMaster
 
       return new CrossOut(bestDecisionInfo.Combination);
     }
+
+    private Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, DecisionInfo>>> decisionCache
+       = new Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, DecisionInfo>>>();
 
     private DecisionInfo GetBestDecision(
       CombinationTypes availableCombinations,

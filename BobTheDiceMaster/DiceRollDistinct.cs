@@ -7,7 +7,11 @@ namespace BobTheDiceMaster
   {
     public DiceRoll Roll { get; private set; }
 
-    int[] dice;
+    public int DiceAmount => dice.Length;
+
+    public int this[int i] => dice[i];
+
+    private int[] dice;
 
     public DiceRollDistinct(int[] dice)
     {
@@ -84,10 +88,6 @@ namespace BobTheDiceMaster
 
       return new DiceRollDistinct(diceNew);
     }
-
-    public int DiceAmount => dice.Length;
-
-    public int this[int i] => dice[i];
 
     public override string ToString()
     {
