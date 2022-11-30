@@ -6,6 +6,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
+      "commandLineArgs": "--pathbase=/BobTheDiceMaster",
       "applicationUrl": "https://localhost:54989;http://localhost:54990"
     }
   }
