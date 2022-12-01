@@ -66,3 +66,20 @@ It makes sense to score a combination if scoring it right now it will yield more
 ### Profit function for a reroll decision
 
 Here where it gets interesting.
+A reroll profit can be defined recursively:
+
+Now we know how to calculate profit for "Score" and "Cross out" decisions. If no rerolls are left, we can already choose the best decision by iterating across all the available combinations and choosing the decision+combination type that yields the most profit. Let's call it Profit(roll, 0) where 0 means that zero rerolls are left. It would be the base of recursion.
+
+1) Across all the possible reroll results, return sum of Probability(rerollResult) \* Profit(rerollResult, rerollsLeft - 1).
+
+## Finding an optimal decision
+
+Now that the profit function is defined, finding an optimal decision is straightforward using brute force:
+
+1) Iterate across all the available combinations, calculate Profit(roll, Score(combination))
+2) Iterate across all the available combinations, calculate Profit(roll, CrossOut(combination))
+3) Iterate across all possible rerolls (<=> all possible rerolls), calculate Profit(roll, Reroll(reroll))
+
+Chose the highest value and return corresponding decision.
+
+## Optimization
