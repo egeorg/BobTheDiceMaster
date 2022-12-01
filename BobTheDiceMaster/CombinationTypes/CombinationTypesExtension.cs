@@ -19,8 +19,8 @@ namespace BobTheDiceMaster
         CombinationTypes.TwoPairs,
         CombinationTypes.Full,
         CombinationTypes.Care,
-        CombinationTypes.SmallStreet,
-        CombinationTypes.BigStreet,
+        CombinationTypes.LittleStraight,
+        CombinationTypes.BigStraight,
         CombinationTypes.Poker,
         CombinationTypes.Trash
       };

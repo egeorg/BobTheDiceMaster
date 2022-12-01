@@ -41,8 +41,8 @@ namespace BobTheDiceMaster
         {CombinationTypes.TwoPairs, 16.37926613378522},
         {CombinationTypes.Full, 7.702210020138647},
         {CombinationTypes.Care, 4.853220771449692},
-        {CombinationTypes.SmallStreet, 4.2452235691873},
-        {CombinationTypes.BigStreet, 6.367835353780939},
+        {CombinationTypes.LittleStraight, 4.2452235691873},
+        {CombinationTypes.BigStraight, 6.367835353780939},
         {CombinationTypes.Poker, 0.8804221388169133},
         {CombinationTypes.Trash, 35.100630144032884}
       };
@@ -334,10 +334,10 @@ namespace BobTheDiceMaster
           return CareScore();
         case CombinationTypes.Full:
           return FullScore();
-        case CombinationTypes.SmallStreet:
-          return SmallStreetScore();
-        case CombinationTypes.BigStreet:
-          return BigStreetScore();
+        case CombinationTypes.LittleStraight:
+          return LittleStraightScore();
+        case CombinationTypes.BigStraight:
+          return BigStraightScore();
         case CombinationTypes.Poker:
           return PokerScore();
         case CombinationTypes.Trash:
@@ -605,7 +605,7 @@ namespace BobTheDiceMaster
       return null;
     }
 
-    private int? SmallStreetScore()
+    private int? LittleStraightScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
@@ -625,7 +625,7 @@ namespace BobTheDiceMaster
       return null;
     }
 
-    private int? BigStreetScore()
+    private int? BigStraightScore()
     {
       int[] valuesCount = new int[D6.MaxValue];
 
