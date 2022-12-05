@@ -5,16 +5,17 @@ using BobTheDiceMaster.Decisions;
 namespace BobTheDiceMasterAwsLambdaApi.Controllers
 {
   [Route("api/[controller]")]
-  public class BobTheDiceMasterController : ControllerBase
+  public class BobController : ControllerBase
   {
-    // GET api/values
+    // GET api/bob
     [HttpGet]
     public IActionResult Get()
     {
-      return Ok("BobTheDiceMaster AWL Lambda API endpoint");
+      return Ok("BobTheDiceMaster AWS Lambda API endpoint");
     }
 
-    // POST api/values
+
+    // POST api/bob
     [HttpPost]
     public DecisionWrapper Post([FromBody] GameOfSchoolContext gameContext)
     {
