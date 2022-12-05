@@ -5,7 +5,7 @@ using BobTheDiceMaster.Decisions;
 namespace BobTheDiceMasterAwsLambdaApi.Controllers
 {
   [Route("api/[controller]")]
-  public class ValuesController : ControllerBase
+  public class BobTheDiceMasterController : ControllerBase
   {
     // GET api/values
     [HttpGet]
@@ -18,7 +18,7 @@ namespace BobTheDiceMasterAwsLambdaApi.Controllers
     [HttpPost]
     public DecisionWrapper Post([FromBody] GameOfSchoolContext gameContext)
     {
-      IPlayer aiPlayer = new VerboseBruteForceBob();
+      IPlayer aiPlayer = new RecursiveBruteForceBob();
       Decision decision = aiPlayer.DecideOnRoll(
           gameContext.AvailableCombinations, gameContext.DiceRoll, gameContext.RollsLeft);
       return new DecisionWrapper { Decision = decision };
