@@ -66,12 +66,6 @@
     isActive = IsActive;
   }
 
-  private void OnIsActiveChanged(ChangeEventArgs e)
-  {
-
-
-  }
-
   private bool isActive;
 
   private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
@@ -84,11 +78,9 @@
 
   private bool isWaiting { get; set; } = false;
 
-  private static D6 d6 = new D6(1);
-
   private List<string> messages = new List<string>();
 
-  const string bobApiAddress = "https://ovsrq83dcc.execute-api.eu-central-1.amazonaws.com/api/bob";
+  const string bobApiAddress = "https://epjlghh8jh.execute-api.eu-central-1.amazonaws.com/api/bob/verbose";
   //const string bobApiAddress = "https://localhost:51777/api/BobTheDiceMaster";
 
   private void ResetRolls()
