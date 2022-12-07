@@ -4,17 +4,17 @@ using BobTheDiceMaster.Decisions;
 
 namespace BobTheDiceMasterAwsLambdaApi.Controllers
 {
-  [Route("api/[controller]")]
+  [Route("[controller]")]
   public class BobController : ControllerBase
   {
-    // GET api/bob
+    // GET /bob
     [HttpGet]
     public IActionResult Get()
     {
       return Ok("BobTheDiceMaster AWS Lambda API endpoint");
     }
 
-    // POST api/bob/{bobVersion}
+    // POST /bob/{bobVersion}
     [HttpPost("{bobVersion}")]
     public DecisionWrapper Post(BobSelector bobVersion, [FromBody] GameOfSchoolContext gameContext)
     {
@@ -31,7 +31,7 @@ namespace BobTheDiceMasterAwsLambdaApi.Controllers
       return new DecisionWrapper { Decision = decision };
     }
 
-    // POST api/bob
+    // POST /bob
     [HttpPost]
     public DecisionWrapper Post([FromBody] GameOfSchoolContext gameContext)
     {
