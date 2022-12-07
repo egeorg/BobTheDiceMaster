@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BobTheDiceMaster
 {
@@ -83,7 +84,10 @@ namespace BobTheDiceMaster
         if (rerollScore > bestRerollDecision.Value)
         {
           bestRerollDecision =
-            new DecisionInfo(rerollScore, bestNextRerollDecision.Combination, reroll);
+            new DecisionInfo(
+              rerollScore,
+              bestNextRerollDecision.Combination,
+              reroll.Select(diceNumber => currentRoll[diceNumber]).ToArray());
         }
       }
 
