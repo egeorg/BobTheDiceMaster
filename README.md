@@ -9,4 +9,7 @@ The initial idea was to make it entirely in browser, with possibility to play on
 More details:
 
 [Rules of the game](school-rules.md)
+
 [Algorithm for Bob](school-bob-algorithm.md)
+
+[The game itself](https://egeorg.github.io/BobTheDiceMaster)
