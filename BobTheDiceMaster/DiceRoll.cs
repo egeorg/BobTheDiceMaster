@@ -23,7 +23,11 @@ namespace BobTheDiceMaster
 
     static DiceRoll()
     {
+      // Note: order matters. InitRollResults() has to be called first because
+      // InitProbabilities() uses results of InitRollResults()
       InitRollResults();
+      InitProbabilities();
+      //uncomment if averageScore has to be recalculated
       //foreach (var elementaryCombination in CombinationTypesExtension.ElementaryCombinations)
       //{
       //  averageScore.Add(elementaryCombination, AverageScore(elementaryCombination));
@@ -65,6 +69,38 @@ namespace BobTheDiceMaster
         {
           throw new ArgumentException(
             $"Die value has to be between 1 and {D6.MaxValue}, but {i}-th value was '{dice[i]}'");
+        }
+      }
+    }
+
+    //TODO: add tests
+    private DiceRoll(DiceRoll roll, int[] diceToReroll, IDiceRoll<DiceRoll> rerollResult)
+    {
+      dice = new int[roll.DiceAmount];
+      int rollCounter = 0;
+      int rerollResultCounter = 0;
+      int rerollCounter = 0;
+      int resultCounter = 0;
+
+      // merge two sorted arrays, ignore diceToReroll from roll.
+      while (resultCounter < roll.DiceAmount)
+      {
+        while (rerollCounter < diceToReroll.Length && rollCounter == diceToReroll[rerollCounter])
+        {
+          rollCounter++;
+          rerollCounter++;
+        }
+        if (rollCounter < roll.DiceAmount && (rerollResultCounter >= rerollResult.DiceAmount || roll[rollCounter] < rerollResult[rerollResultCounter]))
+        {
+          dice[resultCounter] = roll[rollCounter];
+          resultCounter++;
+          rollCounter++;
+        }
+        else
+        {
+          dice[resultCounter] = rerollResult[rerollResultCounter];
+          resultCounter++;
+          rerollResultCounter++;
         }
       }
     }
@@ -130,21 +166,23 @@ namespace BobTheDiceMaster
         throw new ArgumentException(
           $"Dice to reroll and dice result has to be of the same length, but was: diceToReroll({diceToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
       }
-      int[] newRollDice = new int[MaxDiceAmount];
-      int rerollCounter = 0;
-      for (int i = 0; i < MaxDiceAmount; ++i)
-      {
-        // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
-        if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
-        {
-          newRollDice[i] = rerollResult[rerollCounter++];
-        }
-        else
-        {
-          newRollDice[i] = dice[i];
-        }
-      }
-      return new DiceRoll(newRollDice);
+      //TODO: check if using DiceRoll(3 args) actually makes bob faster
+      //int[] newRollDice = new int[MaxDiceAmount];
+      //int rerollCounter = 0;
+      //for (int i = 0; i < MaxDiceAmount; ++i)
+      //{
+      //  // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
+      //  if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
+      //  {
+      //    newRollDice[i] = rerollResult[rerollCounter++];
+      //  }
+      //  else
+      //  {
+      //    newRollDice[i] = dice[i];
+      //  }
+      //}
+      //return new DiceRoll(newRollDice);
+      return new DiceRoll(this, diceToReroll, rerollResult);
     }
 
     public DiceRoll ApplyRerollByValue(int[] valuesToReroll, DiceRoll rerollResult)
@@ -355,39 +393,20 @@ namespace BobTheDiceMaster
 
     public override int GetHashCode()
     {
-      int[] diceHist = new int[D6.MaxValue];
-      for (int i = 0; i < dice.Length; ++i)
-      {
-        ++diceHist[dice[i] - 1];
-      }
+      // dice array is always sorted, hash calculated in this way is perfect.
       int hash = 0;
-      int basePower = 1;
-      for (int i = 0; i < D6.MaxValue; ++i)
+      for (int i = 0; i < DiceAmount; ++i)
       {
-        hash += basePower * diceHist[i];
-        basePower *= MaxDiceAmount;
+        hash *= 6;
+        hash += dice[i];
       }
       return hash;
     }
 
     public override bool Equals(object obj)
     {
-      DiceRoll other = (DiceRoll)obj;
-      int[] diceHist = new int[D6.MaxValue];
-      int[] otherDiceHist = new int[D6.MaxValue];
-      for (int i = 0; i < dice.Length; ++i)
-      {
-        ++diceHist[dice[i] - 1];
-        ++otherDiceHist[other[i] - 1];
-      }
-      for (int i = 0; i < D6.MaxValue; ++i)
-      {
-        if (diceHist[i] != otherDiceHist[i])
-        {
-          return false;
-        }
-      }
-      return true;
+      //GetHashCode is a perfect cache, so it can be used for equality check as well.
+      return GetHashCode() == obj.GetHashCode();
     }
 
     public static readonly IReadOnlyList<int[]> NonEmptyRerolls = new List<int[]>()
@@ -423,7 +442,39 @@ namespace BobTheDiceMaster
       return rollScore;
     }
 
+    static Dictionary<DiceRoll, double> probabilitiesCache = new Dictionary<DiceRoll, double>();
+
+    private static void InitProbabilities()
+    {
+      //TODO: is it all needed?
+      foreach (DiceRoll roll in Roll5Results)
+      {
+        probabilitiesCache.Add(roll, roll.CalculateProbability());
+      }
+      foreach (DiceRoll roll in Roll4Results)
+      {
+        probabilitiesCache.Add(roll, roll.CalculateProbability());
+      }
+      foreach (DiceRoll roll in Roll3Results)
+      {
+        probabilitiesCache.Add(roll, roll.CalculateProbability());
+      }
+      foreach (DiceRoll roll in Roll2Results)
+      {
+        probabilitiesCache.Add(roll, roll.CalculateProbability());
+      }
+      foreach (DiceRoll roll in Roll1Results)
+      {
+        probabilitiesCache.Add(roll, roll.CalculateProbability());
+      }
+    }
+
     public double GetProbability()
+    {
+      return probabilitiesCache[this];
+    }
+
+    public double CalculateProbability()
     {
       int[] diceHist = new int[D6.MaxValue];
       for (int i = 0; i < dice.Length; ++i)
