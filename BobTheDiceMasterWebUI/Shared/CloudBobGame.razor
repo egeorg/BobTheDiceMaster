@@ -80,8 +80,8 @@
 
   private List<string> messages = new List<string>();
 
-  const string bobApiAddress = "https://epjlghh8jh.execute-api.eu-central-1.amazonaws.com/bob/verbose";
-  //const string bobApiAddress = "https://localhost:51777/bob/verbose";
+  const string bobApiAddress = "https://epjlghh8jh.execute-api.eu-central-1.amazonaws.com/bob/precomputed";
+  //const string bobApiAddress = "https://localhost:51777/bob/precomputed";
 
   private void ResetRolls()
   {
@@ -124,10 +124,12 @@
           )
       );
 
+      DateTime startRequestTime = DateTime.UtcNow;
       var decisionHttpResponse = await bobCloudClient.PostAsync(
           bobApiAddress,
           gameStateJsonContent
       );
+      AddMessage($"Request took '{DateTime.UtcNow - startRequestTime}'");
 
       System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
 

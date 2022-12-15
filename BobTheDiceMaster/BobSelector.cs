@@ -5,6 +5,7 @@
     None = 0,
     Recursive,
     Verbose,
-    Parallel
+    Parallel,
+    Precomputed
   }
 }

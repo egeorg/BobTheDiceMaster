@@ -23,6 +23,7 @@ namespace BobTheDiceMasterAwsLambdaApi.Controllers
         BobSelector.Verbose => new VerboseBruteForceBob(),
         BobSelector.Parallel => new ParallelVerboseBruteForceBob(),
         BobSelector.Recursive => new RecursiveBruteForceBob(),
+        BobSelector.Precomputed => new PrecomputedBob(),
         _ => new RecursiveBruteForceBob(),
       };
 
