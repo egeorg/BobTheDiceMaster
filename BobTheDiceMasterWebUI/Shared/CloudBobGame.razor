@@ -107,42 +107,16 @@
     new SortedSet<int>();
   }
 
-  public async Task Next()
+  private async Task Next()
   {
     isWaiting = true;
     messages.Clear();
     bool hasError = false;
     while (!game.IsTurnOver && !hasError)
     {
-      HttpClient bobCloudClient = new HttpClient();
-      JsonContent gameStateJsonContent = JsonContent.Create(
-          new GameOfSchoolContext(
-              game.AllowedCombinationTypes.Aggregate(CombinationTypes.None,
-              (a, b) => a | b),
-          game.CurrentRoll.Roll,
-              game.RollsLeft
-          )
-      );
-
-      DateTime startRequestTime = DateTime.UtcNow;
-      var decisionHttpResponse = await bobCloudClient.PostAsync(
-          bobApiAddress,
-          gameStateJsonContent
-      );
-      AddMessage($"Request took '{DateTime.UtcNow - startRequestTime}'");
-
-      System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
-
-      System.IO.StreamReader sr = new System.IO.StreamReader(s);
-
-      string decisionJson = sr.ReadToEnd();
-
       try
       {
-        var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
-        DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
-        Decision decision = typedDecision.Decision;
-        AddMessage($"For {game.CurrentRoll} I decide to {decision}.");
+        Decision decision = await DecideOnRoll();
 
         game.ApplyDecision(decision);
         if (decision is Reroll)
@@ -165,4 +139,37 @@
     isWaiting = false;
     await OnTurnCompleted.InvokeAsync();
   }
+
+  private async Task<Decision> DecideOnRoll()
+  {
+    DateTime startRequestTime = DateTime.UtcNow;
+    HttpClient bobCloudClient = new HttpClient();
+    JsonContent gameStateJsonContent = JsonContent.Create(
+      new GameOfSchoolContext(
+        game.AllowedCombinationTypes.Aggregate(CombinationTypes.None,
+        (a, b) => a | b),
+      game.CurrentRoll.Roll,
+        game.RollsLeft
+      )
+    );
+
+    var decisionHttpResponse = await bobCloudClient.PostAsync(
+      bobApiAddress,
+      gameStateJsonContent
+    );
+    AddMessage($"Request took '{DateTime.UtcNow - startRequestTime}'");
+
+    System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
+
+    System.IO.StreamReader sr = new System.IO.StreamReader(s);
+
+    string decisionJson = sr.ReadToEnd();
+    var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
+    DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
+    Decision decision = typedDecision.Decision;
+    AddMessage($"For {game.CurrentRoll} I decide to {decision}.");
+    return decision;
+  }
+
+
 }
