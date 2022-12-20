@@ -1,10 +1,10 @@
-namespace BobTheDiceMasterAwsLambdaApi
+namespace BobTheDiceMaster.Api
 {
   /// <summary>
   /// This class extends from APIGatewayProxyFunction which contains the method FunctionHandlerAsync which is the 
   /// actual Lambda function entry point. The Lambda handler field should be set to
   /// 
-  /// BobTheDiceMasterAwsLambdaApi::BobTheDiceMasterAwsLambdaApi.LambdaEntryPoint::FunctionHandlerAsync
+  /// BobTheDiceMaster.Api::BobTheDiceMaster.Api.LambdaEntryPoint::FunctionHandlerAsync
   /// </summary>
   public class LambdaEntryPoint :
 

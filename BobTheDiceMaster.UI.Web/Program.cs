@@ -4,7 +4,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BobTheDiceMasterWebUI
+namespace BobTheDiceMaster.UI.Web
 {
   public class Program
   {

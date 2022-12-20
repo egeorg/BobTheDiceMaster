@@ -3,8 +3,8 @@
   <PropertyGroup>
     <RazorPage_SelectedScaffolderID>RazorPageScaffolder</RazorPage_SelectedScaffolderID>
     <RazorPage_SelectedScaffolderCategoryPath>root/Common/RazorPage</RazorPage_SelectedScaffolderCategoryPath>
-    <ActiveDebugProfile>BobTheDiceMasterWebUI</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>C:\git\BobTheDiceMasterWebUI\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
+    <ActiveDebugProfile>BobTheDiceMaster.UI.Web</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>C:\git\BobTheDiceMaster.UI.Web\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>

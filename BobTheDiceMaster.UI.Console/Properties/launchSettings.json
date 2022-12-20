@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "BobTheDiceMasterConsoleUI": {
+    "BobTheDiceMaster.UI.Console": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

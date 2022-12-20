@@ -3,7 +3,7 @@ using System.Linq;
 
 using BobTheDiceMaster;
 
-namespace BobTheDiceMasterConsoleUI
+namespace BobTheDiceMaster.UI.Console
 {
   class Program
   {

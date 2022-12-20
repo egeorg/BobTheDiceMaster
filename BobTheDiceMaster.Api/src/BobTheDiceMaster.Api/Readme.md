@@ -58,12 +58,12 @@ If already installed check if new version is available.
 
 Execute unit tests
 ```
-    cd "BobTheDiceMasterAwsLambdaApi/test/BobTheDiceMasterAwsLambdaApi.Tests"
+    cd "BobTheDiceMaster.Api/test/BobTheDiceMaster.Api.Tests"
     dotnet test
 ```
 
 Deploy application
 ```
-    cd "BobTheDiceMasterAwsLambdaApi/src/BobTheDiceMasterAwsLambdaApi"
+    cd "BobTheDiceMaster.Api/src/BobTheDiceMaster.Api"
     dotnet lambda deploy-serverless
 ```

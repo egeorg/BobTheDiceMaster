@@ -2,7 +2,7 @@
 using BobTheDiceMaster;
 using BobTheDiceMaster.Decisions;
 
-namespace BobTheDiceMasterAwsLambdaApi.Controllers
+namespace BobTheDiceMaster.Api.Controllers
 {
   [Route("[controller]")]
   public class BobController : ControllerBase

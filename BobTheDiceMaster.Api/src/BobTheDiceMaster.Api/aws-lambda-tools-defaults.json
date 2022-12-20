@@ -8,7 +8,7 @@
   "profile": "",
   "region": "",
   "configuration": "Release",
-  "s3-prefix": "BobTheDiceMasterAwsLambdaApi/",
+  "s3-prefix": "BobTheDiceMaster.Api/",
   "template": "serverless.template",
   "template-parameters": ""
 }

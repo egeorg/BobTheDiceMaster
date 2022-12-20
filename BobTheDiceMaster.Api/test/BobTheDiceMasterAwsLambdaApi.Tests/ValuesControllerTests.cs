@@ -6,7 +6,7 @@ using Amazon.Lambda.APIGatewayEvents;
 
 
 
-namespace BobTheDiceMasterAwsLambdaApi.Tests;
+namespace BobTheDiceMaster.Api.Tests;
 
 public class ValuesControllerTests
 {

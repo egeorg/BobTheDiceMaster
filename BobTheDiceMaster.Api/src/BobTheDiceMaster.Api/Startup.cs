@@ -1,4 +1,4 @@
-﻿namespace BobTheDiceMasterAwsLambdaApi
+﻿namespace BobTheDiceMaster.Api
 {
   public class Startup
   {
