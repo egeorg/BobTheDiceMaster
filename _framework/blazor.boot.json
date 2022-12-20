@@ -2,13 +2,13 @@
   "cacheBootResources": false,
   "config": [ ],
   "debugBuild": false,
-  "entryAssembly": "BobTheDiceMasterWebUI",
+  "entryAssembly": "BobTheDiceMaster.UI.Web",
   "icuDataMode": 0,
   "linkerEnabled": true,
   "resources": {
     "assembly": {
       "BobTheDiceMaster.dll": "sha256-IoX\/Z9pCXlYQxBDpeGCzbBssT\/mwCPr8hAXeYRfMH+8=",
-      "BobTheDiceMasterWebUI.dll": "sha256-zC2mwPiCpky0uzCS20KTYKVBZUyCqv5DxMel3YUiyZY=",
+      "BobTheDiceMaster.UI.Web.dll": "sha256-y5ykOg9OVI7XN+2goojUSc5FpQCIW+6yCjob3kcHmIo=",
       "Microsoft.AspNetCore.Components.dll": "sha256-Pl\/UQ0iOTeAYbdF1SW4LtYcLhOa7Y2X5LE\/JbYX0rOo=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-0FF2e7kgo+OaEpIvfajWgZrnvKTBJ+ieJfL5Q6xK0fA=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-zD6Me\/E7IFgEc8hbtU6Scr\/z5hu3zPTxoy5FcpBOPmU=",
