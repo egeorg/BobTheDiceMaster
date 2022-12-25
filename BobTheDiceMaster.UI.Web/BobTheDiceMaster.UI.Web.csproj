@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BobTheDiceMaster.Api.Client\BobTheDiceMaster.Api.Client.csproj" />
     <ProjectReference Include="..\BobTheDiceMaster\BobTheDiceMaster.csproj" />
   </ItemGroup>
 

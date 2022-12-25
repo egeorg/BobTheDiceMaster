@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BobTheDiceMaster;
-using BobTheDiceMaster.Decisions;
+using BobTheDiceMaster.Api.Model;
 
 namespace BobTheDiceMaster.Api.Controllers
 {
@@ -16,7 +15,7 @@ namespace BobTheDiceMaster.Api.Controllers
 
     // POST /bob/{bobVersion}
     [HttpPost("{bobVersion}")]
-    public DecisionWrapper Post(BobSelector bobVersion, [FromBody] GameOfSchoolContext gameContext)
+    public Model.Decision Post(BobSelector bobVersion, [FromBody] GameOfSchoolContext gameContext)
     {
       IPlayer bob = bobVersion switch
       {
@@ -28,18 +27,19 @@ namespace BobTheDiceMaster.Api.Controllers
       };
 
       Decision decision = bob.DecideOnRoll(
-        gameContext.AvailableCombinations, gameContext.DiceRoll, gameContext.RollsLeft);
-      return new DecisionWrapper { Decision = decision };
+        gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RollsLeft);
+
+      return new Model.Decision(decision);
     }
 
     // POST /bob
     [HttpPost]
-    public DecisionWrapper Post([FromBody] GameOfSchoolContext gameContext)
+    public Model.Decision Post([FromBody] GameOfSchoolContext gameContext)
     {
       IPlayer aiPlayer = new RecursiveBruteForceBob();
       Decision decision = aiPlayer.DecideOnRoll(
-        gameContext.AvailableCombinations, gameContext.DiceRoll, gameContext.RollsLeft);
-      return new DecisionWrapper { Decision = decision };
+        gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RollsLeft);
+      return new Model.Decision(decision);
     }
   }
 }

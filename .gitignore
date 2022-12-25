@@ -22,3 +22,6 @@
 /BobPrecomputer/bin/Debug/net6.0
 /BobPrecomputer/obj
 /BobTheDiceMaster.Api.Client/obj
+/TestOpenApiClient/obj
+/TestOpenApiClient/bin/Debug/net6.0
+/BobTheDiceMaster.Api.Client/bin/Debug/net6.0

@@ -107,6 +107,27 @@
     new SortedSet<int>();
   }
 
+  private Decision ConvertApiToCore(BobTheDiceMaster.Api.Client.Decision apiDecision)
+  {
+    if (apiDecision.Reroll != null)
+    {
+      return new Reroll(apiDecision.Reroll.ValuesToReroll);
+    }
+    else if (apiDecision.Score != null)
+    {
+      return new Score(apiDecision.Score.Combination);
+    }
+    else if (apiDecision.Score != null)
+    {
+      return new Score(apiDecision.Score.Combination);
+    }
+    else
+    {
+      throw new InvalidOperationException(
+        $"All {typeof(BobTheDiceMaster.Api.Client.Decision)} fields are null");
+    }
+  }
+
   private async Task Next()
   {
     isWaiting = true;
@@ -117,8 +138,10 @@
       try
       {
         Decision decision = await DecideOnRoll();
+        AddMessage($"For {game.CurrentRoll} I decide to {decision}.");
 
         game.ApplyDecision(decision);
+
         if (decision is Reroll)
         {
           game.GenerateAndApplyReroll();
@@ -145,12 +168,13 @@
     DateTime startRequestTime = DateTime.UtcNow;
     HttpClient bobCloudClient = new HttpClient();
     JsonContent gameStateJsonContent = JsonContent.Create(
-      new GameOfSchoolContext(
-        game.AllowedCombinationTypes.Aggregate(CombinationTypes.None,
-        (a, b) => a | b),
-      game.CurrentRoll.Roll,
-        game.RollsLeft
-      )
+      new BobTheDiceMaster.Api.Client.GameOfSchoolContext()
+      {
+        AvailableCombinations =
+          game.AllowedCombinationTypes.Aggregate(CombinationTypes.None, (a, b) => a | b),
+        DiceRoll = Enumerable.Range(0, game.CurrentRoll.Roll.DiceAmount).Select(n => game.CurrentRoll.Roll[n]).ToArray(),
+        RollsLeft = game.RollsLeft
+      }
     );
 
     var decisionHttpResponse = await bobCloudClient.PostAsync(
@@ -164,11 +188,16 @@
     System.IO.StreamReader sr = new System.IO.StreamReader(s);
 
     string decisionJson = sr.ReadToEnd();
-    var decisionWrapperJsonConverter = JsonSerializerOptions.Default.GetConverter(typeof(DecisionWrapper));
-    DecisionWrapper typedDecision = JsonSerializer.Deserialize<DecisionWrapper>(decisionJson);
-    Decision decision = typedDecision.Decision;
-    AddMessage($"For {game.CurrentRoll} I decide to {decision}.");
-    return decision;
+    var decisionWrapperJsonConverter =
+    JsonSerializerOptions.Default.GetConverter(typeof(BobTheDiceMaster.Api.Client.Decision));
+    BobTheDiceMaster.Api.Client.Decision decision =
+    JsonSerializer.Deserialize<BobTheDiceMaster.Api.Client.Decision>(
+      decisionJson,
+      new JsonSerializerOptions
+      {
+        PropertyNameCaseInsensitive = true
+      });
+    return ConvertApiToCore(decision);
   }
 
 
