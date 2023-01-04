@@ -1,11 +1,13 @@
 ﻿<div>
-  <h1>Player @playerCounter turn</h1>
+  <h1>Player @(playerCounter + 1) turn</h1>
 </div>
 <div>
   <div style="display:inline-block">
+    Player 1
     <HumanGame IsActive="@isPlayerActive[0]" OnTurnCompleted="NextPlayerTurn" />
   </div>
   <div style="display:inline-block">
+    Player 2
     <BobGame IsActive="@isPlayerActive[1]" OnTurnCompleted="NextPlayerTurn" />
   </div>
 </div>
