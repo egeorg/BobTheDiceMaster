@@ -22,7 +22,12 @@
           .AllowAnyMethod()
           .AllowAnyHeader();
       }));
-      services.AddSwaggerGen(); 
+      services.AddSwaggerGen(c =>
+      {
+        // Required to mark nullable properties as nullable as described at
+        // https://stackoverflow.com/questions/71299450/make-swashbuckle-describe-a-reference-type-property-as-nullable-or-make-nswag-d.
+        c.UseAllOfToExtendReferenceSchemas();
+      }); 
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline

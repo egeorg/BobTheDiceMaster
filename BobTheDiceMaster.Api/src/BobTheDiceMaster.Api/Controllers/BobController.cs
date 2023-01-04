@@ -14,8 +14,9 @@ namespace BobTheDiceMaster.Api.Controllers
     }
 
     // POST /bob/{bobVersion}
-    [HttpPost("{bobVersion}")]
-    public Model.Decision Post(BobSelector bobVersion, [FromBody] GameOfSchoolContext gameContext)
+    [HttpPost("{bobVersion}", Name = nameof(DecideOnRoll))]
+    [Produces("application/json")]
+    public ActionResult<Model.Decision> DecideOnRoll(BobSelector bobVersion, [FromBody] GameOfSchoolContext gameContext)
     {
       IPlayer bob = bobVersion switch
       {
@@ -33,8 +34,9 @@ namespace BobTheDiceMaster.Api.Controllers
     }
 
     // POST /bob
-    [HttpPost]
-    public Model.Decision Post([FromBody] GameOfSchoolContext gameContext)
+    [HttpPost(Name = nameof(DefaultBobDecideOnRoll))]
+    [Produces("application/json")]
+    public ActionResult<Model.Decision> DefaultBobDecideOnRoll([FromBody] GameOfSchoolContext gameContext)
     {
       IPlayer aiPlayer = new RecursiveBruteForceBob();
       Decision decision = aiPlayer.DecideOnRoll(
