@@ -1,0 +1,270 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "BobTheDiceMaster.Api",
+    "version": "1.0"
+  },
+  "paths": {
+    "/Bob": {
+      "get": {
+        "tags": [
+          "Bob"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Bob"
+        ],
+        "operationId": "DefaultBobDecideOnRoll",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GameOfSchoolContext"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GameOfSchoolContext"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GameOfSchoolContext"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Decision"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Bob/{bobVersion}": {
+      "post": {
+        "tags": [
+          "Bob"
+        ],
+        "operationId": "DecideOnRoll",
+        "parameters": [
+          {
+            "name": "bobVersion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/BobSelector"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GameOfSchoolContext"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GameOfSchoolContext"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GameOfSchoolContext"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Decision"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BobSelector": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "CombinationTypes": {
+        "enum": [
+          0,
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          63,
+          64,
+          128,
+          256,
+          512,
+          1024,
+          2048,
+          4096,
+          8192,
+          16384,
+          32704,
+          32767
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "CrossOut": {
+        "type": "object",
+        "properties": {
+          "combination": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CombinationTypes"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "Decision": {
+        "type": "object",
+        "properties": {
+          "reroll": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Reroll"
+              }
+            ],
+            "nullable": true
+          },
+          "score": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Score"
+              }
+            ],
+            "nullable": true
+          },
+          "crossOut": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CrossOut"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GameOfSchoolContext": {
+        "type": "object",
+        "properties": {
+          "availableCombinations": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CombinationTypes"
+              }
+            ]
+          },
+          "diceRoll": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "rollsLeft": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Reroll": {
+        "type": "object",
+        "properties": {
+          "valuesToReroll": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Score": {
+        "type": "object",
+        "properties": {
+          "combination": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CombinationTypes"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

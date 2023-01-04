@@ -80,8 +80,8 @@
 
   private List<string> messages = new List<string>();
 
-  const string bobApiAddress = "https://epjlghh8jh.execute-api.eu-central-1.amazonaws.com/bob/precomputed";
-  //const string bobApiAddress = "https://localhost:51777/bob/precomputed";
+  const string bobApiAddress = "https://epjlghh8jh.execute-api.eu-central-1.amazonaws.com/";
+  //const string bobApiAddress = "https://localhost:51777/";
 
   private void ResetRolls()
   {
@@ -107,7 +107,7 @@
     new SortedSet<int>();
   }
 
-  private Decision ConvertApiToCore(BobTheDiceMaster.Api.Client.Decision apiDecision)
+  private Decision ConvertSwaggerToCore(Api.SwaggerClient.Decision apiDecision)
   {
     if (apiDecision.Reroll != null)
     {
@@ -115,16 +115,16 @@
     }
     else if (apiDecision.Score != null)
     {
-      return new Score(apiDecision.Score.Combination);
+      return new Score((CombinationTypes)apiDecision.Score.Combination);
     }
     else if (apiDecision.Score != null)
     {
-      return new Score(apiDecision.Score.Combination);
+      return new Score((CombinationTypes)apiDecision.Score.Combination);
     }
     else
     {
       throw new InvalidOperationException(
-        $"All {typeof(BobTheDiceMaster.Api.Client.Decision)} fields are null");
+        $"All {typeof(BobTheDiceMaster.Api.SwaggerClient.Decision)} fields are null");
     }
   }
 
@@ -166,38 +166,20 @@
   private async Task<Decision> DecideOnRoll()
   {
     DateTime startRequestTime = DateTime.UtcNow;
-    HttpClient bobCloudClient = new HttpClient();
-    JsonContent gameStateJsonContent = JsonContent.Create(
-      new BobTheDiceMaster.Api.Client.GameOfSchoolContext()
-      {
-        AvailableCombinations =
-          game.AllowedCombinationTypes.Aggregate(CombinationTypes.None, (a, b) => a | b),
-        DiceRoll = Enumerable.Range(0, game.CurrentRoll.Roll.DiceAmount).Select(n => game.CurrentRoll.Roll[n]).ToArray(),
-        RollsLeft = game.RollsLeft
-      }
-    );
+    using HttpClient httpClient = new HttpClient();
+    var bobClient = new BobTheDiceMaster.Api.SwaggerClient.BobApiClient(bobApiAddress, httpClient);
 
-    var decisionHttpResponse = await bobCloudClient.PostAsync(
-      bobApiAddress,
-      gameStateJsonContent
-    );
+    var gameContext = new Api.SwaggerClient.GameOfSchoolContext();
+    gameContext.AvailableCombinations = (Api.SwaggerClient.CombinationTypes)game.AllowedCombinationTypes.Aggregate(CombinationTypes.None, (a, b) => a | b);
+    gameContext.DiceRoll = Enumerable.Range(0, game.CurrentRoll.Roll.DiceAmount)
+        .Select(n => game.CurrentRoll.Roll[n]).ToArray();
+    gameContext.RollsLeft = game.RollsLeft;
+
+    var decision = await bobClient.DefaultBobDecideOnRollAsync(
+        gameContext);
     AddMessage($"Request took '{DateTime.UtcNow - startRequestTime}'");
 
-    System.IO.Stream s = decisionHttpResponse.Content.ReadAsStream();
-
-    System.IO.StreamReader sr = new System.IO.StreamReader(s);
-
-    string decisionJson = sr.ReadToEnd();
-    var decisionWrapperJsonConverter =
-    JsonSerializerOptions.Default.GetConverter(typeof(BobTheDiceMaster.Api.Client.Decision));
-    BobTheDiceMaster.Api.Client.Decision decision =
-    JsonSerializer.Deserialize<BobTheDiceMaster.Api.Client.Decision>(
-      decisionJson,
-      new JsonSerializerOptions
-      {
-        PropertyNameCaseInsensitive = true
-      });
-    return ConvertApiToCore(decision);
+    return ConvertSwaggerToCore(decision);
   }
 
 
