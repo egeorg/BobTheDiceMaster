@@ -28,7 +28,7 @@ namespace BobTheDiceMaster.Api.Controllers
       };
 
       Decision decision = bob.DecideOnRoll(
-        gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RollsLeft);
+        gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RerollsLeft);
 
       return new Model.Decision(decision);
     }
@@ -40,7 +40,7 @@ namespace BobTheDiceMaster.Api.Controllers
     {
       IPlayer aiPlayer = new RecursiveBruteForceBob();
       Decision decision = aiPlayer.DecideOnRoll(
-        gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RollsLeft);
+        gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RerollsLeft);
       return new Model.Decision(decision);
     }
   }

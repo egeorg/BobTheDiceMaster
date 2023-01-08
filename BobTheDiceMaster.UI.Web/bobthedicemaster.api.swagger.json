@@ -231,7 +231,7 @@
             },
             "nullable": true
           },
-          "rollsLeft": {
+          "rerollsLeft": {
             "type": "integer",
             "format": "int32"
           }
