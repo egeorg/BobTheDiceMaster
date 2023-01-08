@@ -102,11 +102,6 @@
     StateHasChanged();
   }
 
-  private void MethodNeverCalled()
-  {
-    new SortedSet<int>();
-  }
-
   private Decision ConvertSwaggerToCore(Api.SwaggerClient.Decision apiDecision)
   {
     if (apiDecision.Reroll != null)
