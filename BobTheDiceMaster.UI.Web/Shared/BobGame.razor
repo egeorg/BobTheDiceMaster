@@ -99,6 +99,16 @@
     StateHasChanged();
   }
 
+  /// <summary>
+  /// This method makes a call to GenerateAndApplyDecision asynchronous so that the
+  /// UI can be updated asynchronously while the decision is being calculated.
+  /// </summary>
+  private async Task<Decision> GenerateAndApplyDecisionAsync()
+  {
+    await Task.Yield();
+    return game.GenerateAndApplyDecision();
+  }
+
   private async Task Next()
   {
     isWaiting = true;
@@ -109,7 +119,7 @@
       string newMessage = $"For {game.CurrentRoll} I decide to ";
 
       DateTime startTime = DateTime.UtcNow;
-      Decision decision = game.GenerateAndApplyDecision();
+      Decision decision = await GenerateAndApplyDecisionAsync();
       AddMessage($"Decision took '{DateTime.UtcNow - startTime}'");
 
       newMessage += $" {decision}.";
