@@ -71,7 +71,7 @@ namespace BobPrecomputer
 
     private static byte ByteSerialize(CrossOut crossOut)
     {
-      return (byte)(GetIndex(crossOut.Combination) | 0b01000000);
+      return (byte)(GetIndex(crossOut.Combination) | 0b01100000);
     }
 
     private static byte ByteSerialize(DiceRoll roll, Reroll rerollByValue)
