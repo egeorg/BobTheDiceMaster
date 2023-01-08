@@ -3,7 +3,7 @@
 ## Formalize the problem
 
 AI for School can be expressed as a single function that maps game context to a decision. Context consists of:
-A set of combination types that can be scored
+A set of combinations that can be scored
 Latest roll results
 Number or rerolls left
 
@@ -24,14 +24,18 @@ For each of the decisions it would be defined differently.
 
 More complex, but not optimal profit function is used by Bob.
 
-### Average score
+### Grades score
 
-Let's define the average score for a combination. Imagine that you aim to score a specific combination from scratch. It it is the last round of the game when only a single combination left not scored.
+Negative score of grades makes it harder to compare them to other combinations. Note that the game will be essentially the same if grades score will be positive, and will be calculated as sum of the dice values of corresponding grade, e.g. sum of all 6 dice for 6-th grade. The only thing that would change will be the final score that would be greater by 105 points, i.e. greater by k\*5 for each grade number k, k=1..6 (105 = Sum(k=1..6, k\*5)).
 
-Then an average amount of points that it will yield given an optimal strategy is used will be the average score of the combination. Optimal strategy is determined by brute force. TODO: how??
+### Average profit
+
+Let's define the average profit for a combination. Imagine that you aim to score a specific combination from scratch. It is the last round of the game i.e. only that single combination is left.
+
+Then an average amount of points that it will yield given an optimal strategy (average across all the possible dice roll results) is used will be the average score of the combination. Algorithms for optimal strategy for a single target combination is straightforward and will not be described here.
 
 The average score does not depend on game context, and I use precomputed values to save time.
-TODO: why grades are positive??
+
 Here are the precomputed average profit by combinations:
 | Combination | Average score |
 |-|-|
@@ -51,24 +55,22 @@ Here are the precomputed average profit by combinations:
 | Poker | 0.8804221388169133 |
 | Trash | 35.100630144032884 |
 
-This number show approximately how much benefit we on average get from each combination during the game.
+This number show approximately how much benefit we on average get from each combinations during the game.
 
 ### Profit function for a cross out decision
 
-TODO: explain things like AverageScore(combination)
-TODO: combination vs combination type
-After crossing out a combination, a player can't score it anymore, hence (on average) a player loses an AverageScore(combination)) points. It means that the score of CrossOut(combinationType) can be negative average score of that combination: -AverageScore(combinationType).
+After crossing out a combination, a player can't score it anymore, hence (on average) a player loses an AverageScore(combination)) points. It means that the score of CrossOut(combination) can be a negative average score of that combination: -AverageScore(combination).
 
 ### Profit function for a score decision
 
-It makes sense to score a combination if scoring it right now it will yield more points than trying to roll that combination from scratch, i.e. score of Score(combinationType) can be defined as a difference between the amount of points that it yields and average score of a the combination type: Score(combintionType) - AverateScore(combinationType).
+It makes sense to score a combination if scoring it right now it will yield more points than trying to roll corresponding combination from scratch, i.e. profit of Score(combination) can be defined as a difference between the amount of points that it yields and average profit of the combination: Score(combination) - AverageScore(combination).
 
 ### Profit function for a reroll decision
 
 Here where it gets interesting.
 A reroll profit can be defined recursively:
 
-Now we know how to calculate profit for "Score" and "Cross out" decisions. If no rerolls are left, we can already choose the best decision by iterating across all the available combinations and choosing the decision+combination type that yields the most profit. Let's call it Profit(roll, 0) where 0 means that zero rerolls are left. It would be the base of recursion.
+Now we know how to calculate profit for "Score" and "Cross out" decisions. If no rerolls are left, we can already choose the best decision by iterating across all the available combinations and choosing the decision+combination that yields the most profit. Let's call it Profit(roll, 0) where 0 means that zero rerolls are left. It would be the base of recursion.
 
 1) Across all the possible reroll results, return sum of Probability(rerollResult) \* Profit(rerollResult, rerollsLeft - 1).
 
