@@ -77,7 +77,7 @@
   private string CombinationToCrossOut { get; set; }
   private bool IsRerollDisabled => !IsActive
       || game.State != GameOfSchoolState.Rolled
-      || game.RollsLeft <= 1
+      || game.RerollsLeft <= 0
       || !diceSelected.Any(x => x);
   private bool IsRollDisabled => !IsActive
       || game.State != GameOfSchoolState.Idle;

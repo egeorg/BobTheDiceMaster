@@ -49,9 +49,9 @@ namespace BobTheDiceMaster
       DecisionInfo noRerollBestDecision = GetNoRerollBestDecision(
         availableCombinations,
         currentRoll,
-        isFirstReroll: rerollsLeft == 3);
+        isFirstReroll: rerollsLeft == 2);
 
-      if (rerollsLeft == 1)
+      if (rerollsLeft == 0)
       {
         decisionCache[availableCombinations][rerollsLeft].Add(currentRoll, noRerollBestDecision);
         return noRerollBestDecision;

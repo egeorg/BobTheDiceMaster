@@ -24,7 +24,7 @@ namespace BobTheDiceMaster
       state == GameOfSchoolState.Idle
       || state == GameOfSchoolState.GameOver;
 
-    public int RollsLeft => rollsLeft;
+    public int RerollsLeft => rerollsLeft;
 
     public GameOfSchool(IPlayer player)
     {
@@ -45,7 +45,7 @@ namespace BobTheDiceMaster
     public DiceRollDistinct GenerateRoll()
     {
       VerifyState(GameOfSchoolState.Idle);
-      rollsLeft = RollsPerTurn;
+      rerollsLeft = RerollsPerTurn;
       currentRoll = new DiceRollDistinct(d6.Roll(DiceRoll.MaxDiceAmount));
       state = GameOfSchoolState.Rolled;
       return currentRoll;
@@ -72,7 +72,7 @@ namespace BobTheDiceMaster
       VerifyState(GameOfSchoolState.Rolled);
       int[] reroll = d6.Roll(diceToReroll.Length);
       currentRoll = currentRoll.ApplyReroll(diceToReroll, reroll);
-      --rollsLeft;
+      --rerollsLeft;
     }
 
     public void ApplyReroll(int[] reroll)
@@ -85,7 +85,7 @@ namespace BobTheDiceMaster
     {
       VerifyState(GameOfSchoolState.Rolled);
       Decision decision = player.DecideOnRoll(
-        allowedCombinationTypes, currentRoll.Roll, rollsLeft);
+        allowedCombinationTypes, currentRoll.Roll, rerollsLeft);
       ApplyDecision(decision);
       return decision;
     }
@@ -96,7 +96,7 @@ namespace BobTheDiceMaster
       switch (decision)
       {
         case Reroll reroll:
-          --rollsLeft;
+          --rerollsLeft;
           diceToReroll = GetDiceToReroll(reroll.DiceValuesToReroll);
           break;
         case Score score:
@@ -110,7 +110,7 @@ namespace BobTheDiceMaster
             throw new InvalidOperationException(
               $"Combination {score.CombinationToScore} can't be scored for roll {currentRoll}");
           }
-          if (rollsLeft == RollsPerTurn
+          if (rerollsLeft == RerollsPerTurn
             && !score.CombinationToScore.IsFromSchool())
           {
             totalScore += currentRoll.Roll.Score(score.CombinationToScore).Value * 2;
@@ -170,11 +170,11 @@ namespace BobTheDiceMaster
 
     private IPlayer player;
     private D6 d6;
-    private const int RollsPerTurn = 3;
+    private const int RerollsPerTurn = 2;
 
     private DiceRollDistinct currentRoll;
     private int[] diceToReroll;
-    private int rollsLeft;
+    private int rerollsLeft;
     private int totalScore;
     private CombinationTypes allowedCombinationTypes;
     private bool isSchoolFinished;

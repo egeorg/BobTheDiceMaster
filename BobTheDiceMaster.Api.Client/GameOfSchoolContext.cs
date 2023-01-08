@@ -4,6 +4,6 @@
   {
     public CombinationTypes AvailableCombinations { get; set; }
     public int[] DiceRoll { get; set; }
-    public int RollsLeft { get; set; }
+    public int RerollsLeft { get; set; }
   }
 }

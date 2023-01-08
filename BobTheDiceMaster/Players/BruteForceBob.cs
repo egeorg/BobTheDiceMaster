@@ -6,14 +6,14 @@ namespace BobTheDiceMaster
   class BruteForceBob : IPlayer
   {
     public Decision DecideOnRoll(
-      CombinationTypes availableCombinations, DiceRoll currentRoll, int rollsLeft)
+      CombinationTypes availableCombinations, DiceRoll currentRoll, int rerollsLeft)
     {
       double firstRollScore;
-      //TODO[GE]: 3 to constants?
+      //TODO[GE]: 2 to constants?
       CombinationTypes bestFirstRollCombination = GetBestCombination(
-        availableCombinations, currentRoll, isFirstRoll: rollsLeft == 3, out firstRollScore);
+        availableCombinations, currentRoll, isFirstRoll: rerollsLeft == 2, out firstRollScore);
 
-      if (rollsLeft == 1)
+      if (rerollsLeft == 0)
       {
         CombinationTypes leastValuableCombination =
           GetLeastValuableCombination(availableCombinations, currentRoll, out double worstScore);
@@ -58,7 +58,7 @@ namespace BobTheDiceMaster
           // Best available score for secondRoll if no rerolls left.
           double secondRollScore;
 
-          if (rollsLeft == 2)
+          if (rerollsLeft == 1)
           {
             secondRollScore = GetBestScore(
               availableCombinations, secondRoll, isFirstRoll: false);

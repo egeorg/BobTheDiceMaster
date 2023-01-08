@@ -80,9 +80,9 @@ namespace BobTheDiceMaster
         SortedSet<DecisionInfoVerbose> noRerollRatedDecisions = GetNoRerollRatedDecisions(
           availableCombinations,
           currentRoll,
-          isFirstReroll: rerollsLeft == 3);
+          isFirstReroll: rerollsLeft == 2);
 
-        if (rerollsLeft == 1)
+        if (rerollsLeft == 0)
         {
           ratedDecisionsCache[availableCombinations][rerollsLeft].TryAdd(currentRoll, noRerollRatedDecisions);
           return noRerollRatedDecisions;

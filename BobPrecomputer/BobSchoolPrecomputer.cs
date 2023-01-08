@@ -21,15 +21,15 @@ namespace BobPrecomputer
 
     public void Precompute()
     {
-      for (int rollsLeft = 1; rollsLeft <= 3; ++rollsLeft)
+      for (int rerollsLeft = 0; rerollsLeft <= 2; ++rerollsLeft)
       {
-        Console.WriteLine($"Computing decisions for {rollsLeft} roll[s] left...");
+        Console.WriteLine($"Computing decisions for {rerollsLeft} roll[s] left...");
         foreach (DiceRoll roll in DiceRoll.Roll5Results)
         {
           Console.WriteLine($"Computing decisions for reroll {roll}.");
           string fileName =
-            $"{rollsLeft}_{String.Join("", Enumerable.Range(0, 5).Select(i => roll[i]))}.bin";
-          File.WriteAllBytes(Path.Combine(outputPath, fileName), Precompute(roll, rollsLeft));
+            $"{rerollsLeft}_{String.Join("", Enumerable.Range(0, 5).Select(i => roll[i]))}.bin";
+          File.WriteAllBytes(Path.Combine(outputPath, fileName), Precompute(roll, rerollsLeft));
         }
       }
     }

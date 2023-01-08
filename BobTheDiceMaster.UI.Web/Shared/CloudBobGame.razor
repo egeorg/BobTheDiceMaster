@@ -173,7 +173,7 @@
     gameContext.AvailableCombinations = (Api.SwaggerClient.CombinationTypes)game.AllowedCombinationTypes.Aggregate(CombinationTypes.None, (a, b) => a | b);
     gameContext.DiceRoll = Enumerable.Range(0, game.CurrentRoll.Roll.DiceAmount)
         .Select(n => game.CurrentRoll.Roll[n]).ToArray();
-    gameContext.RollsLeft = game.RollsLeft;
+    gameContext.RollsLeft = game.RerollsLeft;
 
     var decision = await bobClient.DefaultBobDecideOnRollAsync(
         gameContext);
