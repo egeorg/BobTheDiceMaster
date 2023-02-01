@@ -13,15 +13,18 @@
       Reroll = reroll;
     }
 
-    public DecisionInfo()
-    {
-      //do nothing
-    }
-
     public override string ToString()
     {
       string rerollString = Reroll != null ? string.Join(",", Reroll) : "null";
       return $"DecisionInfo(Value={Value},Combination={Combination},Reroll=({rerollString}))";
+    }
+
+    /// <summary>
+    /// Used by decsendants constructor
+    /// </summary>
+    protected DecisionInfo()
+    {
+      //do nothing
     }
   }
 }

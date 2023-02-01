@@ -5,7 +5,29 @@ namespace BobTheDiceMaster
 {
   public static class CombinationTypesExtension
   {
-    public static IReadOnlyList<CombinationTypes> ElementaryCombinations =>
+    public static IEnumerable<CombinationTypes> GetElementaryCombinationTypes(
+      this CombinationTypes combinations)
+    {
+      foreach (var elementaryCombination in elementaryCombinations)
+      {
+        if ((combinations & elementaryCombination) == elementaryCombination)
+        {
+          yield return elementaryCombination;
+        }
+      }
+    }
+
+    public static bool IsElementary(this CombinationTypes combination)
+    {
+      return elementaryCombinations.Any(x => x == combination);
+    }
+
+    public static bool IsFromSchool(this CombinationTypes combination)
+    {
+      return (combination & CombinationTypes.School) == combination;
+    }
+
+    private static IReadOnlyList<CombinationTypes> elementaryCombinations =>
       new List<CombinationTypes>
       {
         CombinationTypes.Grade1,
@@ -24,27 +46,5 @@ namespace BobTheDiceMaster
         CombinationTypes.Poker,
         CombinationTypes.Trash
       };
-
-    public static IEnumerable<CombinationTypes> GetElementaryCombinationTypes(
-      this CombinationTypes combinations)
-    {
-      foreach (var elementaryCombination in ElementaryCombinations)
-      {
-        if ((combinations & elementaryCombination) == elementaryCombination)
-        {
-          yield return elementaryCombination;
-        }
-      }
-    }
-
-    public static bool IsElementary(this CombinationTypes combination)
-    {
-      return ElementaryCombinations.Any(x => x == combination);
-    }
-
-    public static bool IsFromSchool(this CombinationTypes combination)
-    {
-      return (combination & CombinationTypes.School) == combination;
-    }
   }
 }
