@@ -21,3 +21,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: release/wwwroot
+    - name: Test with the dotnet CLI
+      run: dotnet test
