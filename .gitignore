@@ -25,3 +25,5 @@
 /TestOpenApiClient/obj
 /TestOpenApiClient/bin/Debug/net6.0
 /BobTheDiceMaster.Api.Client/bin/Debug/net6.0
+/BobTheDiceMaster.Test/obj
+/BobTheDiceMaster.Test/bin/Debug/net6.0

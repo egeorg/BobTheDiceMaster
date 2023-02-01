@@ -1,10 +1,5 @@
-﻿using System;
-
-namespace BobTheDiceMaster.Combinations
+﻿namespace BobTheDiceMaster.Test
 {
-  /// <summary>
-  /// Currenlty not used anywhere, may be used in tests.
-  /// </summary>
   public class GradeCombinatorics
   {
     public int GradeNumber { get; }
