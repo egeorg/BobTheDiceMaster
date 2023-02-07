@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// TODO: exploain why do I need a parameter
+  /// </summary>
   public class DiceRoll : IDiceRoll<DiceRoll>
   {
     public int this[int i]
@@ -71,7 +73,6 @@ namespace BobTheDiceMaster
       }
     }
 
-    //TODO: add tests
     private DiceRoll(DiceRoll roll, int[] diceToReroll, IDiceRoll<DiceRoll> rerollResult)
     {
       dice = new int[roll.DiceAmount];
@@ -135,6 +136,9 @@ namespace BobTheDiceMaster
       Array.Sort(dice);
     }
 
+    /// <summary>
+    /// TODO: is it used?
+    /// </summary>
     public void RerollByValue(int[] valuesToReroll, IDie die)
     {
       //TODO[GE]: copy?
@@ -151,7 +155,15 @@ namespace BobTheDiceMaster
         if (valuesToReroll[rerollCounter] == dice[rollCounter])
         {
           diceToReroll[rerollCounter] = rollCounter;
+          ++rerollCounter;
         }
+        ++rollCounter;
+      }
+
+      if (rerollCounter < valuesToReroll.Length)
+      {
+        throw new ArgumentException(
+          $"Can't reroll values {{{String.Join(", ", valuesToReroll)}}} for roll {this}, some of the values were not found");
       }
 
       Reroll(diceToReroll, die);
@@ -183,6 +195,9 @@ namespace BobTheDiceMaster
       return new DiceRoll(this, diceToReroll, rerollResult);
     }
 
+    /// <summary>
+    /// TODO: is it used?
+    /// </summary>
     public DiceRoll ApplyRerollByValue(int[] valuesToReroll, DiceRoll rerollResult)
     {
       if (valuesToReroll.Length != rerollResult.DiceAmount)
@@ -207,23 +222,31 @@ namespace BobTheDiceMaster
         if (valuesToReroll[rerollCounter] == dice[rollCounter])
         {
           newRollDice[rollCounter] = rerollResult[rerollCounter];
+          ++rerollCounter;
         }
+        ++rollCounter;
       }
 
-      rerollCounter = 0;
-
-      for (int i = 0; i < MaxDiceAmount; ++i)
+      if (rerollCounter < valuesToReroll.Length)
       {
-        // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
-        if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
-        {
-          newRollDice[i] = rerollResult[rerollCounter++];
-        }
-        else
-        {
-          newRollDice[i] = dice[i];
-        }
+        throw new ArgumentException(
+          $"Can't reroll values {{{String.Join(", ", valuesToReroll)}}} for roll {this}, some of the values were not found");
       }
+
+      //rerollCounter = 0;
+
+      //for (int i = 0; i < MaxDiceAmount; ++i)
+      //{
+      //  // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
+      //  if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
+      //  {
+      //    newRollDice[i] = rerollResult[rerollCounter++];
+      //  }
+      //  else
+      //  {
+      //    newRollDice[i] = dice[i];
+      //  }
+      //}
       return new DiceRoll(newRollDice);
     }
 
@@ -445,34 +468,54 @@ namespace BobTheDiceMaster
     private static void InitProbabilities()
     {
       //TODO: is it all needed?
-      foreach (DiceRoll roll in Roll5Results)
+      foreach (DiceRoll roll in roll5Results)
       {
         probabilitiesCache.Add(roll, roll.CalculateProbability());
       }
-      foreach (DiceRoll roll in Roll4Results)
+      foreach (DiceRoll roll in roll4Results)
       {
         probabilitiesCache.Add(roll, roll.CalculateProbability());
       }
-      foreach (DiceRoll roll in Roll3Results)
+      foreach (DiceRoll roll in roll3Results)
       {
         probabilitiesCache.Add(roll, roll.CalculateProbability());
       }
-      foreach (DiceRoll roll in Roll2Results)
+      foreach (DiceRoll roll in roll2Results)
       {
         probabilitiesCache.Add(roll, roll.CalculateProbability());
       }
-      foreach (DiceRoll roll in Roll1Results)
+      foreach (DiceRoll roll in roll1Results)
       {
         probabilitiesCache.Add(roll, roll.CalculateProbability());
       }
     }
 
+    /// <summary>
+    /// Probability is calculated as number of distinct dice rolls that yeild
+    /// the numbers specified devided by total number of distinct dice rolls.
+    /// Below are examples for 5 dice rolls, similarly for other number of dice:
+    /// Total number of possible roll results is 6^5, 6 possible results for each dice.
+    /// Number of distinct dice rolls that yield the specific numbers is calculated as follows:
+    /// If all dice values are different, it's 5! (one of 5 dice yeilds the
+    /// first number, one of 4 dice that left yields the second number, etc.)
+    /// It some dice values are repeated, then for each such dice the 5! should be devided
+    /// by x! where x is how many times the value occurs in the dice roll result, for example:
+    /// For roll (1, 2, 3, 4, 5), probability is 5! / 6^5.
+    /// In roll (6,6,6,6,6), 6 appears 5 times =>
+    /// 5! / 5! = 1 possible combination, and probability is 1 / 6^5
+    /// In roll (1,2,6,6,6), 6 appears 3 times and the rest numbers only once =>
+    /// 5! / 3! = 20 combinations, and probability is 20 / 6^5
+    /// In roll (5,5,6,6,6), 6 appears 4 times and 5 appears 2 times =>
+    /// 5! / (3! * 2!) = 10 combinations, and probability is 10 / 6^5
+    /// </summary>
     public double GetProbability()
     {
+      // the probabilitiesCache is filled in an InitProbabilities()
+      // method that to be called from the static constructor.
       return probabilitiesCache[this];
     }
 
-    public double CalculateProbability()
+    private double CalculateProbability()
     {
       int[] diceHist = new int[D6.MaxValue];
       for (int i = 0; i < dice.Length; ++i)
@@ -669,7 +712,7 @@ namespace BobTheDiceMaster
         && valuesCount[3] == 1
         && valuesCount[4] == 1)
       {
-        return 20;
+        return 15;
       }
       return null;
     }
@@ -689,23 +732,19 @@ namespace BobTheDiceMaster
         && valuesCount[4] == 1
         && valuesCount[5] == 1)
       {
-        return 30;
+        return 20;
       }
       return null;
     }
 
-    //TODO[GE]: remove?
     private static List<DiceRoll> roll5Results = new List<DiceRoll>();
     private static List<DiceRoll> roll4Results = new List<DiceRoll>();
     private static List<DiceRoll> roll3Results = new List<DiceRoll>();
     private static List<DiceRoll> roll2Results = new List<DiceRoll>();
     private static List<DiceRoll> roll1Results = new List<DiceRoll>();
 
+    //TODO[GE]: remove? Or change to results depending on number of dice?
     public static IReadOnlyList<DiceRoll> Roll5Results => roll5Results;
-    public static IReadOnlyList<DiceRoll> Roll4Results => roll4Results;
-    public static IReadOnlyList<DiceRoll> Roll3Results => roll3Results;
-    public static IReadOnlyList<DiceRoll> Roll2Results => roll2Results;
-    public static IReadOnlyList<DiceRoll> Roll1Results => roll1Results;
 
     public static IReadOnlyList<DiceRoll>[] RollResults => new[] { roll1Results, roll2Results, roll3Results, roll4Results, roll5Results };
 
