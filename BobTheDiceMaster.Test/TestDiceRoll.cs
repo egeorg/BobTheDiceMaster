@@ -15,7 +15,7 @@ namespace BobTheDiceMaster.Test
     [Fact]
     public void GenerateNew_ReturnsCorrectResult()
     {
-      var dieMock = GetDiceMock(new[] { 2, 4, 4, 5, 6 });
+      var dieMock = TestHelper.GetDiceMock(new[] { 2, 4, 4, 5, 6 });
 
       DiceRoll generatedRoll = DiceRoll.GenerateNew(dieMock.Object);
 
@@ -27,7 +27,7 @@ namespace BobTheDiceMaster.Test
     [Fact]
     public void Reroll_YieldsCorrectResult()
     {
-      var dieMock = GetDiceMock(new[] { 5, 6 });
+      var dieMock = TestHelper.GetDiceMock(new[] { 5, 6 });
 
       DiceRoll testedRoll = new DiceRoll(new[] { 1, 3, 6, 6, 6 });
 
@@ -43,7 +43,7 @@ namespace BobTheDiceMaster.Test
     [Fact]
     public void RerollByValue_YieldsCorrectResult()
     {
-      var dieMock = GetDiceMock(new[] { 5, 6 });
+      var dieMock = TestHelper.GetDiceMock(new[] { 5, 6 });
 
       DiceRoll testedRoll = new DiceRoll(new[] { 1, 3, 6, 6, 6 });
 
@@ -206,7 +206,7 @@ namespace BobTheDiceMaster.Test
     {
       var roll = new DiceRoll(diceValues);
 
-      Assert.Equal(probability, roll.GetProbability(), tolerance);
+      Assert.Equal(probability, roll.GetProbability(), TestHelper.Tolerance);
     }
 
     [Theory]
@@ -222,7 +222,7 @@ namespace BobTheDiceMaster.Test
       {
         pSum += reroll.GetProbability();
       }
-      Assert.Equal(1, pSum, tolerance);
+      Assert.Equal(1, pSum, TestHelper.Tolerance);
     }
 
     [Fact]
@@ -254,17 +254,6 @@ namespace BobTheDiceMaster.Test
           hashCodes.Add(hashCode);
         }
       }
-    }
-
-    private static double tolerance = 0.000001;
-
-    private static Mock<IDie> GetDiceMock(int[] results)
-    {
-      var dieMock = new Mock<IDie>();
-      dieMock.Setup(die => die.Roll(results.Length))
-        .Returns(results);
-
-      return dieMock;
     }
   }
 }
