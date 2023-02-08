@@ -6,11 +6,15 @@ namespace BobTheDiceMaster.Test
   {
     public const double Tolerance = 0.000001;
 
-    public static Mock<IDie> GetDiceMock(int[] results)
+    public static Mock<IDie> GetDiceMock(params int[][] results)
     {
       var dieMock = new Mock<IDie>();
-      dieMock.Setup(die => die.Roll(results.Length))
-        .Returns(results);
+
+      foreach (int[] result in results)
+      {
+        dieMock.Setup(die => die.Roll(result.Length))
+          .Returns(result);
+      }
 
       return dieMock;
     }

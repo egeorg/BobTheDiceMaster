@@ -8,11 +8,11 @@ namespace BobTheDiceMaster
     public List<int> DiceValuesToReroll { get; }
 
     public Reroll(
-      IEnumerable<int> diceToReroll,
+      IEnumerable<int> diceValuesToReroll,
       IEnumerable<DecisionInfoVerbose> decisionInfos = null)
       : base(decisionInfos)
     {
-      DiceValuesToReroll = diceToReroll.ToList();
+      DiceValuesToReroll = diceValuesToReroll.ToList();
     }
 
     public override string ToString()

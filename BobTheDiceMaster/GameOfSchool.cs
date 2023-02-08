@@ -26,16 +26,18 @@ namespace BobTheDiceMaster
 
     public int RerollsLeft => rerollsLeft;
 
-    public GameOfSchool(IPlayer player)
+    public GameOfSchool(IPlayer player, IDie d6)
     {
       this.player = player;
-      d6 = new D6();
+      this.d6 = d6;
       Reset();
     }
 
     public void Reset()
     {
-      currentRoll = new DiceRollDistinct(d6.Roll(DiceRoll.MaxDiceAmount));
+      //TODO: setting roll after reset does not makes sense if game does not generate rolls itself.
+      // Also state is idle, but current roll is set, does it makes sense?
+      //currentRoll = new DiceRollDistinct(d6.Roll(DiceRoll.MaxDiceAmount));
       allowedCombinationTypes = CombinationTypes.School;
       isSchoolFinished = false;
       totalScore = 0;
@@ -54,31 +56,39 @@ namespace BobTheDiceMaster
     public void SetRoll(DiceRollDistinct roll)
     {
       VerifyState(GameOfSchoolState.Idle);
+      //TODO: does it affect anything? Seems that everything worked without it.
+      rerollsLeft = RerollsPerTurn;
       this.currentRoll = roll;
       state = GameOfSchoolState.Rolled;
     }
 
-    public int[] GenerateAndApplyReroll()
+    public void GenerateAndApplyReroll()
     {
       VerifyState(GameOfSchoolState.Rolled);
-      int[] reroll = d6.Roll(diceToReroll.Length);
+      int[] reroll = d6.Roll(diceIndexesToReroll.Length);
       //TODO[GE]: Make DiceRoll immutable
-      currentRoll = currentRoll.ApplyReroll(diceToReroll, reroll);
-      return reroll;
+      currentRoll = currentRoll.ApplyReroll(diceIndexesToReroll, reroll);
     }
 
-    public void GenerateAndApplyReroll(int[] diceToReroll)
+    /// <summary>
+    /// Shorcut, it's basically the same as calling
+    /// <see cref="ApplyDecision(Reroll)"> and then <see cref="GenerateAndApplyReroll">.
+    /// TODO: check that ApplyDecision(Reroll) translated correctly in a generated document
+    /// </summary>
+    public void GenerateAndApplyReroll(int[] diceIndexesToReroll)
     {
       VerifyState(GameOfSchoolState.Rolled);
-      int[] reroll = d6.Roll(diceToReroll.Length);
-      currentRoll = currentRoll.ApplyReroll(diceToReroll, reroll);
-      --rerollsLeft;
+      DecrementRerollsLeft();
+      int[] reroll = d6.Roll(diceIndexesToReroll.Length);
+      currentRoll = currentRoll.ApplyReroll(diceIndexesToReroll, reroll);
     }
+
 
     public void ApplyReroll(int[] reroll)
     {
+      //TODO: ensure that it's not called too many times.
       VerifyState(GameOfSchoolState.Rolled);
-      currentRoll = currentRoll.ApplyReroll(diceToReroll, reroll);
+      currentRoll = currentRoll.ApplyReroll(diceIndexesToReroll, reroll);
     }
 
     public Decision GenerateAndApplyDecision()
@@ -96,8 +106,8 @@ namespace BobTheDiceMaster
       switch (decision)
       {
         case Reroll reroll:
-          --rerollsLeft;
-          diceToReroll = GetDiceToReroll(reroll.DiceValuesToReroll);
+          DecrementRerollsLeft();
+          diceIndexesToReroll = GetDiceIndexesToReroll(reroll.DiceValuesToReroll);
           break;
         case Score score:
           if (!allowedCombinationTypes.HasFlag(score.CombinationToScore))
@@ -169,11 +179,11 @@ namespace BobTheDiceMaster
     }
 
     private IPlayer player;
-    private D6 d6;
+    private IDie d6;
     private const int RerollsPerTurn = 2;
 
     private DiceRollDistinct currentRoll;
-    private int[] diceToReroll;
+    private int[] diceIndexesToReroll;
     private int rerollsLeft;
     private int totalScore;
     private CombinationTypes allowedCombinationTypes;
@@ -224,7 +234,7 @@ namespace BobTheDiceMaster
       }
     }
 
-    private int[] GetDiceToReroll(IReadOnlyCollection<int> diceValuesToReroll)
+    private int[] GetDiceIndexesToReroll(IReadOnlyCollection<int> diceValuesToReroll)
     {
       int[] diceToReroll = new int[diceValuesToReroll.Count];
       int rerollCounter = 0;
@@ -251,6 +261,13 @@ namespace BobTheDiceMaster
       return diceToReroll;
     }
 
-
+    private void DecrementRerollsLeft()
+    {
+      if (rerollsLeft == 0)
+      {
+        throw new InvalidOperationException("No rerolls are left, can't reroll the dice");
+      }
+      --rerollsLeft;
+    }
   }
 }

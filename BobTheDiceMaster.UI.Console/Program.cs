@@ -16,8 +16,7 @@ namespace BobTheDiceMaster.UI.Console
       TestVerboseBob();
       System.Console.ReadLine();
       System.Console.WriteLine("Starting a game...");
-      //GameOfSchool game = new GameOfSchool(new HumanPlayer());
-      GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob());
+      GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob(), new D6());
 
       while (!game.IsGameOver)
       {

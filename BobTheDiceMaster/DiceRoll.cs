@@ -5,7 +5,7 @@ using System.Linq;
 namespace BobTheDiceMaster
 {
   /// <summary>
-  /// TODO: exploain why do I need a parameter
+  /// TODO: explain why do I need a parameter
   /// </summary>
   public class DiceRoll : IDiceRoll<DiceRoll>
   {
@@ -81,7 +81,7 @@ namespace BobTheDiceMaster
       int rerollCounter = 0;
       int resultCounter = 0;
 
-      // merge two sorted arrays, ignore diceToReroll from roll.
+      // merge two sorted arrays, ignore diceIndexesToReroll from roll.
       while (resultCounter < roll.DiceAmount)
       {
         while (rerollCounter < diceToReroll.Length && rollCounter == diceToReroll[rerollCounter])
@@ -174,7 +174,7 @@ namespace BobTheDiceMaster
       if (diceToReroll.Length != rerollResult.DiceAmount)
       {
         throw new ArgumentException(
-          $"Dice to reroll and dice result has to be of the same length, but was: diceToReroll({diceToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
+          $"Dice to reroll and dice result has to be of the same length, but was: diceIndexesToReroll({diceToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
       }
       //TODO: check if using DiceRoll(3 args) actually makes bob faster
       //int[] newRollDice = new int[MaxDiceAmount];
@@ -182,7 +182,7 @@ namespace BobTheDiceMaster
       //for (int i = 0; i < MaxDiceAmount; ++i)
       //{
       //  // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
-      //  if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
+      //  if (rerollCounter < diceIndexesToReroll.Length && diceIndexesToReroll[rerollCounter] == i)
       //  {
       //    newRollDice[i] = rerollResult[rerollCounter++];
       //  }
@@ -203,7 +203,7 @@ namespace BobTheDiceMaster
       if (valuesToReroll.Length != rerollResult.DiceAmount)
       {
         throw new ArgumentException(
-          $"Dice to reroll and dice result has to be of the same length, but was: diceToReroll({valuesToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
+          $"Dice to reroll and dice result has to be of the same length, but was: diceIndexesToReroll({valuesToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
       }
 
       //TODO[GE]: copy?
@@ -238,7 +238,7 @@ namespace BobTheDiceMaster
       //for (int i = 0; i < MaxDiceAmount; ++i)
       //{
       //  // Indices in DiceRoll.NonEmptyRerolls elements are in ascending order
-      //  if (rerollCounter < diceToReroll.Length && diceToReroll[rerollCounter] == i)
+      //  if (rerollCounter < diceIndexesToReroll.Length && diceIndexesToReroll[rerollCounter] == i)
       //  {
       //    newRollDice[i] = rerollResult[rerollCounter++];
       //  }
@@ -409,12 +409,12 @@ namespace BobTheDiceMaster
 
     public override string ToString()
     {
-      return $"DiceRoll({String.Join(", ", dice)})";
+      return $"{nameof(DiceRoll)}({String.Join(", ", dice)})";
     }
 
     public override int GetHashCode()
     {
-      // dice array is always sorted, hash calculated in this way is perfect.
+      // hash calculated in this way is perfect.
       int hash = 0;
       for (int i = 0; i < DiceAmount; ++i)
       {
@@ -427,7 +427,7 @@ namespace BobTheDiceMaster
     public override bool Equals(object obj)
     {
       //GetHashCode is a perfect cache, so it can be used for equality check as well.
-      return GetHashCode() == obj.GetHashCode();
+      return obj is DiceRoll && GetHashCode() == obj.GetHashCode();
     }
 
     public static readonly IReadOnlyList<int[]> NonEmptyRerolls = new List<int[]>()

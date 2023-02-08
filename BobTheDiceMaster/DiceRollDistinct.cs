@@ -47,7 +47,7 @@ namespace BobTheDiceMaster
       if (diceToReroll.Length != rerollResult.DiceAmount)
       {
         throw new ArgumentException(
-          $"Dice to reroll and dice result has to be of the same length, but was: diceToReroll({diceToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
+          $"Dice to reroll and dice result has to be of the same length, but was: diceIndexesToReroll({diceToReroll.Length}), rerollResult({rerollResult.DiceAmount})");
       }
 
       for (int rerollCounter = 0; rerollCounter < diceToReroll.Length; rerollCounter++)
@@ -72,7 +72,7 @@ namespace BobTheDiceMaster
       if (diceToReroll.Length != rerollResult.Length)
       {
         throw new ArgumentException(
-          $"Dice to reroll and dice result has to be of the same length, but was: diceToReroll({diceToReroll.Length}), rerollResult({rerollResult.Length})");
+          $"Dice to reroll and dice result has to be of the same length, but was: diceIndexesToReroll({diceToReroll.Length}), rerollResult({rerollResult.Length})");
       }
 
       for (int rerollCounter = 0; rerollCounter < diceToReroll.Length; rerollCounter++)
@@ -89,9 +89,40 @@ namespace BobTheDiceMaster
       return new DiceRollDistinct(diceNew);
     }
 
+    public override bool Equals(object other)
+    {
+      var otherRoll = (DiceRollDistinct)other;
+
+      if (dice.Length != otherRoll.DiceAmount)
+      {
+        return false;
+      }
+
+      for (int i = 0; i < dice.Length; ++i)
+      {
+        if (dice[i] != otherRoll[i])
+        {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    public override int GetHashCode()
+    {
+      int hash = 0;
+      for (int i = 0; i < DiceAmount; ++i)
+      {
+        hash *= 6;
+        hash += dice[i];
+      }
+      return hash;
+    }
+
     public override string ToString()
     {
-      return Roll.ToString();
+      return $"{nameof(DiceRollDistinct)}({String.Join(", ", dice)})";
     }
   }
 }
