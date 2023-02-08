@@ -4,13 +4,13 @@ namespace BobPrecomputer
 {
   /// <summary>
   /// Produces a precomputed set of decisions for the dice game called School.
-  /// How to use: create a new <see cref="BobSchoolPrecomputer"> instance, pass relevant
+  /// How to use: create a new <see cref="BobSchoolDecisionsPrecomputer"> instance, pass relevant
   /// <see cref="IPlayer"> instance and existing directory for the precomputed output to the
   /// constructor. Then call <see cref="Precompute()"> to produce a precomputed set of decisions.
   /// </summary>
-  public class BobSchoolPrecomputer
+  public class BobSchoolDecisionsPrecomputer
   {
-    public BobSchoolPrecomputer(IPlayer bob, string outputPath = null)
+    public BobSchoolDecisionsPrecomputer(IPlayer bob, string outputPath = null)
     {
       this.bob = bob;
       if (outputPath != null)

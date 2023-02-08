@@ -1,7 +1,12 @@
 ﻿using BobPrecomputer;
 using BobTheDiceMaster;
+using BobTheDiceMaster.Precomputer;
 
-BobSchoolPrecomputer bobPrecomputer = new BobSchoolPrecomputer(new RecursiveBruteForceBob());
+Console.WriteLine(new BobSchoolAverageScorePrecomputer().Precompute());
+
+Console.ReadLine();
+
+BobSchoolDecisionsPrecomputer bobPrecomputer = new BobSchoolDecisionsPrecomputer(new RecursiveBruteForceBob());
 bobPrecomputer.Precompute();
 
 Console.WriteLine("Press any key...");
