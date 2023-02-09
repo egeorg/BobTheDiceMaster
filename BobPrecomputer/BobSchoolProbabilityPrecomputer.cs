@@ -2,7 +2,7 @@
 
 namespace BobTheDiceMaster.Precomputer
 {
-  public class BobSchoolAverageScorePrecomputer
+  public class BobSchoolProbabilityPrecomputer
   {
     public string Precompute()
     {
@@ -10,13 +10,24 @@ namespace BobTheDiceMaster.Precomputer
 
       foreach (var elementaryCombination in CombinationTypes.All.GetElementaryCombinationTypes())
       {
-        averageScoresString.AppendLine($"{{{elementaryCombination}, {AverageScore(elementaryCombination).ToString("R")}}},");
+        averageScoresString.AppendLine($"{{{elementaryCombination}, {GetProbability(elementaryCombination).ToString("R")}}},");
+      }
+
+      return averageScoresString.ToString();
+    }
+    public string PrecomputeCombinationProbabilityOnFirstRoll()
+    {
+      StringBuilder averageScoresString = new StringBuilder();
+
+      foreach (var elementaryCombination in CombinationTypes.All.GetElementaryCombinationTypes())
+      {
+        averageScoresString.AppendLine($"{{{elementaryCombination}, {CombinationProbabilityOnFirstRoll(elementaryCombination).ToString("R")}}},");
       }
 
       return averageScoresString.ToString();
     }
 
-    public static double AverageScore(CombinationTypes combination)
+    public static double GetProbability(CombinationTypes combination)
     {
       if (!combination.IsElementary())
       {
@@ -30,11 +41,11 @@ namespace BobTheDiceMaster.Precomputer
 
       foreach (DiceRoll firstRoll in DiceRoll.Roll5Results)
       {
-        double firstRollScore = firstRoll.Score(combination) ?? 0;
+        double firstRollScore = 0;
 
-        if (!combination.IsFromSchool())
+        if (firstRoll.Score(combination) != null)
         {
-          firstRollScore *= 2;
+          firstRollScore = firstRoll.GetProbability();
         }
 
         int[]? bestFirstReroll = null;
@@ -58,7 +69,11 @@ namespace BobTheDiceMaster.Precomputer
             }
             else
             {
-              secondRollScore = secondRoll.Score(combination) ?? 0;
+              secondRollScore = 0;
+              if (secondRoll.Score(combination) != null)
+              {
+                secondRollScore = secondRoll.GetProbability();
+              }
 
               // null indicates that current score is better than any reroll
               int[]? bestSecondReroll = null;
@@ -67,11 +82,16 @@ namespace BobTheDiceMaster.Precomputer
               {
                 IReadOnlyList<DiceRoll> secondRerollResults = DiceRoll.RollResults[secondReroll.Length - 1];
                 double secondRerollAverage = 0;
+                double secondRerollTotal = 0;
 
                 foreach (var secondRerollResult in secondRerollResults)
                 {
                   DiceRoll thirdRoll = secondRoll.ApplyReroll(secondReroll, secondRerollResult);
-                  secondRerollAverage += secondRerollResult.GetProbability() * (thirdRoll.Score(combination) ?? 0);
+                  if (thirdRoll.Score(combination) != null)
+                  {
+                    secondRerollAverage += secondRerollResult.GetProbability();
+                  }
+                  secondRerollTotal += secondRerollResult.GetProbability();
                 }
 
                 if (secondRerollAverage > secondRollScore)
@@ -98,6 +118,14 @@ namespace BobTheDiceMaster.Precomputer
       }
 
       return averageProfit;
+    }
+
+    public static double CombinationProbabilityOnFirstRoll(CombinationTypes combination)
+    {
+      double totalProbability = 0;
+
+      return DiceRoll.Roll5Results.Sum(roll =>
+        roll.Score(combination) == null ? 0 : roll.GetProbability());
     }
   }
 }
