@@ -18,5 +18,15 @@ namespace BobTheDiceMaster
     {
       return $"Score({CombinationToScore})";
     }
+
+    public override bool Equals(object obj)
+    {
+      return obj is Score && ((Score)obj).CombinationToScore == CombinationToScore;
+    }
+
+    public override int GetHashCode()
+    {
+      return CombinationToScore.GetHashCode();
+    }
   }
 }

@@ -19,5 +19,23 @@ namespace BobTheDiceMaster
     {
       return $"Reroll({string.Join(", ", DiceValuesToReroll)})";
     }
+
+    public override bool Equals(object obj)
+    {
+      var otherReroll = obj as Reroll;
+
+      if (otherReroll == null)
+      {
+        return false;
+      }
+
+      return !DiceValuesToReroll.Except(otherReroll.DiceValuesToReroll).Any()
+        && !otherReroll.DiceValuesToReroll.Except(DiceValuesToReroll).Any();
+    }
+
+    public override int GetHashCode()
+    {
+      return DiceValuesToReroll.GetHashCode();
+    }
   }
 }

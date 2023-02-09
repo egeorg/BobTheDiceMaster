@@ -18,5 +18,15 @@ namespace BobTheDiceMaster
     {
       return $"CrossOut({Combination})";
     }
+
+    public override bool Equals(object obj)
+    {
+      return obj is CrossOut && ((CrossOut)obj).Combination == Combination;
+    }
+
+    public override int GetHashCode()
+    {
+      return Combination.GetHashCode();
+    }
   }
 }
