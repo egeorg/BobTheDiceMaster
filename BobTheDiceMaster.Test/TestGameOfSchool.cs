@@ -499,6 +499,7 @@ namespace BobTheDiceMaster.Test
       Assert.Equal(GameOfSchoolState.GameOver, game.State);
     }
 
+    [Fact]
     public void AllowedCombinations_ContainsOnlyGrades_UnlessThreeGradesScored()
     {
       var game = new GameOfSchool(defaultPlayerMock.Object, defaultDieMock.Object);
