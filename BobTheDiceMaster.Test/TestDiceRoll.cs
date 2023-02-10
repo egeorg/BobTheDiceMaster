@@ -29,15 +29,15 @@ namespace BobTheDiceMaster.Test
     {
       var dieMock = TestHelper.GetDiceMock(new[] { 5, 6 });
 
-      DiceRoll testedRoll = new DiceRoll(new[] { 1, 3, 6, 6, 6 });
+      DiceRoll initialRoll = new DiceRoll(new[] { 1, 3, 6, 6, 6 });
 
       int[] diceIndexesToReroll = new[] { 0, 1 };
 
-      testedRoll.Reroll(diceIndexesToReroll, dieMock.Object);
+      DiceRoll newRoll = initialRoll.Reroll(diceIndexesToReroll, dieMock.Object);
 
       DiceRoll expectedRoll = new DiceRoll(new[] { 5, 6, 6, 6, 6 });
 
-      Assert.Equal(expectedRoll, testedRoll);
+      Assert.Equal(expectedRoll, newRoll);
     }
 
     [Fact]
@@ -45,15 +45,15 @@ namespace BobTheDiceMaster.Test
     {
       var dieMock = TestHelper.GetDiceMock(new[] { 5, 6 });
 
-      DiceRoll testedRoll = new DiceRoll(new[] { 1, 3, 6, 6, 6 });
+      DiceRoll initialRoll = new DiceRoll(new[] { 1, 3, 6, 6, 6 });
 
       int[] diceValuesToReroll = new[] { 1, 3 };
 
-      testedRoll.RerollByValue(diceValuesToReroll, dieMock.Object);
+      DiceRoll newRoll = initialRoll.RerollByValue(diceValuesToReroll, dieMock.Object);
 
       DiceRoll expectedRoll = new DiceRoll(new[] { 5, 6, 6, 6, 6 });
 
-      Assert.Equal(expectedRoll, testedRoll);
+      Assert.Equal(expectedRoll, newRoll);
     }
 
     [Fact]

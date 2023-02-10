@@ -12,7 +12,7 @@ namespace BobTheDiceMaster
 
     public int this[int i] => dice[i];
 
-    private int[] dice;
+    private readonly int[] dice;
 
     public DiceRollDistinct(int[] dice)
     {
@@ -20,11 +20,13 @@ namespace BobTheDiceMaster
       Roll = new DiceRoll(dice);
     }
 
-    public void Reroll(IReadOnlyCollection<int> diceIndexesToReroll, IDie die)
+    public DiceRollDistinct Reroll(IReadOnlyCollection<int> diceIndexesToReroll, IDie die)
     {
-      if (diceIndexesToReroll.Count > dice.Length)
+      int[] diceNew = (int[])dice.Clone();
+
+      if (diceIndexesToReroll.Count > diceNew.Length)
       {
-        throw new ArgumentException($"Can't reroll more than {dice.Length} dice for roll {this}.");
+        throw new ArgumentException($"Can't reroll more than {diceNew.Length} dice for roll {this}.");
       }
 
       int[] rerollResult = die.Roll(diceIndexesToReroll.Count);
@@ -33,15 +35,15 @@ namespace BobTheDiceMaster
       {
         int dieIndex = diceIndexesToReroll.ElementAt(i);
 
-        if (dieIndex < 0 || dieIndex >= dice.Length)
+        if (dieIndex < 0 || dieIndex >= diceNew.Length)
         {
           throw new ArgumentException(
-            $"Can't reroll die {dieIndex}. Die number has to be between 0 and {dice.Length - 1} inclusively for roll {this}.");
+            $"Can't reroll die {dieIndex}. Die number has to be between 0 and {diceNew.Length - 1} inclusively for roll {this}.");
         }
-        dice[dieIndex] = rerollResult[dieIndex];
+        diceNew[dieIndex] = rerollResult[i];
       }
 
-      Roll = new DiceRoll(dice);
+      return new DiceRollDistinct(diceNew);
     }
 
     public DiceRollDistinct ApplyReroll(

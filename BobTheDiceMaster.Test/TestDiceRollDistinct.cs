@@ -9,11 +9,11 @@ namespace BobTheDiceMaster.Test
     {
       Mock<IDie> dieMock = TestHelper.GetDiceMock(new[] { 3, 1 });
 
-      DiceRollDistinct testedRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
+      DiceRollDistinct initialRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
-      testedRoll.Reroll(new[] { 0, 2 }, dieMock.Object);
+      DiceRollDistinct newRoll = initialRoll.Reroll(new[] { 0, 2 }, dieMock.Object);
 
-      Assert.Equal(new DiceRollDistinct(new[] { 3, 2, 1, 4, 6 }), testedRoll);
+      Assert.Equal(new DiceRollDistinct(new[] { 3, 2, 1, 4, 6 }), newRoll);
     }
 
     [Fact]

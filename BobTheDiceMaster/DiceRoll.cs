@@ -110,11 +110,13 @@ namespace BobTheDiceMaster
       return new DiceRoll(die.Roll(MaxDiceAmount));
     }
 
-    public void Reroll(IReadOnlyCollection<int> diceToReroll, IDie die)
+    public DiceRoll Reroll(IReadOnlyCollection<int> diceToReroll, IDie die)
     {
-      if (diceToReroll.Count > dice.Length)
+      int[] diceNew = (int[])dice.Clone();
+
+      if (diceToReroll.Count > diceNew.Length)
       {
-        throw new ArgumentException($"Can't reroll more than {dice.Length} dice for roll {this}.");
+        throw new ArgumentException($"Can't reroll more than {diceNew.Length} dice for roll {this}.");
       }
 
       int[] dieRollResult = die.Roll(diceToReroll.Count);
@@ -122,20 +124,21 @@ namespace BobTheDiceMaster
 
       foreach (var dieNumber in diceToReroll)
       {
-        if (dieNumber < 0 || dieNumber >= dice.Length)
+        if (dieNumber < 0 || dieNumber >= diceNew.Length)
         {
           throw new ArgumentException(
-            $"Can't reroll die {dieNumber}. Die number has to be between 0 and {dice.Length - 1} inclusively for roll {this}.");
+            $"Can't reroll die {dieNumber}. Die number has to be between 0 and {diceNew.Length - 1} inclusively for roll {this}.");
         }
-        dice[dieNumber] = dieRollResult[dieRollResultCounter++];
+        diceNew[dieNumber] = dieRollResult[dieRollResultCounter++];
       }
-      Array.Sort(dice);
+
+      return new DiceRoll(diceNew);
     }
 
     /// <summary>
     /// TODO: is it used?
     /// </summary>
-    public void RerollByValue(int[] valuesToReroll, IDie die)
+    public DiceRoll RerollByValue(int[] valuesToReroll, IDie die)
     {
       //TODO[GE]: copy?
       Array.Sort(valuesToReroll);
@@ -162,7 +165,7 @@ namespace BobTheDiceMaster
           $"Can't reroll values {{{String.Join(", ", valuesToReroll)}}} for roll {this}, some of the values were not found");
       }
 
-      Reroll(diceToReroll, die);
+      return Reroll(diceToReroll, die);
     }
 
     public DiceRoll ApplyReroll(int[] diceToReroll, IDiceRoll<DiceRoll> rerollResult)
@@ -429,7 +432,7 @@ namespace BobTheDiceMaster
       return numberOfThrows / Math.Pow(6, dice.Length);
     }
 
-    private int[] dice;
+    private readonly int[] dice;
 
     private static Dictionary<CombinationTypes, double> averageScore =
       new Dictionary<CombinationTypes, double>();
