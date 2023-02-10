@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace BobTheDiceMaster
 {
@@ -19,21 +20,25 @@ namespace BobTheDiceMaster
       Roll = new DiceRoll(dice);
     }
 
-    public void Reroll(IReadOnlyCollection<int> diceToReroll, IDie die)
+    public void Reroll(IReadOnlyCollection<int> diceIndexesToReroll, IDie die)
     {
-      if (diceToReroll.Count > dice.Length)
+      if (diceIndexesToReroll.Count > dice.Length)
       {
         throw new ArgumentException($"Can't reroll more than {dice.Length} dice for roll {this}.");
       }
 
-      foreach (var dieNumber in diceToReroll)
+      int[] rerollResult = die.Roll(diceIndexesToReroll.Count);
+
+      for (int i = 0; i < diceIndexesToReroll.Count; ++i)
       {
-        if (dieNumber < 0 || dieNumber >= dice.Length)
+        int dieIndex = diceIndexesToReroll.ElementAt(i);
+
+        if (dieIndex < 0 || dieIndex >= dice.Length)
         {
           throw new ArgumentException(
-            $"Can't reroll die {dieNumber}. Die number has to be between 0 and {dice.Length - 1} inclusively for roll {this}.");
+            $"Can't reroll die {dieIndex}. Die number has to be between 0 and {dice.Length - 1} inclusively for roll {this}.");
         }
-        dice[dieNumber] = die.Roll();
+        dice[dieIndex] = rerollResult[dieIndex];
       }
 
       Roll = new DiceRoll(dice);
