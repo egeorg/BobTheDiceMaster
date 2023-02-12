@@ -22,9 +22,9 @@ namespace BobTheDiceMaster.Api.Controllers
       {
         BobSelector.Verbose => new VerboseBruteForceBob(),
         BobSelector.Parallel => new ParallelVerboseBruteForceBob(),
-        BobSelector.Recursive => new RecursiveBruteForceBob(),
+        BobSelector.Recursive => new BruteForceBob(),
         BobSelector.Precomputed => new PrecomputedBob(),
-        _ => new RecursiveBruteForceBob(),
+        _ => new BruteForceBob(),
       };
 
       Decision decision = bob.DecideOnRoll(
@@ -38,7 +38,7 @@ namespace BobTheDiceMaster.Api.Controllers
     [Produces("application/json")]
     public ActionResult<Model.Decision> DefaultBobDecideOnRoll([FromBody] GameOfSchoolContext gameContext)
     {
-      IPlayer aiPlayer = new RecursiveBruteForceBob();
+      IPlayer aiPlayer = new BruteForceBob();
       Decision decision = aiPlayer.DecideOnRoll(
         gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RerollsLeft);
       return new Model.Decision(decision);

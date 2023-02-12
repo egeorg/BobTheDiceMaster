@@ -2,8 +2,16 @@
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// D6 - 6-sided die with each face represented by an integer from interval [1,6].
+  /// Roll results are obtained using a <see cref="Console"/> input.
+  /// </summary>
   public class D6Console : IDie
   {
+    /// <summary>
+    /// Request a user to enter a single D6 roll result, read and parse it.
+    /// The request is repeated until a valid value is entered.
+    /// </summary>
     public int Roll()
     {
       while (true)
@@ -19,6 +27,11 @@ namespace BobTheDiceMaster
       }
     }
 
+    /// <summary>
+    /// Request a user to enter results of <see cref="diceAmount"/> D6 rolls
+    /// separated by space, read and parse it.
+    /// The request is repeated until a valid input is received.
+    /// </summary>
     public int[] Roll(int diceAmount)
     {
       if (diceAmount < 1)
@@ -26,12 +39,12 @@ namespace BobTheDiceMaster
         throw new ArgumentOutOfRangeException($"diceAmount has to be non-negative, but was '{diceAmount}'");
       }
 
-      bool inputCorrect;
+      bool isInputCorrect;
       int[] intResult = new int[diceAmount];
 
       do
       {
-        inputCorrect = true;
+        isInputCorrect = true;
         Console.WriteLine(
           $"Enter {diceAmount} results of D6 roll separated by spaces. Every result has to be an integer between 1 and {D6.MaxValue}");
         string stringResult = Console.ReadLine().Trim();
@@ -50,11 +63,11 @@ namespace BobTheDiceMaster
         {
           if (!Int32.TryParse(stringResults[i], out intResult[i]) && intResult[i] >= 1 && intResult[i] <= D6.MaxValue)
           {
-            inputCorrect = false;
+            isInputCorrect = false;
             Console.WriteLine($"{i}-th D6 result has to be an integer between 1 and {D6.MaxValue}, but was '{intResult}'");
           }
         }
-      } while (!inputCorrect);
+      } while (!isInputCorrect);
       return intResult;
     }
   }

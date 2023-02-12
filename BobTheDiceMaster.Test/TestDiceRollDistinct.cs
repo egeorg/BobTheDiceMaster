@@ -17,23 +17,13 @@ namespace BobTheDiceMaster.Test
     }
 
     [Fact]
-    public void ApplyReroll_IsAppliedCorrectlyAndWithoutDiceReorder_WithDiceRollDistinctArgument()
+    public void ApplyReroll_IsAppliedCorrectlyAndWithoutDiceReorder()
     {
       DiceRollDistinct roll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
       DiceRollDistinct rerollResult = new DiceRollDistinct(new[] { 3, 1 });
 
       DiceRollDistinct newRoll = roll.ApplyReroll(new[] { 0, 2 }, rerollResult);
-
-      Assert.Equal(new DiceRollDistinct(new[] { 3, 2, 1, 4, 6 }), newRoll);
-    }
-
-    [Fact]
-    public void ApplyReroll_IsAppliedCorrectlyAndWithoutDiceReorder_WithArrayArgument()
-    {
-      DiceRollDistinct roll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
-
-      DiceRollDistinct newRoll = roll.ApplyReroll(new[] { 0, 2 }, new[] { 3, 1 });
 
       Assert.Equal(new DiceRollDistinct(new[] { 3, 2, 1, 4, 6 }), newRoll);
     }

@@ -2,7 +2,14 @@
 
 namespace BobTheDiceMaster
 {
-  public class DecisionInfoInverseByValueComparer : IComparer<DecisionInfo>
+  /// <summary>
+  /// A comparer for <see cref="DecisionInfo"> is required
+  /// to store them in a <see cref="SortedSet{T}">.
+  /// When the <see cref="DecisionInfo"> are sorted inversely, the most
+  /// valuable decision from a <see cref="SortedSet{T}"> can be retrieved
+  /// by a .First() LINQ method.
+  /// </summary>
+  internal class DecisionInfoInverseByValueComparer : IComparer<DecisionInfo>
   {
     public int Compare(DecisionInfo x, DecisionInfo y)
     {

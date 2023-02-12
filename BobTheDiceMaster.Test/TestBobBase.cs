@@ -1,7 +1,10 @@
 ﻿namespace BobTheDiceMaster.Test
 {
   /// <summary>
-  /// Unit tests for a <see cref="RecursiveBruteForceBob" />
+  /// Unit tests for different Bobs.
+  /// Test for specific bob can be implemented by inheriting this class
+  /// and calling a <see cref="TestBobBase(IPlayer)"/> in
+  /// a parameterless default constructor.
   /// Note: all available combinations has to be either grades only or they
   /// have to contain no more than 3 grades, otherwise bob is not guaranteed
   /// to return any result since it's not a valid situation in game of school.

@@ -3,11 +3,24 @@ using System.Linq;
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// Artificial intelligence implementation of an <see cref="IPlayer"/>.
+  /// The best combination is obtained using brute-force with several optimizations.
+  /// In addition it calculates information that justifies the decision returned:
+  /// the resulting <see cref="Decision"/> contains non-empty
+  /// <see cref="Decision.RatedDecisionInfo"/>.
+  /// </summary>
   public class VerboseBruteForceBob : IPlayer
   {
     Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>> ratedDecisionsCache
        = new Dictionary<CombinationTypes, Dictionary<int, Dictionary<DiceRoll, SortedSet<DecisionInfoVerbose>>>>();
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// It calculates information that justifies the decision returned:
+    /// the <see cref="Decision"/> returned contains non-empty
+    /// <see cref="Decision.RatedDecisionInfo"/>.
+    /// <remarks/>
     public Decision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
@@ -19,7 +32,7 @@ namespace BobTheDiceMaster
         rerollsLeft);
     }
 
-    public Decision DecideOnRollRatedDecisions(
+    private Decision DecideOnRollRatedDecisions(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)
@@ -32,12 +45,12 @@ namespace BobTheDiceMaster
 
       DecisionInfoVerbose bestDecisionInfo = ratedDecisionsInfo.First();
 
-      if (bestDecisionInfo.Reroll != null)
+      if (bestDecisionInfo.DiceValuesToReroll != null)
       {
-        int[] diceToReroll = new int[bestDecisionInfo.Reroll.Length];
-        for (int i = 0; i < bestDecisionInfo.Reroll.Length; ++i)
+        int[] diceToReroll = new int[bestDecisionInfo.DiceValuesToReroll.Length];
+        for (int i = 0; i < bestDecisionInfo.DiceValuesToReroll.Length; ++i)
         {
-          diceToReroll[i] = currentRoll[bestDecisionInfo.Reroll[i]];
+          diceToReroll[i] = currentRoll[bestDecisionInfo.DiceValuesToReroll[i]];
         }
         return new Reroll(diceToReroll, ratedDecisionsInfo);
       }
@@ -84,7 +97,7 @@ namespace BobTheDiceMaster
         double rerollScore = 0;
         List<OutcomeInfo> outcomes = new List<OutcomeInfo>();
 
-        foreach (var rerollResult in DiceRoll.RollResults[reroll.Length - 1])
+        foreach (var rerollResult in DiceRoll.RollResultsByDiceAmount[reroll.Length - 1])
         {
           DiceRoll nextRoll = currentRoll.ApplyReroll(reroll, rerollResult);
 

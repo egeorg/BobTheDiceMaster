@@ -2,6 +2,6 @@
 {
   public class TestRecursiveBob : TestBobBase
   {
-    public TestRecursiveBob() : base(new RecursiveBruteForceBob()) { }
+    public TestRecursiveBob() : base(new BruteForceBob()) { }
   }
 }

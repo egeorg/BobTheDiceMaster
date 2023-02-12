@@ -6,6 +6,12 @@ using System.Reflection;
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// Artificial intelligence implementation of an <see cref="IPlayer"/>
+  /// sped up using precomputed results.
+  /// Faster than other implementations for bigger number of rerolls left,
+  /// slower for situations when <paramref name="rerollsLeft" /> == 0.
+  /// </summary>
   public class PrecomputedBob : IPlayer
   {
     public Decision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerollsLeft)
@@ -29,6 +35,9 @@ namespace BobTheDiceMaster
       }
     }
 
+    /// <summary>
+    /// Precomputed using a BobTheDiceMaster.Precomputer tool, it's in this solution as well. 
+    /// </summary>
     private const string precomputedDecisionsResource = "BobTheDiceMaster.Players.precomputedDecisions.zip";
 
     private Decision ExtractDecision(byte decisionByte, DiceRoll currentRoll)

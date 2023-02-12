@@ -5,9 +5,9 @@ using System.Linq;
 namespace BobTheDiceMaster
 {
   /// <summary>
-  /// Represents information that justifies certain decision. Namely:
-  /// - Average value that the decision yields.
-  /// - List of possible outcomes, sorted by their contribution to the decision value.
+  /// In addition to information presented by <see cref="DecisionInfo">, it
+  /// represents information that justifies certain decision. Namely list of
+  /// possible outcomes, sorted by their contribution to the decision value.
   /// </summary>
   public class DecisionInfoVerbose : DecisionInfo
   {
@@ -23,17 +23,17 @@ namespace BobTheDiceMaster
       int[] reroll = null)
     {
       Value = value;
-      Reroll = reroll;
+      DiceValuesToReroll = reroll;
       Outcomes = new SortedSet<OutcomeInfo>(outcomes, new OutcomeInfoInverseByValueComparer());
       Combination = Outcomes.First().Combination;
     }
 
     public override string ToString()
     {
-      if (Reroll != null)
+      if (DiceValuesToReroll != null)
       {
         return
-          $"C={Combination};V={Value};R={string.Join(",", Reroll)};O={string.Join(",", Outcomes)}";
+          $"C={Combination};V={Value};R={string.Join(",", DiceValuesToReroll)};O={string.Join(",", Outcomes)}";
       }
       return
         $"C={Combination};V={Value};O={string.Join(",", Outcomes)}";

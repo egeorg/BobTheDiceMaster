@@ -2,6 +2,13 @@
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// A comparer for <see cref="OutcomeInfo"/> is required
+  /// to store them in a <see cref="SortedSet{T}"/>.
+  /// When the <see cref="OutcomeInfo"/> are sorted inversely, the most
+  /// valuable decision from a <see cref="SortedSet{T}"/> can be retrieved
+  /// by a .First() LINQ method.
+  /// </summary>
   class OutcomeInfoInverseByValueComparer : IComparer<OutcomeInfo>
   {
     public int Compare(OutcomeInfo x, OutcomeInfo y)

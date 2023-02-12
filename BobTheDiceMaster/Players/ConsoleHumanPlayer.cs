@@ -4,60 +4,108 @@ using System.Collections.Generic;
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// A <see cref="GameOfSchool"/> player where decisions are read from user using
+  /// a <see cref="Console"/> input.
+  /// A relevant game context is displayed before requesting a decision.
+  /// </summary>
   public class ConsoleHumanPlayer : IPlayer
   {
-    public Decision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerloosLeft)
+    /// <summary>
+    /// Request and read users decision from a <see cref="Console"/> input.
+    /// Firstly, a decision type is read. User has to enter:
+    /// <ul>
+    /// <li>r for reroll;</li>
+    /// <li>s for score;</li>
+    /// <li>c for cross out.</li>
+    /// </ul>
+    /// Then user is requested and has to enter a decision payload:
+    /// <ul>
+    /// <li>Dice values separated by spaces for a reroll;</li>
+    /// <li>Combination type string representation for score or cross out.</li>
+    /// </ul>
+    /// </summary>
+    public Decision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerollsLeft)
     {
-      Console.WriteLine(
-        $"Current roll: [1]={currentRoll[0]}, [2]={currentRoll[1]}, [3]={currentRoll[2]}, [4]={currentRoll[3]}, [5]={currentRoll[4]}");
-      Console.WriteLine($"Available combinations: {availableCombinations}");
       Decision inputDecision = null;
       while (inputDecision == null)
       {
-        Console.WriteLine("Select what to do next: roll (r), score (s) or cross our (c)");
+        string decisionsAvailable = String.Empty;
+
+        if (rerollsLeft > 0)
+        {
+          decisionsAvailable += " reroll (r);";
+        }
+
+        List<CombinationTypes> combinationsThatCanBeScored =
+          availableCombinations
+          .GetElementaryCombinationTypes()
+          .Where(combination => currentRoll.Score(combination) != null)
+          .ToList();
+
+        List<CombinationTypes> combinationsThatCanBeCrossedOut =
+          (availableCombinations & ~CombinationTypes.School)
+          .GetElementaryCombinationTypes()
+          .ToList();
+
+        if (combinationsThatCanBeScored.Any())
+        {
+          decisionsAvailable += " score (s);";
+        }
+
+        if (combinationsThatCanBeCrossedOut.Any())
+        {
+          decisionsAvailable += " cross out (c);";
+        }
+
+        Console.WriteLine($"Select what to do:{decisionsAvailable}");
+
         string input = Console.ReadLine();
         switch (input)
         {
           case "r":
-            List<int> diceToReroll = null;
-            while (diceToReroll == null)
+            if (rerollsLeft == 0)
+              break;
+            List<int> diceValuesToReroll = null;
+            while (diceValuesToReroll == null)
             {
-              Console.WriteLine("Enter dice to reroll (their numbers, not values: 1-5), separated by space");
-              Console.WriteLine("For example: 2 3 4");
-              string diceToRerollString = Console.ReadLine();
+              Console.WriteLine("Enter dice values to reroll (1-6, may be repeated), separated by space");
+              string diceValuesToRerollString = Console.ReadLine();
               try
               {
-                diceToReroll = diceToRerollString.Split(" ").Select(x => Int32.Parse(x) - 1).ToList();
+                diceValuesToReroll = diceValuesToRerollString.Split(" ").Select(x => Int32.Parse(x)).ToList();
               }
               catch (Exception e) when (e is FormatException || e is OverflowException)
               {
-                Console.WriteLine($"Dice number must be an integer between 1 and 5");
+                Console.WriteLine($"Dice value must be an integer between 1 and 6");
                 continue;
               }
-              if (diceToReroll.Count == 0)
+              if (diceValuesToReroll.Count == 0)
               {
-                Console.WriteLine("Enter more than zero dice numbers");
+                Console.WriteLine("Enter more than zero dice values");
                 continue;
               }
-              foreach (var dieToReroll in diceToReroll)
+              foreach (var dieValuesToReroll in diceValuesToReroll)
               {
-                if (dieToReroll < 0 || dieToReroll >= 5)
+                if (dieValuesToReroll < 0 || dieValuesToReroll > 6)
                 {
-                  diceToReroll = null;
+                  diceValuesToReroll = null;
                   Console.WriteLine(
-                    $"Invalid dice number: {dieToReroll + 1}. Dice number must be an integer between 1 and 5");
+                    $"Invalid dice value: {dieValuesToReroll}. Dice number must be an integer between 1 and 6");
                 }
               }
             }
-            inputDecision = new Reroll(diceToReroll);
+            inputDecision = new Reroll(diceValuesToReroll);
             break;
           case "s":
             {
+              if (!combinationsThatCanBeScored.Any())
+                break;
               bool isInputCorrect = false;
               while (!isInputCorrect)
               {
                 Console.WriteLine(
-                  $"Enter a combination type to score ({String.Join(", ", availableCombinations.GetElementaryCombinationTypes())})");
+                  $"Enter a combination type to score ({String.Join(", ", combinationsThatCanBeScored)})");
                 string combinationString = Console.ReadLine();
                 if (!Enum.TryParse(typeof(CombinationTypes), combinationString, out object result))
                 {
@@ -76,17 +124,20 @@ namespace BobTheDiceMaster
                     $"Combination '{combinationString}' can't be scored for for roll '{currentRoll}'");
                   continue;
                 }
+                isInputCorrect = true;
                 inputDecision = new Score((CombinationTypes)result);
               }
             }
             break;
           case "c":
             {
+              if (!combinationsThatCanBeCrossedOut.Any())
+                break;
               bool isInputCorrect = false;
               while (!isInputCorrect)
               {
                 Console.WriteLine(
-                  $"Enter a combination type to cross out ({String.Join(", ", availableCombinations.GetElementaryCombinationTypes())})");
+                  $"Enter a combination type to cross out ({String.Join(", ", combinationsThatCanBeCrossedOut)})");
                 string combinationString = Console.ReadLine();
                 if (!Enum.TryParse(typeof(CombinationTypes), combinationString, out object result))
                 {
@@ -99,6 +150,7 @@ namespace BobTheDiceMaster
                     $"Combination '{combinationString}' is not available (it's already scored or crossed out).");
                   continue;
                 }
+                isInputCorrect = true;
                 inputDecision = new CrossOut((CombinationTypes)result);
               }
             }

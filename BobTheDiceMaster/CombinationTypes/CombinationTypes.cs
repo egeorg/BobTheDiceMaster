@@ -2,6 +2,12 @@
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// Flag enum that represents a number of combination types used by a game of school.
+  /// </summary>
+  /// <remarks>
+  /// Ordered by probability to roll a combination in a single roll (without rerolls).
+  /// </remarks>
   [Flags]
   public enum CombinationTypes : uint
   {
@@ -12,17 +18,17 @@ namespace BobTheDiceMaster
     Grade4 = 0x8,
     Grade5 = 0x10,
     Grade6 = 0x20,
-    School = Grade1 | Grade2 | Grade3 | Grade4 | Grade5 | Grade6,
-    Pair = 0x40,
-    Set = 0x80,
+    Trash = 0x40,
+    Pair = 0x80,
     TwoPairs = 0x100,
-    Full = 0x200,
-    Care = 0x400,
-    LittleStraight = 0x800,
-    BigStraight = 0x1000,
-    Poker = 0x2000,
-    Trash = 0x4000,
+    Set = 0x200,
+    Full = 0x400,
+    Care = 0x800,
+    LittleStraight = 0x1000,
+    BigStraight = 0x2000,
+    Poker = 0x4000,
     All = 0x7fff,
+    School = Grade1 | Grade2 | Grade3 | Grade4 | Grade5 | Grade6,
     AllButSchool = All - School
   }
 }

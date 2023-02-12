@@ -10,7 +10,7 @@ Console.WriteLine(new BobSchoolAverageScorePrecomputer().Precompute());
 
 Console.ReadLine();
 
-BobSchoolDecisionsPrecomputer bobPrecomputer = new BobSchoolDecisionsPrecomputer(new RecursiveBruteForceBob());
+BobSchoolDecisionsPrecomputer bobPrecomputer = new BobSchoolDecisionsPrecomputer(new BruteForceBob());
 bobPrecomputer.Precompute();
 
 Console.WriteLine("Press any key...");

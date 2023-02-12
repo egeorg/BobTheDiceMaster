@@ -3,8 +3,14 @@ using System.Linq;
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// A decision to reroll a number of dice.
+  /// </summary>
   public class Reroll : Decision
   {
+    /// <summary>
+    /// Values of the dice to be rerolled.
+    /// </summary>
     public List<int> DiceValuesToReroll { get; }
 
     public Reroll(
@@ -20,6 +26,9 @@ namespace BobTheDiceMaster
       return $"Reroll({string.Join(", ", DiceValuesToReroll)})";
     }
 
+    /// <summary>
+    /// Two <see cref="Reroll"/>s are considered equal if values to reroll are the same (ignoring order).
+    /// </summary>
     public override bool Equals(object obj)
     {
       var otherReroll = obj as Reroll;

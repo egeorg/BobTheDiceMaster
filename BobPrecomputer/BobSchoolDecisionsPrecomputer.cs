@@ -24,7 +24,7 @@ namespace BobPrecomputer
       for (int rerollsLeft = 0; rerollsLeft <= 2; ++rerollsLeft)
       {
         Console.WriteLine($"Computing decisions for {rerollsLeft} roll[s] left...");
-        foreach (DiceRoll roll in DiceRoll.Roll5Results)
+        foreach (DiceRoll roll in DiceRoll.RollResultsOfAllDice)
         {
           Console.WriteLine($"Computing decisions for reroll {roll}.");
           string fileName =

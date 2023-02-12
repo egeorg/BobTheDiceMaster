@@ -96,7 +96,8 @@ namespace BobTheDiceMaster.Test
     [InlineData(new[] { 1, 1, 1, 1, 1 }, 5,   CombinationTypes.Poker)]
     [InlineData(new[] { 2, 2, 2, 5, 5 }, 14,  CombinationTypes.TwoPairs)]
     [InlineData(new[] { 2, 2, 2, 2, 5 }, 8,   CombinationTypes.TwoPairs)]
-    [InlineData(new[] { 2, 2, 2, 5, 5 }, 16,  CombinationTypes.Full)]
+    [InlineData(new[] { 2, 2, 2, 5, 5 }, 16, CombinationTypes.Full)]
+    [InlineData(new[] { 2, 2, 5, 5, 5 }, 19, CombinationTypes.Full)]
     [InlineData(new[] { 5, 5, 5, 5, 5 }, 25,  CombinationTypes.Full)]
     [InlineData(new[] { 1, 2, 3, 4, 5 }, 15,  CombinationTypes.LittleStraight)]
     [InlineData(new[] { 2, 3, 4, 5, 6 }, 20,  CombinationTypes.BigStraight)]
@@ -151,7 +152,7 @@ namespace BobTheDiceMaster.Test
 
       IEnumerable<IEnumerable<int>> allRolls = GetAllRerollResults(diceAmount);
 
-      var rollResultsSet = new HashSet<DiceRoll>(DiceRoll.RollResults[rollResultsIndex]);
+      var rollResultsSet = new HashSet<DiceRoll>(DiceRoll.RollResultsByDiceAmount[rollResultsIndex]);
 
       foreach (IEnumerable<int> roll in allRolls)
       {
@@ -218,7 +219,7 @@ namespace BobTheDiceMaster.Test
     public void GetProbability_SumIs1_AcrossAllRollResults(int rollResultsIndex)
     {
       double pSum = 0;
-      foreach (var reroll in DiceRoll.RollResults[rollResultsIndex])
+      foreach (var reroll in DiceRoll.RollResultsByDiceAmount[rollResultsIndex])
       {
         pSum += reroll.GetProbability();
       }
@@ -245,7 +246,7 @@ namespace BobTheDiceMaster.Test
     public void GetHashCode_IsPerfectHash()
     {
       HashSet<int> hashCodes = new HashSet<int>();
-      foreach (IEnumerable<DiceRoll> rolls in DiceRoll.RollResults)
+      foreach (IEnumerable<DiceRoll> rolls in DiceRoll.RollResultsByDiceAmount)
       {
         foreach (DiceRoll roll in rolls)
         {

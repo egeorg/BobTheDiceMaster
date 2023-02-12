@@ -2,6 +2,6 @@
 {
   public class TestPrecomputedBob : TestBobBase
   {
-    public TestPrecomputedBob() : base(new RecursiveBruteForceBob()) { }
+    public TestPrecomputedBob() : base(new PrecomputedBob()) { }
   }
 }

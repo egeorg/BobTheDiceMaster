@@ -28,7 +28,7 @@ namespace BobTheDiceMaster.Precomputer
 
       Dictionary<DiceRoll, double> secondRollScoreCache = new Dictionary<DiceRoll, double>();
 
-      foreach (DiceRoll firstRoll in DiceRoll.Roll5Results)
+      foreach (DiceRoll firstRoll in DiceRoll.RollResultsOfAllDice)
       {
         double firstRollScore = firstRoll.Score(combination) ?? 0;
 
@@ -41,7 +41,7 @@ namespace BobTheDiceMaster.Precomputer
 
         foreach (int[] firstReroll in DiceRoll.NonEmptyRerolls)
         {
-          IReadOnlyList<DiceRoll> firstRerollResults = DiceRoll.RollResults[firstReroll.Length - 1];
+          IReadOnlyList<DiceRoll> firstRerollResults = DiceRoll.RollResultsByDiceAmount[firstReroll.Length - 1];
           double firstRerollAverage = 0;
 
           foreach (var firstRerollResult in firstRerollResults)
@@ -65,7 +65,7 @@ namespace BobTheDiceMaster.Precomputer
 
               foreach (int[] secondReroll in DiceRoll.NonEmptyRerolls)
               {
-                IReadOnlyList<DiceRoll> secondRerollResults = DiceRoll.RollResults[secondReroll.Length - 1];
+                IReadOnlyList<DiceRoll> secondRerollResults = DiceRoll.RollResultsByDiceAmount[secondReroll.Length - 1];
                 double secondRerollAverage = 0;
 
                 foreach (var secondRerollResult in secondRerollResults)

@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// Artificial intelligence implementation of an <see cref="IPlayer"/> sped up using parallelization.
+  /// </summary>
   public class ParallelVerboseBruteForceBob : IPlayer
   {
+    /// <inheritdoc/>
     public Decision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
@@ -19,7 +23,7 @@ namespace BobTheDiceMaster
         rerollsLeft);
     }
 
-    public Decision DecideOnRollRatedDecisions(
+    private Decision DecideOnRollRatedDecisions(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)
@@ -33,12 +37,12 @@ namespace BobTheDiceMaster
 
       DecisionInfoVerbose bestDecisionInfo = ratedDecisionsInfo.First();
 
-      if (bestDecisionInfo.Reroll != null)
+      if (bestDecisionInfo.DiceValuesToReroll != null)
       {
-        int[] diceToReroll = new int[bestDecisionInfo.Reroll.Length];
-        for (int i = 0; i < bestDecisionInfo.Reroll.Length; ++i)
+        int[] diceToReroll = new int[bestDecisionInfo.DiceValuesToReroll.Length];
+        for (int i = 0; i < bestDecisionInfo.DiceValuesToReroll.Length; ++i)
         {
-          diceToReroll[i] = currentRoll[bestDecisionInfo.Reroll[i]];
+          diceToReroll[i] = currentRoll[bestDecisionInfo.DiceValuesToReroll[i]];
         }
         return new Reroll(diceToReroll, ratedDecisionsInfo);
       }
@@ -195,7 +199,7 @@ namespace BobTheDiceMaster
       List<OutcomeInfo> outcomes = new List<OutcomeInfo>();
 
       //Can be paralleled here
-      foreach (var rerollResult in DiceRoll.RollResults[reroll.Length - 1])
+      foreach (var rerollResult in DiceRoll.RollResultsByDiceAmount[reroll.Length - 1])
       {
         DiceRoll nextRoll = currentRoll.ApplyReroll(reroll, rerollResult);
 

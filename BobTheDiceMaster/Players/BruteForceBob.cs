@@ -3,8 +3,16 @@ using System.Linq;
 
 namespace BobTheDiceMaster
 {
-  public class RecursiveBruteForceBob : IPlayer
+  /// <summary>
+  /// Artificial intelligence implementation of an <see cref="IPlayer"/>.
+  /// An optimal combination is obtained using brute-force with several optimizations.
+  /// </summary>
+  public class BruteForceBob : IPlayer
   {
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Result is obtained using brute-force with several optimizations.
+    /// </remarks>>
     public Decision DecideOnRoll(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
@@ -15,12 +23,9 @@ namespace BobTheDiceMaster
         currentRoll,
         rerollsLeft);
 
-      //System.Console.WriteLine(
-      //  $"Best combination is {bestDecisionInfo.Combination} with score {bestDecisionInfo.Value}");
-
-      if (bestDecisionInfo.Reroll != null)
+      if (bestDecisionInfo.DiceValuesToReroll != null)
       {
-        return new Reroll(bestDecisionInfo.Reroll);
+        return new Reroll(bestDecisionInfo.DiceValuesToReroll);
       }
 
       if (currentRoll.Score(bestDecisionInfo.Combination) != null)
@@ -66,7 +71,7 @@ namespace BobTheDiceMaster
         DecisionInfo bestNextRerollDecision =
           new DecisionInfo(double.NegativeInfinity, CombinationTypes.None, null);
 
-        foreach (var rerollResult in DiceRoll.RollResults[reroll.Length - 1])
+        foreach (var rerollResult in DiceRoll.RollResultsByDiceAmount[reroll.Length - 1])
         {
           DiceRoll nextRoll = currentRoll.ApplyReroll(reroll, rerollResult);
 

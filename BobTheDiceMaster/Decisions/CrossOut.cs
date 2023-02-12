@@ -2,8 +2,14 @@
 
 namespace BobTheDiceMaster
 {
+  /// <summary>
+  /// A decision to cross out a combination.
+  /// </summary>
   public class CrossOut : Decision
   {
+    /// <summary>
+    /// A combination to cross out.
+    /// </summary>
     public CombinationTypes Combination { get; }
 
     public CrossOut(
@@ -19,6 +25,9 @@ namespace BobTheDiceMaster
       return $"CrossOut({Combination})";
     }
 
+    /// <summary>
+    /// Two <see cref="CrossOut"/>s are considered equal if corresponding combinations are equal.
+    /// </summary>
     public override bool Equals(object obj)
     {
       return obj is CrossOut && ((CrossOut)obj).Combination == Combination;

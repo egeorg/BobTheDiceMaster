@@ -2,13 +2,21 @@
 
 namespace BobTheDiceMaster
 {
-  public class Combinatorics
+  /// <summary>
+  /// Static class with combinatorial functions.
+  /// </summary>
+  public static class Combinatorics
   {
     private const int factorialMaxArgument = 20;
 
     /// <summary>
+    /// Calculate number of <paramref name="k"/>-combinations of <paramref name="n"/s>
+    /// elements, aka binomial coefficients.
     /// This method is rather dumb and it's not suitable for big numbers.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Arguments are too big and internal computation may result in an overflow.
+    /// </exception>
     public static long Cnk(int n, int k)
     {
       if (n > factorialMaxArgument)
@@ -35,6 +43,7 @@ namespace BobTheDiceMaster
       }
 
       long result = 1;
+
       // Calculate n!/k!
       for (int i = n; i > k; --i)
       {
@@ -44,9 +53,14 @@ namespace BobTheDiceMaster
       return result / Factorial(n - k);
     }
 
+    /// <summary>
+    /// Calculate <paramref name="n"/> factorial.
+    /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Argument is too big and internal computation may result in an overflow.
+    /// </exception>
     public static long Factorial(int n)
     {
-
       if (n < 0)
       {
         throw new ArgumentException(

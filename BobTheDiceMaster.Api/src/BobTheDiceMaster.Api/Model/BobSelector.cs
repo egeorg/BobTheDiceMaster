@@ -1,4 +1,4 @@
-﻿namespace BobTheDiceMaster
+﻿namespace BobTheDiceMaster.Api.Model
 {
   public enum BobSelector
   {

@@ -548,15 +548,15 @@ namespace BobTheDiceMaster.Test
           CombinationTypes.Grade4,
           CombinationTypes.Grade5,
           CombinationTypes.Grade6,
+          CombinationTypes.Trash,
           CombinationTypes.Pair,
-          CombinationTypes.Set,
           CombinationTypes.TwoPairs,
+          CombinationTypes.Set,
           CombinationTypes.Full,
           CombinationTypes.Care,
           CombinationTypes.LittleStraight,
           CombinationTypes.BigStraight,
           CombinationTypes.Poker,
-          CombinationTypes.Trash,
         },
         game.AllowedCombinationTypes);
     }
