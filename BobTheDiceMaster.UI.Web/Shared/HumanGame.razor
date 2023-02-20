@@ -69,8 +69,6 @@
     ResetComboBoxes();
   }
 
-  private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
-
   private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob(), new D6());
 
   private string CombinationToScore { get; set; }
@@ -132,8 +130,6 @@
       Enumerable.Range(0, DiceRoll.MaxDiceAmount)
         .Where(i => diceSelected[i])
         .ToArray());
-
-    currentRoll = game.CurrentRoll;
 
     ResetComboBoxes();
   }
