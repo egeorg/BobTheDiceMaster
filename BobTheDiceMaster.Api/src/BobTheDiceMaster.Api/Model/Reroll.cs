@@ -2,6 +2,6 @@
 {
   public class Reroll
   {
-    public int[] ValuesToReroll { get; set; }
+    public int[] ValuesToReroll { get; set; } = new int[0];
   }
 }

@@ -15,6 +15,7 @@ namespace BobTheDiceMaster.Precomputer
 
       return averageScoresString.ToString();
     }
+
     public string PrecomputeCombinationProbabilityOnFirstRoll()
     {
       StringBuilder averageScoresString = new StringBuilder();
@@ -122,8 +123,6 @@ namespace BobTheDiceMaster.Precomputer
 
     public static double CombinationProbabilityOnFirstRoll(CombinationTypes combination)
     {
-      double totalProbability = 0;
-
       return DiceRoll.RollResultsOfAllDice.Sum(roll =>
         roll.Score(combination) == null ? 0 : roll.GetProbability());
     }
