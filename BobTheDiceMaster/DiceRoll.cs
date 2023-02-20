@@ -90,7 +90,7 @@ namespace BobTheDiceMaster
     /// <paramref name="diceIndexesToReroll"/> contains values out of interval [0, <see cref="DiceAmount"/> - 1].
     /// <paramref name="diceIndexesToReroll"/> contains more than <see cref="DiceAmount"/> values.
     /// </exception>
-    public DiceRoll Reroll(int[] diceIndexesToReroll, IDie die)
+    public DiceRoll RerollIndexes(int[] diceIndexesToReroll, IDie die)
     {
       int[] diceNew = (int[])dice.Clone();
 
@@ -123,7 +123,7 @@ namespace BobTheDiceMaster
     /// This roll does not contain all of the values from <paramref name="valuesToReroll"/>.
     /// <paramref name="valuesToReroll"/> contains more than <see cref="DiceAmount"/> values.
     /// </exception>
-    public DiceRoll RerollByValue(int[] valuesToReroll, IDie die)
+    public DiceRoll RerollValues(int[] valuesToReroll, IDie die)
     {
       if (valuesToReroll.Length > dice.Length)
       {
@@ -154,7 +154,7 @@ namespace BobTheDiceMaster
           $"Can't reroll values {{{String.Join(", ", valuesToRerollSorted)}}} for roll {this}, some of the values were not found");
       }
 
-      return Reroll(diceToReroll, die);
+      return RerollIndexes(diceToReroll, die);
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ namespace BobTheDiceMaster
     /// <paramref name="diceIndexesToReroll"/> contains values out of interval [0, <see cref="DiceAmount"/> - 1].
     /// <paramref name="diceIndexesToReroll"/> size differs from <paramref name="rerollResult"/> size.
     /// </exception>
-    public DiceRoll ApplyReroll(int[] diceIndexesToReroll, DiceRoll rerollResult)
+    public DiceRoll ApplyRerollAtIndexes(int[] diceIndexesToReroll, DiceRoll rerollResult)
     {
       if (diceIndexesToReroll.Length != rerollResult.DiceAmount)
       {
@@ -216,7 +216,7 @@ namespace BobTheDiceMaster
     /// This roll does not contain all of the values from <paramref name="valuesToReroll"/>.
     /// <paramref name="valuesToReroll"/> size differs from <paramref name="rerollResult"/> size.
     /// </exception>
-    public DiceRoll ApplyRerollByValue(int[] valuesToReroll, DiceRoll rerollResult)
+    public DiceRoll ApplyRerollForValues(int[] valuesToReroll, DiceRoll rerollResult)
     {
       if (valuesToReroll.Length != rerollResult.DiceAmount)
       {

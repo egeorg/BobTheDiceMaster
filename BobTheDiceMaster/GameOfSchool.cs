@@ -132,20 +132,20 @@ namespace BobTheDiceMaster
     public void GenerateAndApplyReroll()
     {
       VerifyState(GameOfSchoolState.Rolled);
-      currentRoll = currentRoll.Reroll(diceIndexesToReroll, d6);
+      currentRoll = currentRoll.RerollIndexes(diceIndexesToReroll, d6);
     }
 
     /// <summary>
     /// Shorcut, it's basically the same as calling
-    /// <see cref="ApplyDecision(Reroll)"> and then <see cref="GenerateAndApplyReroll">.
+    /// <see cref="ApplyDecision(Decision)"/> with a <see cref="Reroll"/>
+    /// argument and then <see cref="GenerateAndApplyReroll"/>.
     /// Only possible in <see cref="GameOfSchoolState.Rolled"/> game state.
-    /// TODO: check that ApplyDecision(Reroll) translated correctly in a generated document
     /// </summary>
     public void GenerateAndApplyReroll(int[] diceIndexesToReroll)
     {
       VerifyState(GameOfSchoolState.Rolled);
       DecrementRerollsLeft();
-      currentRoll = currentRoll.Reroll(diceIndexesToReroll, d6);
+      currentRoll = currentRoll.RerollIndexes(diceIndexesToReroll, d6);
     }
 
     /// <summary>
@@ -159,7 +159,7 @@ namespace BobTheDiceMaster
     public void ApplyReroll(int[] reroll)
     {
       VerifyState(GameOfSchoolState.Rolled);
-      currentRoll = currentRoll.ApplyReroll(diceIndexesToReroll, new DiceRollDistinct(reroll));
+      currentRoll = currentRoll.ApplyRerollAtIndexes(diceIndexesToReroll, new DiceRollDistinct(reroll));
     }
 
     /// <summary>

@@ -33,7 +33,7 @@ namespace BobTheDiceMaster.Test
 
       int[] diceIndexesToReroll = new[] { 0, 1 };
 
-      DiceRoll newRoll = initialRoll.Reroll(diceIndexesToReroll, dieMock.Object);
+      DiceRoll newRoll = initialRoll.RerollIndexes(diceIndexesToReroll, dieMock.Object);
 
       DiceRoll expectedRoll = new DiceRoll(new[] { 5, 6, 6, 6, 6 });
 
@@ -49,7 +49,7 @@ namespace BobTheDiceMaster.Test
 
       int[] diceValuesToReroll = new[] { 1, 3 };
 
-      DiceRoll newRoll = initialRoll.RerollByValue(diceValuesToReroll, dieMock.Object);
+      DiceRoll newRoll = initialRoll.RerollValues(diceValuesToReroll, dieMock.Object);
 
       DiceRoll expectedRoll = new DiceRoll(new[] { 5, 6, 6, 6, 6 });
 
@@ -65,7 +65,7 @@ namespace BobTheDiceMaster.Test
 
       DiceRoll rerollResult = new DiceRoll(new[] { 6, 6 });
 
-      DiceRoll resultRoll = initialRoll.ApplyReroll(diceIndexesToReroll, rerollResult);
+      DiceRoll resultRoll = initialRoll.ApplyRerollAtIndexes(diceIndexesToReroll, rerollResult);
 
       DiceRoll expectedRoll = new DiceRoll(new[] { 1, 1, 1, 6, 6 });
 
@@ -81,7 +81,7 @@ namespace BobTheDiceMaster.Test
 
       DiceRoll rerollResult = new DiceRoll(new[] { 6, 6 });
 
-      DiceRoll resultRoll = initialRoll.ApplyRerollByValue(diceValuesToReroll, rerollResult);
+      DiceRoll resultRoll = initialRoll.ApplyRerollForValues(diceValuesToReroll, rerollResult);
 
       DiceRoll expectedRoll = new DiceRoll(new[] { 2, 4, 5, 6, 6 });
 

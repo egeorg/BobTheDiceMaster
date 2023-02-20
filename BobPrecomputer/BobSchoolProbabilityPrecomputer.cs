@@ -58,7 +58,7 @@ namespace BobTheDiceMaster.Precomputer
 
           foreach (var firstRerollResult in firstRerollResults)
           {
-            DiceRoll secondRoll = firstRoll.ApplyReroll(firstReroll, firstRerollResult);
+            DiceRoll secondRoll = firstRoll.ApplyRerollAtIndexes(firstReroll, firstRerollResult);
 
             // The best score that can be achieved on the secondRoll result, including optimal reroll.
             // i.e. if first reroll yields firstRerollResult, it's the best.
@@ -87,7 +87,7 @@ namespace BobTheDiceMaster.Precomputer
 
                 foreach (var secondRerollResult in secondRerollResults)
                 {
-                  DiceRoll thirdRoll = secondRoll.ApplyReroll(secondReroll, secondRerollResult);
+                  DiceRoll thirdRoll = secondRoll.ApplyRerollAtIndexes(secondReroll, secondRerollResult);
                   if (thirdRoll.Score(combination) != null)
                   {
                     secondRerollAverage += secondRerollResult.GetProbability();

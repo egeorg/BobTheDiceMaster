@@ -8,7 +8,7 @@ namespace BobTheDiceMaster
   /// </summary>
   /// <remarks>
   /// The type parameter is necessary to make methods like
-  /// <see cref="Reroll(int[], IDie)"/> and <see cref="ApplyReroll(int[], T)"/>
+  /// <see cref="RerollIndexes(int[], IDie)"/> and <see cref="ApplyRerollAtIndexes(int[], T)"/>
   /// that return the <see cref="IDiceRoll{T}"/>
   /// implementation itself.
   /// </remarks>
@@ -23,13 +23,13 @@ namespace BobTheDiceMaster
     /// Replace dice at the indexes <paramref name="diceIndexesToReroll"/>
     /// by the result of the <paramref name="die"/> roll.
     /// </summary>
-    public T Reroll(int[] diceIndexesToReroll, IDie die);
+    public T RerollIndexes(int[] diceIndexesToReroll, IDie die);
 
     /// <summary>
     /// Replace dice at the indexes <paramref name="diceIndexesToReroll"/>
     /// by the <paramref name="rerollResult"/>.
     /// </summary>
-    public T ApplyReroll(int[] diceIndexesToReroll, T rerollResult);
+    public T ApplyRerollAtIndexes(int[] diceIndexesToReroll, T rerollResult);
 
     /// <summary>
     /// Public way to access dice values without being able to affect them.
