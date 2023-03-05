@@ -99,7 +99,7 @@ Such optimization does not affect assymptotics, still it's O(n\*C^k). But it aff
 
 Profit(rerollResult, rerollsLeft) is called multiple times with the same arguments, let's store the results in a dictionary that basically maps game context (available combinations, roll and rerollsLeft) to an optimal decision.
 
-Now the algorithm becomes O(n + ) on time and O(n\*k) on memory.
+Now the algorithm becomes O(??) on time and O(??) on memory.
 
 How big the dictionary will be, it is fine for an in-browser application?
 
@@ -125,4 +125,4 @@ Each file would be exactly 2^15 bytes = 32KB (uncompressed), where each byte rep
 
 There would be 752 files, so all the file metadata does not take much space.
 
-In total, the zip archive takes 643KB, which is completely acceptable for an in-browser application.
+In total, the zip archive takes ~600KB, which is completely acceptable for an in-browser application.
