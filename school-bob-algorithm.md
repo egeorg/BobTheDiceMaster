@@ -50,8 +50,8 @@ Here are the precomputed average profit by combinations:
 | Two pairs | 16.37926613378522 |
 | Full | 7.702210020138647 |
 | Care | 4.853220771449692 |
-| Little straight | 4.2452235691873 |
-| Big straight | 6.367835353780939 |
+| Little straight | 3.183917676890467 |
+| Big straight | 4.245223569187295 |
 | Poker | 0.8804221388169133 |
 | Trash | 35.100630144032884 |
 
@@ -72,7 +72,7 @@ A reroll profit can be defined recursively:
 
 Now we know how to calculate profit for "Score" and "Cross out" decisions. If no rerolls are left, we can already choose the best decision by iterating across all the available combinations and choosing the decision+combination that yields the most profit. Let's call it Profit(roll, 0) where 0 means that zero rerolls are left. It would be the base of recursion.
 
-1) Across all the possible reroll results, return sum of Probability(rerollResult) \* Profit(rerollResult, rerollsLeft - 1).
+If there are rerolls left: return sum of Probability(rerollResult) \* Profit(rerollResult, rerollsLeft - 1) across all the possible rerolls and their results (reroll die number 1, results are 1-6, reroll dice number 1 and 2, results are all pairs {1..6, 1..6}, etc).
 
 ## Finding an optimal decision
 
@@ -87,11 +87,11 @@ Chose the highest value and return corresponding decision.
 ## Optimization
 How much time such algorithm takes?
 
-Interesting parameters that affects performance are 1 - number of rerolls left, and 2 - number of available combinations. There are always 5 dice and there 6 dice faces.
-Without additional modifications, assymptotic is O(n\*C^k) where n is amount of available combinations, and k is number of rerolls left.
+Interesting parameters that affect performance are number of rerolls left, and number of available combinations. There are always 5 dice and there 6 dice faces.
+Without additional modifications, assymptotic is O(n\*C^k) where n is amount of available combinations, and k is number of rerolls left, and C is a parameter that only depends on number of dice (5) and dice faces (6), so it is a constant. Essentially C is a number of terms in the sum from reroll profit calculation algorithm.
 
 ### Optimization 1: get rid of duplicates in reroll results.
-Imagine rerolling 2 dice. Reroll results 1,6 and 6,1 yield to the same dice values, but when using the naive brute force this result is calculated twice. Instead of 6^k reroll values, less can be considered. Namely it is amount of k-combinations with repetitions of 6 elements, or C(6 + k - 1).
+Imagine rerolling 2 dice. Reroll results 1,6 and 6,1 yield to the same dice values, but when using the naive brute force this result is calculated twice. Instead of 6^k reroll values, less can be considered. Namely it is amount of k-combinations with repetitions of 6 elements, or a binomial coefficient C(6 + k - 1, k).
 
 Such optimization does not affect assymptotics, still it's O(n\*C^k). But it affects constant C in expression n\*C^k, for 3 rerolls it reduces number of operations ~100 times.
 
@@ -99,11 +99,11 @@ Such optimization does not affect assymptotics, still it's O(n\*C^k). But it aff
 
 Profit(rerollResult, rerollsLeft) is called multiple times with the same arguments, let's store the results in a dictionary that basically maps game context (available combinations, roll and rerollsLeft) to an optimal decision.
 
-Now the algorithm becomes O(n\*k) on time and O(n\*k) on memory.
+Now the algorithm becomes O(n + ) on time and O(n\*k) on memory.
 
 How big the dictionary will be, it is fine for an in-browser application?
 
-There are only C(5 + 6 - 1, 5) = С(10, 5) = 252 available distincs combinations of 5 d6 dice. There may be 1,2 or 3 rerolls. For a single decision calculation, it will be 252\*3\*(size of a decision) = 756\*(size of a decision) bytes for a single availableCombinations value, hence, for a single decision calculation. In other words, its size would be order of kilobytes, that's completely fine, given that an almost empty blazor webassembly projects takes megabytes.
+There are only C(6 + 5 - 1, 5) = С(10, 5) = 252 available distincs combinations of 5 d6 dice. There may be 1,2 or 3 rerolls. For a single decision calculation, it will be 252\*3\*(size of a decision) = 756\*(size of a decision) bytes for a single availableCombinations value, hence, for a single decision calculation. In other words, its size would be order of kilobytes, that's completely fine, given that an almost empty blazor webassembly projects takes megabytes.
 
 ### Optimization 3: precompute all the decisions.
 
