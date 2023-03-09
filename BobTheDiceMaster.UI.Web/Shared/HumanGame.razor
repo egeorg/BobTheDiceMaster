@@ -1,11 +1,11 @@
 ﻿<div style="display:inline-block; vertical-align:top">
   <div style="display:margin:10px">
     <div style="width:200px; display:inline-block">
-      <Die Value="@currentRoll[0]" Id="die1" @bind-IsSelected="@diceSelected[0]" />
-      <Die Value="@currentRoll[1]" Id="die2" @bind-IsSelected="@diceSelected[1]" />
-      <Die Value="@currentRoll[2]" Id="die3" @bind-IsSelected="@diceSelected[2]" />
-      <Die Value="@currentRoll[3]" Id="die4" @bind-IsSelected="@diceSelected[3]" />
-      <Die Value="@currentRoll[4]" Id="die5" @bind-IsSelected="@diceSelected[4]" />
+      <Die Value="@game.CurrentRoll[0]" Id="die1" @bind-IsSelected="@diceSelected[0]" />
+      <Die Value="@game.CurrentRoll[1]" Id="die2" @bind-IsSelected="@diceSelected[1]" />
+      <Die Value="@game.CurrentRoll[2]" Id="die3" @bind-IsSelected="@diceSelected[2]" />
+      <Die Value="@game.CurrentRoll[3]" Id="die4" @bind-IsSelected="@diceSelected[3]" />
+      <Die Value="@game.CurrentRoll[4]" Id="die5" @bind-IsSelected="@diceSelected[4]" />
     </div>
     <div style="display:inline-block">
       <div>
@@ -65,11 +65,9 @@
 
   protected override void OnInitialized()
   {
-    currentRoll = game.GenerateRoll();
+    game.GenerateRoll();
     ResetComboBoxes();
   }
-
-  private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
   private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob(), new D6());
 
@@ -92,8 +90,6 @@
   private List<CombinationTypes> CrossOutCombinationTypes { get; set; }
 
   private bool[] diceSelected = new[] { false, false, false, false, false };
-
-  private static D6 d6 = new D6(1);
 
   /// <summary>
   /// Initialize content and selected items in combo boxes (combinations available to score
@@ -124,7 +120,6 @@
   private void Roll()
   {
     game.GenerateRoll();
-    currentRoll = game.CurrentRoll;
 
     ResetComboBoxes();
   }
@@ -136,16 +131,13 @@
         .Where(i => diceSelected[i])
         .ToArray());
 
-    //TODO: do I need a currentRoll local variable ora can I bind to game.CurrentRoll directly?
-    currentRoll = game.CurrentRoll;
-
     ResetComboBoxes();
   }
 
   private async void Score()
   {
     CombinationTypes combinationToScore =
-        (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToScore);
+      (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToScore);
     game.ApplyDecision(new Score(combinationToScore));
     ResetRolls();
     await OnTurnCompleted.InvokeAsync();
@@ -154,7 +146,7 @@
   private async void CrossOut()
   {
     CombinationTypes combinationToCrossOut =
-        (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToCrossOut);
+      (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToCrossOut);
     game.ApplyDecision(new CrossOut(combinationToCrossOut));
     ResetRolls();
     await OnTurnCompleted.InvokeAsync();

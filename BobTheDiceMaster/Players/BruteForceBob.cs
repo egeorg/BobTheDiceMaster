@@ -73,7 +73,7 @@ namespace BobTheDiceMaster
 
         foreach (var rerollResult in DiceRoll.RollResultsByDiceAmount[reroll.Length - 1])
         {
-          DiceRoll nextRoll = currentRoll.ApplyReroll(reroll, rerollResult);
+          DiceRoll nextRoll = currentRoll.ApplyRerollAtIndexes(reroll, rerollResult);
 
           DecisionInfo nextRollDecision =
             GetBestDecision(availableCombinations, nextRoll, rerollsLeft - 1);

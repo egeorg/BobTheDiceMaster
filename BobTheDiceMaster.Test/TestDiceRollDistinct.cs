@@ -11,7 +11,7 @@ namespace BobTheDiceMaster.Test
 
       DiceRollDistinct initialRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
-      DiceRollDistinct newRoll = initialRoll.Reroll(new[] { 0, 2 }, dieMock.Object);
+      DiceRollDistinct newRoll = initialRoll.RerollIndexes(new[] { 0, 2 }, dieMock.Object);
 
       Assert.Equal(new DiceRollDistinct(new[] { 3, 2, 1, 4, 6 }), newRoll);
     }
@@ -23,7 +23,7 @@ namespace BobTheDiceMaster.Test
 
       DiceRollDistinct rerollResult = new DiceRollDistinct(new[] { 3, 1 });
 
-      DiceRollDistinct newRoll = roll.ApplyReroll(new[] { 0, 2 }, rerollResult);
+      DiceRollDistinct newRoll = roll.ApplyRerollAtIndexes(new[] { 0, 2 }, rerollResult);
 
       Assert.Equal(new DiceRollDistinct(new[] { 3, 2, 1, 4, 6 }), newRoll);
     }
