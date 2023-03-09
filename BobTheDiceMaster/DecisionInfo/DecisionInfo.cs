@@ -2,7 +2,7 @@
 {
   /// <summary>
   /// Class that represents information required to make a decision given a game
-  /// of school context (available combinaitons and current dice roll result) and
+  /// of school context (available combinaitons, current dice roll result and rerolls left) and
   /// a double value that can be used to compare two corresponding decisions.
   /// Used in Bob algorithms to compare different options and to construct a final decision.
   /// </summary>

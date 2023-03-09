@@ -2,32 +2,52 @@
 
 namespace BobTheDiceMaster.Precomputer
 {
+  /// <summary>
+  /// Class used to precompute probability of a combination: ptobability that
+  /// a player would get a specific combination if they aim for a specific
+  /// combination and choose optimal rerolls.
+  /// </summary>
+  /// <remarks>
+  /// The result is not used anywhere, I wrote it out of curiosity.
+  /// </remarks>
   public class BobSchoolProbabilityPrecomputer
   {
+    /// <summary>
+    /// Returns a string with all the elementary combinations and probability
+    /// to roll the specific combinations in a single turn (roll and two rerolls),
+    /// formatted like a dictionary collection initializer, i.e. it can be
+    /// copy-pasted directly to the code and be used as a dictionary collecion
+    /// initializer. Average score is formatted to represent the exact number
+    /// when read, without rounding errors.
+    /// </summary>
     public string Precompute()
     {
       StringBuilder averageScoresString = new StringBuilder();
 
       foreach (var elementaryCombination in CombinationTypes.All.GetElementaryCombinationTypes())
       {
-        averageScoresString.AppendLine($"{{{elementaryCombination}, {GetProbability(elementaryCombination).ToString("R")}}},");
+        averageScoresString.AppendLine($"CombinationTypes.{{{elementaryCombination}, {GetProbability(elementaryCombination).ToString("R")}}},");
       }
 
       return averageScoresString.ToString();
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public string PrecomputeCombinationProbabilityOnFirstRoll()
     {
       StringBuilder averageScoresString = new StringBuilder();
 
       foreach (var elementaryCombination in CombinationTypes.All.GetElementaryCombinationTypes())
       {
-        averageScoresString.AppendLine($"{{{elementaryCombination}, {CombinationProbabilityOnFirstRoll(elementaryCombination).ToString("R")}}},");
+        averageScoresString.AppendLine($"CombinationTypes.{{{elementaryCombination}, {CombinationProbabilityOnFirstRoll(elementaryCombination).ToString("R")}}},");
       }
 
       return averageScoresString.ToString();
     }
 
-    public static double GetProbability(CombinationTypes combination)
+    private static double GetProbability(CombinationTypes combination)
     {
       if (!combination.IsElementary())
       {

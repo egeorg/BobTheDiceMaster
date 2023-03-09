@@ -35,35 +35,49 @@ namespace BobTheDiceMaster
       }
     }
 
-    /// <summary>
-    /// Precomputed using a BobTheDiceMaster.Precomputer tool, it's in this solution as well. 
-    /// </summary>
+    // Precomputed using a BobTheDiceMaster.Precomputer tool, it's in this solution as well.
     private const string precomputedDecisionsResource = "BobTheDiceMaster.Players.precomputedDecisions.zip";
+
+    // 6-th and 7-th bytes encode decision type, 1-5-th encode payload (reroll or combination).
+    private const int DecisionTypeMask = 0b01100000;
+    private const int DecisionPayloadMask = 0b00011111;
+
+    private const int RerollDecisionBits = 0b00100000;
+    private const int ScoreDecisionBits = 0b01000000;
+    private const int CrossOutDecisionBits = 0b01100000;
 
     private Decision ExtractDecision(byte decisionByte, DiceRoll currentRoll)
     {
-      // 6-th and 7-th bytes encode decision type, 1-5-th encode payload (reroll or combination).
-      switch (decisionByte & 0b01100000)
+      switch (decisionByte & DecisionTypeMask)
       {
-        case 0b00100000:
-          List<int> reroll = new List<int>();
-          //TODO: 5 to const?
-          for (int i = 0; i < 5; ++i)
-          {
-            if ((decisionByte & (1 << i)) != 0)
-            {
-              reroll.Add(currentRoll[i]);
-            }
-          }
-          return new Reroll(reroll);
-        case 0b01000000:
-          return new Score((CombinationTypes)(1 << ((decisionByte & 0b00001111) - 1)));
-        case 0b01100000:
-          return new CrossOut((CombinationTypes)(1 << ((decisionByte & 0b00001111) - 1)));
+        case RerollDecisionBits:
+          return new Reroll(GetDiceIndexesToRerollDecisionPayload(decisionByte, currentRoll));
+        case ScoreDecisionBits:
+          return new Score(GetCombinationTypesDecisionPayload(decisionByte));
+        case CrossOutDecisionBits:
+          return new CrossOut(GetCombinationTypesDecisionPayload(decisionByte));
         default:
           throw new ArgumentException(
             $"Unknown decision type in '{Convert.ToString(decisionByte, 2).PadLeft(8, '0')}'");
       }
+    }
+
+    private CombinationTypes GetCombinationTypesDecisionPayload(byte decisionByte)
+    {
+      return (CombinationTypes)(1 << ((decisionByte & DecisionPayloadMask) - 1));
+    }
+
+    private List<int> GetDiceIndexesToRerollDecisionPayload(byte decisionByte, DiceRoll currentRoll)
+    {
+      List<int> reroll = new List<int>();
+      for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+      {
+        if ((decisionByte & (1 << i)) != 0)
+        {
+          reroll.Add(currentRoll[i]);
+        }
+      }
+      return reroll;
     }
   }
 }

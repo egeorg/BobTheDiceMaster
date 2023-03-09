@@ -2,21 +2,33 @@
 
 namespace BobTheDiceMaster.Precomputer
 {
+  /// <summary>
+  /// Class used to precompute average score of a combination: an average
+  /// score a player would get in a single turn (roll and two rerolls) if they
+  /// aim for a specific combination and choose optimal rerolls.
+  /// </summary>
   public class BobSchoolAverageScorePrecomputer
   {
+    /// <summary>
+    /// Returns a string with all the elementary combinations and their average
+    /// score, formatted like a dictionary collection initializer, i.e. it can be
+    /// copy-pasted directly to the code and be used as a dictionary collection
+    /// initializer. Average score is formatted to represent the exact number
+    /// when read, without rounding errors.
+    /// </summary>
     public string Precompute()
     {
       StringBuilder averageScoresString = new StringBuilder();
 
       foreach (var elementaryCombination in CombinationTypes.All.GetElementaryCombinationTypes())
       {
-        averageScoresString.AppendLine($"{{{elementaryCombination}, {AverageScore(elementaryCombination).ToString("R")}}},");
+        averageScoresString.AppendLine($"CombinationTypes.{{{elementaryCombination}, {AverageScore(elementaryCombination).ToString("R")}}},");
       }
 
       return averageScoresString.ToString();
     }
 
-    public static double AverageScore(CombinationTypes combination)
+    private double AverageScore(CombinationTypes combination)
     {
       if (!combination.IsElementary())
       {

@@ -100,5 +100,51 @@
 
       Assert.Equal(new Reroll(new[] { 2, 2 }), decision);
     }
+
+    [Fact]
+    public void FirstValueIsRerolled_WhenIts1WithFour6()
+    {
+      DiceRoll roll = new DiceRoll(new[] { 1, 6, 6, 6, 6 });
+      Decision decision = bob.DecideOnRoll(CombinationTypes.School, roll, 2);
+
+      Assert.Equal(new Reroll(new[] { 1 }), decision);
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 4, 5, 6 }, 1)]
+    [InlineData(new[] { 2, 2, 4, 5, 6 }, 2)]
+    [InlineData(new[] { 2, 3, 3, 5, 6 }, 3)]
+    [InlineData(new[] { 2, 3, 4, 4, 6 }, 4)]
+    [InlineData(new[] { 2, 3, 4, 5, 5 }, 5)]
+    public void AnyDiceIndexRerollIsPossible_ForBigStraigt(int[] diceValues, int expectedDieValueToReroll)
+    {
+      DiceRoll roll = new DiceRoll(diceValues);
+      Decision decision = bob.DecideOnRoll(CombinationTypes.BigStraight, roll, 2);
+
+      Assert.Equal(new Reroll(new[] { expectedDieValueToReroll }), decision);
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 1, 3, 4, 5 }, 1)]
+    [InlineData(new[] { 1, 2, 2, 4, 5 }, 2)]
+    [InlineData(new[] { 1, 2, 3, 3, 5 }, 3)]
+    [InlineData(new[] { 1, 2, 3, 4, 4 }, 4)]
+    [InlineData(new[] { 1, 2, 3, 4, 6 }, 6)]
+    public void AnyDiceIndexRerollIsPossible_ForSmallStraight(int[] diceValues, int expectedDieValueToReroll)
+    {
+      DiceRoll roll = new DiceRoll(diceValues);
+      Decision decision = bob.DecideOnRoll(CombinationTypes.LittleStraight, roll, 2);
+
+      Assert.Equal(new Reroll(new[] { expectedDieValueToReroll }), decision);
+    }
+
+    [Fact]
+    public void AllDiceCanBeRerolled()
+    {
+      DiceRoll roll = new DiceRoll(new[] { 1, 2, 3, 4, 5 });
+      Decision decision = bob.DecideOnRoll(CombinationTypes.Grade6, roll, 2);
+
+      Assert.Equal(new Reroll(new[] { 1, 2, 3, 4, 5 }), decision);
+    }
   }
 }
