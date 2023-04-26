@@ -186,48 +186,20 @@ namespace BobTheDiceMaster
     public void ApplyDecision(Decision decision)
     {
       VerifyState(GameOfSchoolState.Rolled);
+
       switch (decision)
       {
         case Reroll reroll:
-          DecrementRerollsLeft();
-          diceIndexesToReroll = GetDiceIndexesToReroll(reroll.DiceValuesToReroll);
+          ApplyRerollDecision(reroll);
           break;
         case Score score:
-          if (!allowedCombinationTypes.HasFlag(score.CombinationToScore))
-          {
-            throw new InvalidOperationException(
-              $"Combination {score.CombinationToScore} is already used");
-          }
-          if (currentRoll.Roll.Score(score.CombinationToScore) == null)
-          {
-            throw new InvalidOperationException(
-              $"Combination {score.CombinationToScore} can't be scored for roll {currentRoll}");
-          }
-          if (rerollsLeft == RerollsPerTurn
-            && !score.CombinationToScore.IsFromSchool())
-          {
-            totalScore += currentRoll.Roll.Score(score.CombinationToScore).Value * 2;
-          }
-          else
-          {
-            totalScore += currentRoll.Roll.Score(score.CombinationToScore).Value;
-          }
-          allowedCombinationTypes -= score.CombinationToScore;
-          state = GameOfSchoolState.Idle;
+          ApplyScoreDecision(score);
           break;
         case CrossOut crossOut:
-          if (!allowedCombinationTypes.HasFlag(crossOut.Combination))
-          {
-            throw new InvalidOperationException($"Combination {crossOut.Combination} is already used");
-          }
-          if (crossOut.Combination.IsFromSchool())
-          {
-            throw new InvalidOperationException($"Can't cross out combination {crossOut.Combination}. Can't cross out combinations from school");
-          }
-          allowedCombinationTypes -= crossOut.Combination;
-          state = GameOfSchoolState.Idle;
+          ApplyCrossOutDecision(crossOut);
           break;
       }
+
       if (!isSchoolFinished && AreThreeGradesFinished(allowedCombinationTypes))
       {
         allowedCombinationTypes |= CombinationTypes.AllButSchool;
@@ -237,6 +209,53 @@ namespace BobTheDiceMaster
       {
         state = GameOfSchoolState.GameOver;
       }
+    }
+
+    private void ApplyRerollDecision(Reroll reroll)
+    {
+      DecrementRerollsLeft();
+      diceIndexesToReroll = GetDiceIndexesToReroll(reroll.DiceValuesToReroll);
+    }
+
+    private void ApplyScoreDecision(Score score)
+    {
+      if (!allowedCombinationTypes.HasFlag(score.CombinationToScore))
+      {
+        throw new InvalidOperationException(
+          $"Combination {score.CombinationToScore} is already used");
+      }
+      if (currentRoll.Roll.Score(score.CombinationToScore) == null)
+      {
+        throw new InvalidOperationException(
+          $"Combination {score.CombinationToScore} can't be scored for roll {currentRoll}");
+      }
+      if (rerollsLeft == RerollsPerTurn
+        && !score.CombinationToScore.IsFromSchool())
+      {
+        totalScore += currentRoll.Roll.Score(score.CombinationToScore).Value * 2;
+      }
+      else
+      {
+        totalScore += currentRoll.Roll.Score(score.CombinationToScore).Value;
+      }
+
+      allowedCombinationTypes -= score.CombinationToScore;
+      state = GameOfSchoolState.Idle;
+    }
+
+    private void ApplyCrossOutDecision(CrossOut crossOut)
+    {
+      if (!allowedCombinationTypes.HasFlag(crossOut.Combination))
+      {
+        throw new InvalidOperationException($"Combination {crossOut.Combination} is already used");
+      }
+      if (crossOut.Combination.IsFromSchool())
+      {
+        throw new InvalidOperationException($"Can't cross out combination {crossOut.Combination}. Can't cross out combinations from school");
+      }
+
+      allowedCombinationTypes -= crossOut.Combination;
+      state = GameOfSchoolState.Idle;
     }
 
     private IPlayer player;
