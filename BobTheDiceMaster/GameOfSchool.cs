@@ -64,6 +64,18 @@ namespace BobTheDiceMaster
     /// </summary>
     public int RerollsLeft => rerollsLeft;
 
+    private IPlayer player;
+    private IDie d6;
+    private const int RerollsPerTurn = 2;
+
+    private DiceRollDistinct currentRoll;
+    private int[] diceIndexesToReroll;
+    private int rerollsLeft;
+    private int totalScore;
+    private CombinationTypes allowedCombinationTypes;
+    private bool isSchoolFinished;
+    private GameOfSchoolState state;
+
     /// <summary>
     /// Create a new <see cref="GameOfSchool"/> instance for given <see cref="IPlayer"/>
     /// and use the <paramref name="d6"/> to generate roll results when it is delegated to the game.
@@ -257,18 +269,6 @@ namespace BobTheDiceMaster
       allowedCombinationTypes -= crossOut.Combination;
       state = GameOfSchoolState.Idle;
     }
-
-    private IPlayer player;
-    private IDie d6;
-    private const int RerollsPerTurn = 2;
-
-    private DiceRollDistinct currentRoll;
-    private int[] diceIndexesToReroll;
-    private int rerollsLeft;
-    private int totalScore;
-    private CombinationTypes allowedCombinationTypes;
-    private bool isSchoolFinished;
-    private GameOfSchoolState state;
 
     private bool AreThreeGradesFinished(CombinationTypes combinationTypes)
     {
