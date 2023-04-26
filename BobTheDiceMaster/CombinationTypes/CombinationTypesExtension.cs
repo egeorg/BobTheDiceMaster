@@ -52,15 +52,15 @@ namespace BobTheDiceMaster
         CombinationTypes.Grade4,
         CombinationTypes.Grade5,
         CombinationTypes.Grade6,
-        CombinationTypes.Trash,
         CombinationTypes.Pair,
-        CombinationTypes.TwoPairs,
         CombinationTypes.Set,
+        CombinationTypes.TwoPairs,
         CombinationTypes.Full,
         CombinationTypes.Care,
         CombinationTypes.LittleStraight,
         CombinationTypes.BigStraight,
-        CombinationTypes.Poker
+        CombinationTypes.Poker,
+        CombinationTypes.Trash
       };
   }
 }

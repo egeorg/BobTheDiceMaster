@@ -22,7 +22,7 @@ namespace BobTheDiceMaster.Precomputer
 
       foreach (var elementaryCombination in CombinationTypes.All.GetElementaryCombinationTypes())
       {
-        averageScoresString.AppendLine($"CombinationTypes.{{{elementaryCombination}, {AverageScore(elementaryCombination).ToString("R")}}},");
+        averageScoresString.AppendLine($"{{ CombinationTypes.{elementaryCombination}, {AverageScore(elementaryCombination).ToString("R")} }},");
       }
 
       return averageScoresString.ToString();

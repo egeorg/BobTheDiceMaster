@@ -373,9 +373,9 @@ namespace BobTheDiceMaster
       int rollScore = 0;
       for (int i = 0; i < MaxDiceAmount; ++i)
       {
-        if (dice[i] == grade)
+        if (dice[i] != grade)
         {
-          rollScore += grade;
+          rollScore -= grade;
         }
       }
       return rollScore;
@@ -414,12 +414,12 @@ namespace BobTheDiceMaster
     // Precomputed using a BobTheDiceMaster.Precomputer tool, it's in this solution as well.
     private static Dictionary<CombinationTypes, double> averageScore = new Dictionary<CombinationTypes, double>
       {
-        { CombinationTypes.Grade1, 2.1064814814814756 },
-        { CombinationTypes.Grade2, 4.2129629629629575 },
-        { CombinationTypes.Grade3, 6.3194444444444455 },
-        { CombinationTypes.Grade4, 8.425925925925913 },
-        { CombinationTypes.Grade5, 10.532407407407392 },
-        { CombinationTypes.Grade6, 12.6388888888889 },
+        { CombinationTypes.Grade1, -2.893518518518524 },
+        { CombinationTypes.Grade2, -5.7870370370370425 },
+        { CombinationTypes.Grade3, -8.680555555555555 },
+        { CombinationTypes.Grade4, -11.574074074074092 },
+        { CombinationTypes.Grade5, -14.4675925925926 },
+        { CombinationTypes.Grade6, -17.361111111111118 },
         { CombinationTypes.Pair, 15.865270870457234 },
         { CombinationTypes.Set, 11.619899714332302 },
         { CombinationTypes.TwoPairs, 16.37926613378522 },
@@ -428,7 +428,7 @@ namespace BobTheDiceMaster
         { CombinationTypes.LittleStraight, 3.183917676890467 },
         { CombinationTypes.BigStraight, 4.245223569187295 },
         { CombinationTypes.Poker, 0.8804221388169133 },
-        { CombinationTypes.Trash, 35.100630144032884 }
+        { CombinationTypes.Trash, 35.100630144032884 },
       };
 
     private int? PairScore()

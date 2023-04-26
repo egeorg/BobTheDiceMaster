@@ -211,28 +211,6 @@ namespace BobTheDiceMaster
           else
           {
             totalScore += currentRoll.Roll.Score(score.CombinationToScore).Value;
-            //TODO[GE]: move somewhere
-            switch (score.CombinationToScore)
-            {
-              case CombinationTypes.Grade1:
-                totalScore -= 5;
-                break;
-              case CombinationTypes.Grade2:
-                totalScore -= 10;
-                break;
-              case CombinationTypes.Grade3:
-                totalScore -= 15;
-                break;
-              case CombinationTypes.Grade4:
-                totalScore -= 20;
-                break;
-              case CombinationTypes.Grade5:
-                totalScore -= 25;
-                break;
-              case CombinationTypes.Grade6:
-                totalScore -= 30;
-                break;
-            }
           }
           allowedCombinationTypes -= score.CombinationToScore;
           state = GameOfSchoolState.Idle;
