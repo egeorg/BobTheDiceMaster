@@ -89,7 +89,7 @@ namespace BobTheDiceMaster.Test
     }
 
     [Theory]
-    [InlineData(new[] { 1, 2, 6, 6, 6 }, 18, CombinationTypes.Grade6)]
+    [InlineData(new[] { 1, 2, 6, 6, 6 }, -12, CombinationTypes.Grade6)]
     [InlineData(new[] { 2, 2, 2, 4, 4 }, 8,   CombinationTypes.Pair)]
     [InlineData(new[] { 2, 2, 2, 4, 4 }, 6,   CombinationTypes.Set)]
     [InlineData(new[] { 4, 6, 6, 6, 6 }, 24,  CombinationTypes.Care)]

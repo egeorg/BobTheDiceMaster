@@ -9,8 +9,8 @@
       CombinationTypes[] constituents =
       {
         CombinationTypes.Grade6,
-        CombinationTypes.Trash,
-        CombinationTypes.Full
+        CombinationTypes.Full,
+        CombinationTypes.Trash
       };
       CombinationTypes disjunction = constituents.Aggregate(
         CombinationTypes.None,
