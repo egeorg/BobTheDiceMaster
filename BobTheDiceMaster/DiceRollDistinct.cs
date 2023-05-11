@@ -20,12 +20,12 @@ namespace BobTheDiceMaster
   {
     /// <summary>
     /// A <see cref="DiceRoll"> with the same values. Can be useful,
-    /// for example to calculate <see cref="DiceRoll.Score">.
+    /// for example to calculate <see cref="DiceRoll.Score"/>.
     /// </summary>
     public DiceRoll Roll { get; private set; }
 
     /// <summary>
-    /// Number of dice
+    /// Number of dice.
     /// </summary>
     public int DiceAmount => dice.Length;
 

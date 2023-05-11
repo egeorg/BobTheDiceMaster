@@ -70,7 +70,7 @@
 
   private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
-  private GameOfSchool game = new GameOfSchool(new VerboseBruteForceBob(), new D6());
+  private GameOfSchoolWithDice game = new GameOfSchoolWithDice(new D6());
 
   private bool[] diceSelected = new[] { false, false, false, false, false };
 
@@ -170,11 +170,11 @@
         .Select(n => game.CurrentRoll.Roll[n]).ToArray();
     gameContext.RerollsLeft = game.RerollsLeft;
 
-    var decision = await bobClient.DefaultBobDecideOnRollAsync(
+    var apiDecision = await bobClient.DefaultBobDecideOnRollAsync(
         gameContext);
     AddMessage($"Request took '{DateTime.UtcNow - startRequestTime}'");
 
-    return ConvertSwaggerToCore(decision);
+    return ConvertSwaggerToCore(apiDecision);
   }
 
 

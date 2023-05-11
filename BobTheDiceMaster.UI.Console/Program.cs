@@ -10,7 +10,7 @@ namespace BobTheDiceMaster.UI.Console
     static void Main(string[] args)
     {
       System.Console.WriteLine("Starting a game...");
-      GameOfSchool game = new GameOfSchool(new ConsoleHumanPlayer(), new D6());
+      GameOfSchoolWithDiceAndPlayer game = new GameOfSchoolWithDiceAndPlayer(new D6(), new ConsoleHumanPlayer());
 
       while (!game.IsGameOver)
       {
@@ -29,7 +29,7 @@ namespace BobTheDiceMaster.UI.Console
       }
     }
 
-    public static void PerformNextStep(GameOfSchool game)
+    public static void PerformNextStep(GameOfSchoolWithDiceAndPlayer game)
     {
       game.GenerateRoll();
       while (!game.IsTurnOver)
