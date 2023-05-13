@@ -43,7 +43,6 @@ namespace BobTheDiceMaster
     /// </returns>
     public Decision GenerateAndApplyDecision()
     {
-      VerifyState(GameOfSchoolState.Rolled);
       Decision decision = aiPlayer.DecideOnRoll(
         allowedCombinationTypes, CurrentRoll.Roll, RerollsLeft);
       switch (decision)

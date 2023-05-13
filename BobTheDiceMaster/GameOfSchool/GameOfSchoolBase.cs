@@ -190,7 +190,7 @@ namespace BobTheDiceMaster
     //TODO[GE]: move to appropriate location, private fields too
     protected CombinationTypes allowedCombinationTypes;
 
-    protected bool AreThreeGradesFinished(CombinationTypes combinationTypes)
+    private bool AreThreeGradesFinished(CombinationTypes combinationTypes)
     {
       if (!combinationTypes.IsFromSchool())
       {
@@ -212,7 +212,7 @@ namespace BobTheDiceMaster
       return true;
     }
 
-    protected void VerifyState(GameOfSchoolState requiredState)
+    private void VerifyState(GameOfSchoolState requiredState)
     {
       if (state == requiredState)
       {
