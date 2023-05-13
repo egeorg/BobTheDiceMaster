@@ -20,9 +20,6 @@
     /// </summary>
     public DiceRollDistinct GenerateRoll()
     {
-      //TODO: add unit tests
-      VerifyState(GameOfSchoolState.Idle);
-
       DiceRollDistinct newRoll = new DiceRollDistinct(
           dice.Roll(DiceRoll.MaxDiceAmount));
       SetCurrentRollProtected(newRoll);
