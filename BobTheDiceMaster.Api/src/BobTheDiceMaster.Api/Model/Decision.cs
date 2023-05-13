@@ -19,7 +19,7 @@
         case BobTheDiceMaster.Score score:
           Score = new Score
           {
-            Combination = score.CombinationToScore
+            Combination = score.Combination
           };
           break;
         case BobTheDiceMaster.CrossOut crossOut:

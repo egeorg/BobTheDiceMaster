@@ -50,11 +50,6 @@ namespace BobTheDiceMaster.UI.Console
             $"Top 3 decisions are:" + Environment.NewLine + 
             $"{string.Join(Environment.NewLine, decision.RatedDecisionInfo.Take(3))}");
         }
-
-        if (decision is Reroll)
-        {
-          game.GenerateAndApplyReroll();
-        }
       }
     }
   }

@@ -123,6 +123,52 @@
     }
   }
 
+  //TODO: remove when game with player is used or move
+  private void ApplyDecision(Decision decision)
+  {
+    switch (decision)
+    {
+      case Reroll reroll:
+        game.RerollDiceAtIndexes(GetDiceIndexesToReroll(reroll.DiceValuesToReroll));
+        break;
+      case Score score:
+        //TODO: same property name for score and cross out
+        game.ScoreCombination(score.Combination);
+        break;
+      case CrossOut crossOut:
+        game.CrossOutCombination(crossOut.Combination);
+        break;
+    }
+  }
+
+  //TODO: remove when game with player is used or move
+  private int[] GetDiceIndexesToReroll(IReadOnlyCollection<int> diceValuesToReroll)
+  {
+    int[] diceToReroll = new int[diceValuesToReroll.Count];
+    int rerollCounter = 0;
+    bool[] dieUsed = new bool[DiceRoll.MaxDiceAmount];
+    foreach (int dieValue in diceValuesToReroll)
+    {
+      for (int i = 0; i < DiceRoll.MaxDiceAmount; ++i)
+      {
+        if (!dieUsed[i] && currentRoll[i] == dieValue)
+        {
+          diceToReroll[rerollCounter++] = i;
+          dieUsed[i] = true;
+          break;
+        }
+      }
+    }
+
+    if (rerollCounter < diceValuesToReroll.Count)
+    {
+      throw new InvalidOperationException(
+        $"Current roll {currentRoll} does not contain all of the reroll values: {String.Join(",", diceValuesToReroll)}");
+    }
+
+    return diceToReroll;
+  }
+
   private async Task Next()
   {
     isWaiting = true;
@@ -135,12 +181,7 @@
         Decision decision = await DecideOnRoll();
         AddMessage($"For {game.CurrentRoll} I decide to {decision}.");
 
-        game.ApplyDecision(decision);
-
-        if (decision is Reroll)
-        {
-          game.GenerateAndApplyReroll();
-        }
+        ApplyDecision(decision);
       }
       catch (Exception e)
       {

@@ -5,13 +5,13 @@ namespace BobTheDiceMaster.Test
   public class TestGameOfSchoolWithDiceAndPlayer
   {
     [Fact]
-    public void GenerateAndApplyReroll_FailsInIdleState()
+    public void GenerateAndApplyDecision_FailsInIdleState()
     {
       var defaultPlayerMock = new Mock<IPlayer>();
       var defaultDieMock = TestHelper.GetDiceMock(new int[] { });
       var game = new GameOfSchoolWithDiceAndPlayer(defaultDieMock.Object, defaultPlayerMock.Object);
 
-      Assert.Throws<InvalidOperationException>(() => game.GenerateAndApplyReroll());
+      Assert.Throws<InvalidOperationException>(() => game.GenerateAndApplyDecision());
     }
 
     [Fact]
@@ -27,7 +27,6 @@ namespace BobTheDiceMaster.Test
       var game = new GameOfSchoolWithDiceAndPlayer(diceMock.Object, playerMock.Object);
       game.GenerateRoll();
       game.GenerateAndApplyDecision();
-      game.GenerateAndApplyReroll();
 
       var expectedResult = new DiceRollDistinct(new[] { 6, 6, 5, 6, 6 });
       Assert.Equal(expectedResult, game.CurrentRoll);

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace BobTheDiceMaster
+﻿namespace BobTheDiceMaster
 {
   /// <summary>
   /// A game of school for a single player with decisions as input parameters
@@ -17,47 +14,47 @@ namespace BobTheDiceMaster
     }
 
     /// <summary>
-    /// Generate and return a new <see cref="CurrentRoll"/>.
+    /// Generate and return a new <see cref="CurrentRoll"/> and
+    /// change game state to <see cref="GameOfSchoolState.Rolled"/>.
+    /// Only possible in <see cref="GameOfSchoolState.Idle"/> game state.
     /// </summary>
     public DiceRollDistinct GenerateRoll()
     {
-      DiceRollDistinct newRoll =
-        new DiceRollDistinct(
+      //TODO: add unit tests
+      VerifyState(GameOfSchoolState.Idle);
+
+      DiceRollDistinct newRoll = new DiceRollDistinct(
           dice.Roll(DiceRoll.MaxDiceAmount));
       SetCurrentRollProtected(newRoll);
+
       return newRoll;
     }
 
     /// <summary>
-    /// Apply a decision passed as an argument.
-    /// </summary>
-    public void ApplyDecision(Decision decision)
-    {
-      ApplyDecisionProtected(decision);
-    }
-
-    /// <summary>
-    /// Generate a reroll result and apply it to a <see cref="CurrentRoll"/>.
-    /// Dice to be rerolled has to be set earlier by
-    /// a <see cref="ApplyDecision(Decision)"/> method with an argument of type <see cref="Reroll"/>.
-    /// </summary>
-    public void GenerateAndApplyReroll()
-    {
-      VerifyState(GameOfSchoolState.Rolled);
-      currentRoll = currentRoll.RerollIndexes(diceIndexesToReroll, dice);
-    }
-
-    /// <summary>
-    /// Shorcut, it's basically the same as calling
-    /// <see cref="ApplyDecision(Decision)"/> with a <see cref="Reroll"/>
-    /// argument and then <see cref="GenerateAndApplyReroll"/>.
+    /// Score a combination <paramref name="combination"/>.
     /// Only possible in <see cref="GameOfSchoolState.Rolled"/> game state.
     /// </summary>
-    public void GenerateAndApplyReroll(int[] diceIndexesToReroll)
+    public void ScoreCombination(CombinationTypes combination)
     {
-      DecrementRerollsLeftAndThrowIfNoRerollsLeft();
-      this.diceIndexesToReroll = diceIndexesToReroll;
-      GenerateAndApplyReroll();
+      ScoreCombinationProtected(combination);
+    }
+
+    /// <summary>
+    /// Cross out a combination <paramref name="combination"/>.
+    /// Only possible in <see cref="GameOfSchoolState.Rolled"/> game state.
+    /// </summary>
+    public void CrossOutCombination(CombinationTypes combination)
+    {
+      CrossOutCombinationProtected(combination);
+    }
+
+    /// <summary>
+    /// Generate new values for dice at indexes <paramref name="diceIndexes" />.
+    /// Only possible in the <see cref="GameOfSchoolState.Rolled"/> game state.
+    /// </summary>
+    public void RerollDiceAtIndexes(int[] diceIndexes)
+    {
+      ApplyRerollToDiceAtIndexesProtected(dice.Roll(diceIndexes.Length), diceIndexes);
     }
   }
 }

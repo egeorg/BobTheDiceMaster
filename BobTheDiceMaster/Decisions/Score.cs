@@ -10,19 +10,19 @@ namespace BobTheDiceMaster
     /// <summary>
     /// A combination to score.
     /// </summary>
-    public CombinationTypes CombinationToScore { get; }
+    public CombinationTypes Combination { get; }
 
     public Score(
-      CombinationTypes combinationToScore,
+      CombinationTypes combination,
       IEnumerable<DecisionInfoVerbose> decisionInfos = null)
       : base(decisionInfos)
     {
-      CombinationToScore = combinationToScore;
+      Combination = combination;
     }
 
     public override string ToString()
     {
-      return $"Score({CombinationToScore})";
+      return $"Score({Combination})";
     }
 
     /// <summary>
@@ -30,12 +30,12 @@ namespace BobTheDiceMaster
     /// </summary>
     public override bool Equals(object obj)
     {
-      return obj is Score && ((Score)obj).CombinationToScore == CombinationToScore;
+      return obj is Score && ((Score)obj).Combination == Combination;
     }
 
     public override int GetHashCode()
     {
-      return CombinationToScore.GetHashCode();
+      return Combination.GetHashCode();
     }
   }
 }

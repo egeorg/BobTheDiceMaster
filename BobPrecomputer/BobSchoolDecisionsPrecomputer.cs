@@ -87,7 +87,7 @@ namespace BobPrecomputer
 
     private static byte ByteSerialize(Score score)
     {
-      return (byte)(GetIndex(score.CombinationToScore) | 0b01000000);
+      return (byte)(GetIndex(score.Combination) | 0b01000000);
     }
 
     private static byte ByteSerialize(CrossOut crossOut)

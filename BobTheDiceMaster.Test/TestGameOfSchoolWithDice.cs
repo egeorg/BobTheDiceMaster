@@ -11,7 +11,7 @@ namespace BobTheDiceMaster.Test
 
       var game = new GameOfSchoolWithDice(diceMock.Object);
 
-      Assert.Throws<InvalidOperationException>(() => game.GenerateAndApplyReroll(new[] { 1, 2, 3 }));
+      Assert.Throws<InvalidOperationException>(() => game.RerollDiceAtIndexes(new[] { 1, 2, 3 }));
     }
 
     [Fact]
@@ -21,7 +21,7 @@ namespace BobTheDiceMaster.Test
 
       var game = new GameOfSchoolWithDice(diceMock.Object);
       game.GenerateRoll();
-      game.GenerateAndApplyReroll(new[] { 1, 2, 3 });
+      game.RerollDiceAtIndexes(new[] { 1, 2, 3 });
 
       var expectedResult = new DiceRollDistinct(new[] { 6, 1, 5, 2, 6 });
       Assert.Equal(expectedResult, game.CurrentRoll);
@@ -35,7 +35,7 @@ namespace BobTheDiceMaster.Test
       var game = new GameOfSchoolWithDice(diceMock.Object);
       game.GenerateRoll();
       int rerollsLeftBeforeReroll = game.RerollsLeft;
-      game.GenerateAndApplyReroll(new[] { 1, 2, 3 });
+      game.RerollDiceAtIndexes(new[] { 1, 2, 3 });
 
       Assert.Equal(rerollsLeftBeforeReroll - 1, game.RerollsLeft);
     }
@@ -47,10 +47,10 @@ namespace BobTheDiceMaster.Test
       var game = new GameOfSchoolWithDice(diceMock.Object);
       int rerollsLeftBeforeReroll = game.RerollsLeft;
       game.GenerateRoll();
-      game.GenerateAndApplyReroll(new[] { 1, 2, 3 });
-      game.GenerateAndApplyReroll(new[] { 1, 2, 3 });
+      game.RerollDiceAtIndexes(new[] { 1, 2, 3 });
+      game.RerollDiceAtIndexes(new[] { 1, 2, 3 });
 
-      Assert.Throws<InvalidOperationException>(() => game.GenerateAndApplyReroll(new[] { 1, 2, 3 }));
+      Assert.Throws<InvalidOperationException>(() => game.RerollDiceAtIndexes(new[] { 1, 2, 3 }));
     }
 
     [Fact]
@@ -62,39 +62,9 @@ namespace BobTheDiceMaster.Test
 
       game.GenerateRoll();
 
-      game.GenerateAndApplyReroll(new[] { 1, 3 });
+      game.RerollDiceAtIndexes(new[] { 1, 3 });
 
       Assert.Equal(game.CurrentRoll, new DiceRollDistinct(new[] { 1, 5, 1, 2, 1 }));
-    }
-
-
-    [Fact]
-    public void GenerateAndApplyRerollWithoutArguments_DecrementsRerollsLeft()
-    {
-      var diceMock = TestHelper.GetDiceMock(new[] { 6, 1, 2, 2, 6 }, new[] { 1, 5, 2 });
-
-      var game = new GameOfSchoolWithDice(diceMock.Object);
-      game.GenerateRoll();
-      int rerollsLeftBeforeReroll = game.RerollsLeft;
-      game.ApplyDecision(new Reroll(new[] { 1, 2, 2 }));
-      game.GenerateAndApplyReroll();
-
-      Assert.Equal(rerollsLeftBeforeReroll - 1, game.RerollsLeft);
-    }
-
-    [Fact]
-    public void ApplyDecision_FailsOnThirdReroll()
-    {
-      var diceMock = TestHelper.GetDiceMock(new[] { 6, 1, 2, 2, 6 }, new[] { 1, 2, 2 });
-      var game = new GameOfSchoolWithDice(diceMock.Object);
-      int rerollsLeftBeforeReroll = game.RerollsLeft;
-      game.GenerateRoll();
-      game.ApplyDecision(new Reroll(new[] { 1, 2, 2 }));
-      game.GenerateAndApplyReroll();
-      game.ApplyDecision(new Reroll(new[] { 1, 2, 2 }));
-      game.GenerateAndApplyReroll();
-
-      Assert.Throws<InvalidOperationException>(() => game.ApplyDecision(new Reroll(new[] { 1, 2, 2 })));
     }
 
     [Fact]

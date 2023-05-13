@@ -41,11 +41,11 @@ namespace BobTheDiceMaster.Test
     private void ScoreGrades456(GameOfSchool game)
     {
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 6, 6, 6, 6 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade6));
+      game.ScoreCombination(CombinationTypes.Grade6);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 1, 5, 5, 5 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade5));
+      game.ScoreCombination(CombinationTypes.Grade5);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 1, 1, 4, 4 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade4));
+      game.ScoreCombination(CombinationTypes.Grade4);
     }
 
     [Fact]
@@ -143,7 +143,7 @@ namespace BobTheDiceMaster.Test
     {
       var game = new GameOfSchool();
 
-      Assert.Throws<InvalidOperationException>(() => game.ApplyReroll(new[] { 1, 2, 3 }));
+      Assert.Throws<InvalidOperationException>(() => game.ApplyRerollToDiceAtIndexes(new[] { 1, 5, 2 }, new[] { 1, 2, 3 }));
     }
 
     [Fact]
@@ -153,9 +153,7 @@ namespace BobTheDiceMaster.Test
 
       var game = new GameOfSchool();
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 6, 1, 2, 2, 6 }));
-      game.ApplyDecision(new Reroll(new[] { 1, 2, 2 }));
-        
-      game.ApplyReroll(new[] { 1, 5, 2 });
+      game.ApplyRerollToDiceAtIndexes(new[] { 1, 5, 2 }, new[] { 1, 2, 3 });
 
       var expectedResult = new DiceRollDistinct(new[] { 6, 1, 5, 2, 6 });
       Assert.Equal(expectedResult, game.CurrentRoll);
@@ -166,7 +164,7 @@ namespace BobTheDiceMaster.Test
     {
       var game = new GameOfSchool();
 
-      Assert.Throws<InvalidOperationException>(() => game.ApplyDecision(new Reroll(new int[] { 1 })));
+      Assert.Throws<InvalidOperationException>(() => game.ApplyRerollToDiceAtIndexes(new[] { 1, 5, 2 }, new[] { 1, 2, 3 }));
     }
 
     [Fact]
@@ -175,12 +173,10 @@ namespace BobTheDiceMaster.Test
       var game = new GameOfSchool();
 
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 6, 1, 2, 2, 6 }));
-      game.ApplyDecision(new Reroll(new[] { 1, 2, 2 }));
-      game.ApplyReroll(new[] { 1, 5, 2 });
-      game.ApplyDecision(new Reroll(new[] { 1, 5, 2 }));
-      game.ApplyReroll(new[] { 1, 5, 2 });
+      game.ApplyRerollToDiceAtIndexes(new[] { 1, 5, 2 }, new[] { 1, 2, 3 });
+      game.ApplyRerollToDiceAtIndexes(new[] { 1, 5, 2 }, new[] { 1, 2, 3 });
 
-      Assert.Throws<InvalidOperationException>(() => game.ApplyDecision(new Reroll(new[] { 1, 5, 2 })));
+      Assert.Throws<InvalidOperationException>(() => game.ApplyRerollToDiceAtIndexes(new[] { 1, 5, 2 }, new[] { 1, 2, 3 }));
     }
 
     [Fact]
@@ -192,7 +188,7 @@ namespace BobTheDiceMaster.Test
 
       // Pair is not allowed since it's only start of the game and only grades are allowed
       Assert.DoesNotContain(CombinationTypes.Pair, game.AllowedCombinationTypes);
-      Assert.Throws<InvalidOperationException>(() => game.ApplyDecision(new Score(CombinationTypes.Pair)));
+      Assert.Throws<InvalidOperationException>(() => game.ScoreCombination(CombinationTypes.Pair));
     }
 
     [Fact]
@@ -206,7 +202,7 @@ namespace BobTheDiceMaster.Test
 
       Assert.Contains(CombinationTypes.Pair, game.AllowedCombinationTypes);
       Assert.DoesNotContain(CombinationTypes.Pair, game.ScoreCombinationTypes);
-      Assert.Throws<InvalidOperationException>(() => game.ApplyDecision(new Score(CombinationTypes.Pair)));
+      Assert.Throws<InvalidOperationException>(() => game.ScoreCombination(CombinationTypes.Pair));
     }
 
     [Fact]
@@ -220,7 +216,7 @@ namespace BobTheDiceMaster.Test
 
       int initialScore = game.Score;
 
-      game.ApplyDecision(new Score(CombinationTypes.Pair));
+      game.ScoreCombination(CombinationTypes.Pair);
 
       Assert.Equal(24, game.Score - initialScore);
     }
@@ -233,7 +229,7 @@ namespace BobTheDiceMaster.Test
 
       int initialScore = game.Score;
 
-      game.ApplyDecision(new Score(CombinationTypes.Grade1));
+      game.ScoreCombination(CombinationTypes.Grade1);
 
       Assert.Equal(-2, game.Score - initialScore);
     }
@@ -249,10 +245,9 @@ namespace BobTheDiceMaster.Test
 
       int initialScore = game.Score;
 
-      game.ApplyDecision(new Reroll(new[] { 1, 1, 2, 4 }));
-      game.ApplyReroll(new[] { 1, 2, 3, 6 });
+      game.ApplyRerollToDiceAtIndexes(new[] { 1, 2, 3, 6 }, new[] { 0, 1, 2, 3 });
 
-      game.ApplyDecision(new Score(CombinationTypes.Pair));
+      game.ScoreCombination(CombinationTypes.Pair);
 
       Assert.Equal(12, game.Score - initialScore);
     }
@@ -266,12 +261,11 @@ namespace BobTheDiceMaster.Test
 
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 1, 2, 4, 6 }));
 
-      game.ApplyDecision(new Reroll(new[] { 1, 1, 2, 4 }));
-      game.ApplyReroll(new[] { 1, 2, 3, 6 });
+      game.ApplyRerollToDiceAtIndexes(new[] { 1, 2, 3, 6 }, new[] { 0, 1, 2, 3 });
 
       Assert.Contains(CombinationTypes.Pair, game.AllowedCombinationTypes);
 
-      game.ApplyDecision(new Score(CombinationTypes.Pair));
+      game.ScoreCombination(CombinationTypes.Pair);
 
       Assert.DoesNotContain(CombinationTypes.Pair, game.AllowedCombinationTypes);
     }
@@ -285,7 +279,7 @@ namespace BobTheDiceMaster.Test
 
       Assert.Equal(GameOfSchoolState.Rolled, game.State);
 
-      game.ApplyDecision(new Score(CombinationTypes.Grade1));
+      game.ScoreCombination(CombinationTypes.Grade1);
 
       Assert.Equal(GameOfSchoolState.Idle, game.State);
     }
@@ -301,25 +295,9 @@ namespace BobTheDiceMaster.Test
 
       Assert.Equal(GameOfSchoolState.Rolled, game.State);
 
-      game.ApplyDecision(new CrossOut(CombinationTypes.Poker));
+      game.CrossOutCombination(CombinationTypes.Poker);
 
       Assert.Equal(GameOfSchoolState.Idle, game.State);
-    }
-
-    [Fact]
-    public void ApplyDecisionReroll_DoesNotChangeGameStateToIdle()
-    {
-      var game = new GameOfSchool();
-
-      ScoreGrades456(game);
-
-      game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 2, 3, 1, 2 }));
-
-      Assert.Equal(GameOfSchoolState.Rolled, game.State);
-
-      game.ApplyDecision(new Reroll(new[] { 1, 1, 2, 2, 3 }));
-
-      Assert.Equal(GameOfSchoolState.Rolled, game.State);
     }
 
     [Fact]
@@ -330,29 +308,29 @@ namespace BobTheDiceMaster.Test
       ScoreGrades456(game);
 
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 1, 1, 1, 1 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade1));
+      game.ScoreCombination(CombinationTypes.Grade1);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 2, 2, 2, 2, 2 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade2));
+      game.ScoreCombination(CombinationTypes.Grade2);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 3, 3, 3, 3, 3 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade3));
+      game.ScoreCombination(CombinationTypes.Grade3);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 1, 1, 6, 6 }));
-      game.ApplyDecision(new Score(CombinationTypes.Pair));
+      game.ScoreCombination(CombinationTypes.Pair);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 1, 1, 6, 6 }));
-      game.ApplyDecision(new Score(CombinationTypes.Set));
+      game.ScoreCombination(CombinationTypes.Set);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 5, 5, 6, 6 }));
-      game.ApplyDecision(new Score(CombinationTypes.TwoPairs));
+      game.ScoreCombination(CombinationTypes.TwoPairs);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 1, 1, 6, 6 }));
-      game.ApplyDecision(new Score(CombinationTypes.Full));
+      game.ScoreCombination(CombinationTypes.Full);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 6, 6, 6, 6 }));
-      game.ApplyDecision(new Score(CombinationTypes.Care));
+      game.ScoreCombination(CombinationTypes.Care);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 2, 3, 4, 5 }));
-      game.ApplyDecision(new Score(CombinationTypes.LittleStraight));
+      game.ScoreCombination(CombinationTypes.LittleStraight);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 2, 3, 4, 5, 6 }));
-      game.ApplyDecision(new Score(CombinationTypes.BigStraight));
+      game.ScoreCombination(CombinationTypes.BigStraight);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 3, 3, 3, 3, 3 }));
-      game.ApplyDecision(new Score(CombinationTypes.Poker));
+      game.ScoreCombination(CombinationTypes.Poker);
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 3, 4, 5, 3, 6 }));
-      game.ApplyDecision(new Score(CombinationTypes.Trash));
+      game.ScoreCombination(CombinationTypes.Trash);
 
       Assert.Equal(GameOfSchoolState.GameOver, game.State);
     }
@@ -374,7 +352,7 @@ namespace BobTheDiceMaster.Test
         game.AllowedCombinationTypes);
 
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 1, 1, 1, 1, 1 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade1));
+      game.ScoreCombination(CombinationTypes.Grade1);
 
       Assert.Equal(new[]
         {
@@ -387,7 +365,7 @@ namespace BobTheDiceMaster.Test
         game.AllowedCombinationTypes);
 
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 2, 2, 2, 2, 2 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade2));
+      game.ScoreCombination(CombinationTypes.Grade2);
 
       Assert.Equal(new[]
         {
@@ -399,7 +377,7 @@ namespace BobTheDiceMaster.Test
         game.AllowedCombinationTypes);
 
       game.SetCurrentRoll(new DiceRollDistinct(new[] { 3, 3, 3, 3, 3 }));
-      game.ApplyDecision(new Score(CombinationTypes.Grade3));
+      game.ScoreCombination(CombinationTypes.Grade3);
 
       Assert.Equal(new[]
         {

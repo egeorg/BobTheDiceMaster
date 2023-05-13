@@ -15,23 +15,23 @@
     }
 
     /// <summary>
-    /// Apply a reroll result <paramref name="rerolledDiceValuesAfterReroll"/> to a <see cref="CurrentRoll"/>.
-    /// Dice to be rerolled has to be set earlier by
-    /// a <see cref="ApplyDecision(Decision)"/> method with an argument of type <see cref="Reroll"/>.
+    /// Apply a reroll result <paramref name="newDiceValues"/> to
+    /// <see cref="CurrentRoll"/> dice at indexes <paramref name="diceIndexes"/>.
     /// Only possible in <see cref="GameOfSchoolState.Rolled"/> game state.
     /// </summary>
-    public void ApplyReroll(int[] rerolledDiceValuesAfterReroll)
+    public void ApplyRerollToDiceAtIndexes(int[] newDiceValues, int[] diceIndexes)
     {
-      ApplyRerollProtected(rerolledDiceValuesAfterReroll);
+      ApplyRerollToDiceAtIndexesProtected(newDiceValues, diceIndexes);
     }
 
-    /// <summary>
-    /// Apply a decision passed as an argument.
-    /// Only possible in <see cref="GameOfSchoolState.Rolled"/> game state.
-    /// </summary>
-    public void ApplyDecision(Decision decision)
+    public void ScoreCombination(CombinationTypes combinationToScore)
     {
-      ApplyDecisionProtected(decision);
+      ScoreCombinationProtected(combinationToScore);
+    }
+
+    public void CrossOutCombination(CombinationTypes combinationToCrossOut)
+    {
+      CrossOutCombinationProtected(combinationToCrossOut);
     }
   }
 }

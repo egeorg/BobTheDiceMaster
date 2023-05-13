@@ -126,11 +126,6 @@
       newMessage += $" {decision}.";
 
       AddMessage(newMessage);
-
-      if (decision is Reroll)
-      {
-        game.GenerateAndApplyReroll();
-      }
     }
 
     if (!game.IsGameOver)

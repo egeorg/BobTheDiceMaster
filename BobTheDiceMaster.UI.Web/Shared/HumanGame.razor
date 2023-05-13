@@ -126,7 +126,7 @@
 
   private void Reroll()
   {
-    game.GenerateAndApplyReroll(
+    game.RerollDiceAtIndexes(
       Enumerable.Range(0, DiceRoll.MaxDiceAmount)
         .Where(i => diceSelected[i])
         .ToArray());
@@ -138,7 +138,7 @@
   {
     CombinationTypes combinationToScore =
       (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToScore);
-    game.ApplyDecision(new Score(combinationToScore));
+    game.ScoreCombination(combinationToScore);
     ResetRolls();
     await OnTurnCompleted.InvokeAsync();
   }
@@ -147,7 +147,7 @@
   {
     CombinationTypes combinationToCrossOut =
       (CombinationTypes)Enum.Parse(typeof(CombinationTypes), CombinationToCrossOut);
-    game.ApplyDecision(new CrossOut(combinationToCrossOut));
+    game.CrossOutCombination(combinationToCrossOut);
     ResetRolls();
     await OnTurnCompleted.InvokeAsync();
   }
