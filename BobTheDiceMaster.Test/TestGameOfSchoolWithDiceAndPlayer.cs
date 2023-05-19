@@ -2,14 +2,23 @@
 
 namespace BobTheDiceMaster.Test
 {
-  public class TestGameOfSchoolWithDiceAndPlayer
+  public class TestGameOfSchoolWithDiceAndPlayer : TestGameOfSchoolWithDiceBase<GameOfSchoolWithDiceAndPlayer>
   {
+    private Mock<IPlayer> playerMock = new Mock<IPlayer>();
+
+    public TestGameOfSchoolWithDiceAndPlayer()
+    {
+      game = new GameOfSchoolWithDiceAndPlayer(diceMock.Object, playerMock.Object);
+    }
+
     [Fact]
     public void GenerateAndApplyDecision_FailsInIdleState()
     {
-      var defaultPlayerMock = new Mock<IPlayer>();
-      var defaultDieMock = TestHelper.GetDiceMock(new int[] { });
-      var game = new GameOfSchoolWithDiceAndPlayer(defaultDieMock.Object, defaultPlayerMock.Object);
+      //playerMock.Setup(
+      //  player => player.DecideOnRoll(
+      //    It.IsAny<CombinationTypes>(), It.IsAny<DiceRoll>(), It.IsAny<int>()))
+      //  .Returns((Decision)null);
+      var game = new GameOfSchoolWithDiceAndPlayer(diceMock.Object, playerMock.Object);
 
       Assert.Throws<InvalidOperationException>(() => game.GenerateAndApplyDecision());
     }
@@ -17,8 +26,7 @@ namespace BobTheDiceMaster.Test
     [Fact]
     public void GenerateAndApplyReroll_YieldsCorrectResult_InRolledState()
     {
-      var diceMock = TestHelper.GetDiceMock(new[] { 6, 1, 2, 2, 6 }, new[] { 6, 5, 6 });
-      var playerMock = new Mock<IPlayer>();
+      TestHelper.ConfigureDiceMock(diceMock, new[] { 6, 1, 2, 2, 6 }, new[] { 6, 5, 6 });
       playerMock.Setup(
         player => player.DecideOnRoll(
           It.IsAny<CombinationTypes>(), It.IsAny<DiceRoll>(), It.IsAny<int>()))

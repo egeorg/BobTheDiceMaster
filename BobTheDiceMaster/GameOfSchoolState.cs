@@ -1,7 +1,7 @@
 ﻿namespace BobTheDiceMaster
 {
   /// <summary>
-  /// State of a <see cref="GameOfSchool"/> finite state machine.
+  /// State of a <see cref="GameOfSchoolBase"/> finite state machine.
   /// </summary>
   public enum GameOfSchoolState
   {

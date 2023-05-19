@@ -8,15 +8,25 @@ namespace BobTheDiceMaster.Test
 
     public static Mock<IDie> GetDiceMock(params int[][] results)
     {
-      var dieMock = new Mock<IDie>();
+      var diceMock = new Mock<IDie>();
 
       foreach (int[] result in results)
       {
-        dieMock.Setup(die => die.Roll(result.Length))
+        diceMock.Setup(die => die.Roll(result.Length))
           .Returns(result);
       }
 
-      return dieMock;
+      return diceMock;
+    }
+    public static Mock<IDie> ConfigureDiceMock(Mock<IDie> diceMock, params int[][] results)
+    {
+      foreach (int[] result in results)
+      {
+        diceMock.Setup(die => die.Roll(result.Length))
+          .Returns(result);
+      }
+
+      return diceMock;
     }
   }
 }

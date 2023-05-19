@@ -7,7 +7,7 @@ namespace BobTheDiceMaster
   /// <summary>
   /// A base class for a game of school for a single player.
   /// A game for multiple players can be constructed using several
-  /// <see cref="GameOfSchoolBase"/> instances in parallel, it does not
+  /// <see cref="GameOfSchoolBase"/> descendants instances in parallel, it does not
   /// have any state shared across different instances.
   /// </summary>
   public abstract class GameOfSchoolBase
@@ -212,7 +212,7 @@ namespace BobTheDiceMaster
       return true;
     }
 
-    private void VerifyState(GameOfSchoolState requiredState)
+    protected void VerifyState(GameOfSchoolState requiredState)
     {
       if (state == requiredState)
       {
