@@ -14,10 +14,6 @@ namespace BobTheDiceMaster.Test
     [Fact]
     public void GenerateAndApplyDecision_FailsInIdleState()
     {
-      //playerMock.Setup(
-      //  player => player.DecideOnRoll(
-      //    It.IsAny<CombinationTypes>(), It.IsAny<DiceRoll>(), It.IsAny<int>()))
-      //  .Returns((Decision)null);
       var game = new GameOfSchoolWithDiceAndPlayer(diceMock.Object, playerMock.Object);
 
       Assert.Throws<InvalidOperationException>(() => game.GenerateAndApplyDecision());
