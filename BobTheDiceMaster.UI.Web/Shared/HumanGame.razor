@@ -69,7 +69,7 @@
     ResetComboBoxes();
   }
 
-  private GameOfSchoolWithDice game = new GameOfSchoolWithDice(new D6());
+  private GameOfSchoolWithDiceAndHumanPlayer game = new GameOfSchoolWithDiceAndHumanPlayer(new GameOfSchool(), new D6());
 
   private string CombinationToScore { get; set; }
   private string CombinationToCrossOut { get; set; }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-using BobTheDiceMaster;
+using BobTheDiceMaster.GameOfSchool;
 
 namespace BobTheDiceMaster.UI.Console
 {
@@ -10,7 +10,11 @@ namespace BobTheDiceMaster.UI.Console
     static void Main(string[] args)
     {
       System.Console.WriteLine("Starting a game...");
-      GameOfSchoolWithDiceAndPlayer game = new GameOfSchoolWithDiceAndPlayer(new D6(), new ConsoleHumanPlayer());
+      GameOfSchoolWithDiceAndAIPlayer game =
+        new GameOfSchoolWithDiceAndAIPlayer(
+          new GameOfSchool.GameOfSchool(),
+          new D6(),
+          new ConsoleHumanPlayer());
 
       while (!game.IsGameOver)
       {
@@ -29,7 +33,7 @@ namespace BobTheDiceMaster.UI.Console
       }
     }
 
-    public static void PerformNextStep(GameOfSchoolWithDiceAndPlayer game)
+    public static void PerformNextStep(GameOfSchoolWithDiceAndAIPlayer game)
     {
       game.GenerateRoll();
       while (!game.IsTurnOver)

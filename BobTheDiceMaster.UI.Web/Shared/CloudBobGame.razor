@@ -70,7 +70,7 @@
 
   private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
-  private GameOfSchoolWithDice game = new GameOfSchoolWithDice(new D6());
+  private GameOfSchoolWithDiceAndHumanPlayer game = new GameOfSchoolWithDiceAndHumanPlayer(new GameOfSchool(), new D6());
 
   private bool[] diceSelected = new[] { false, false, false, false, false };
 

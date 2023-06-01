@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace BobTheDiceMaster
+namespace BobTheDiceMaster.GameOfSchool
 {
-  /// <summary>
-  /// A base class for a game of school for a single player.
-  /// A game for multiple players can be constructed using several
-  /// <see cref="GameOfSchoolBase"/> descendants instances in parallel, it does not
-  /// have any state shared across different instances.
-  /// </summary>
-  public abstract class GameOfSchoolBase
+  public class GameOfSchool : IGameOfSchool
   {
     /// <summary>
     /// Latest result of a dice roll.
@@ -20,21 +12,7 @@ namespace BobTheDiceMaster
     /// <summary>
     /// All the combinations that are left (not scored or crossed out).
     /// </summary>
-    public IEnumerable<CombinationTypes> AllowedCombinationTypes =>
-      allowedCombinationTypes.GetElementaryCombinationTypes();
-
-    /// <summary>
-    /// All the available combinations that can be crossed out.
-    /// </summary>
-    public IEnumerable<CombinationTypes> CrossOutCombinationTypes =>
-      AllowedCombinationTypes.Where(x => !x.IsFromSchool());
-
-    /// <summary>
-    /// All the available combinations that can be scored
-    /// given actual <see cref="CurrentRoll"/> value.
-    /// </summary>
-    public IEnumerable<CombinationTypes> ScoreCombinationTypes =>
-      AllowedCombinationTypes.Where(x => currentRoll.Roll.Score(x) != null);
+    public CombinationTypes AllowedCombinationTypes => allowedCombinationTypes;
 
     /// <summary>
     /// Current state of game turn.
@@ -47,23 +25,11 @@ namespace BobTheDiceMaster
     public int Score => totalScore;
 
     /// <summary>
-    /// True iff game is over.
-    /// </summary>
-    public bool IsGameOver => state == GameOfSchoolState.GameOver;
-
-    /// <summary>
-    /// True iff turn a is not in progress: player has rolled the dice, but did not scored or crossed out any combination.
-    /// </summary>
-    public bool IsTurnOver =>
-      state == GameOfSchoolState.Idle
-      || state == GameOfSchoolState.GameOver;
-
-    /// <summary>
     /// How many rerolls are left.
     /// </summary>
     public int RerollsLeft => rerollsLeft;
 
-    public GameOfSchoolBase()
+    public GameOfSchool()
     {
       Reset();
     }
@@ -84,10 +50,10 @@ namespace BobTheDiceMaster
     /// change game state to <see cref="GameOfSchoolState.Rolled"/>.
     /// Only possible in <see cref="GameOfSchoolState.Idle"/> game state.
     /// </summary>
-    protected void SetCurrentRollProtected(DiceRollDistinct roll)
+    public void SetCurrentRoll(DiceRollDistinct roll)
     {
       VerifyState(GameOfSchoolState.Idle);
-      rerollsLeft = RerollsPerTurn;
+      rerollsLeft = rerollsPerTurn;
       this.currentRoll = roll;
       state = GameOfSchoolState.Rolled;
     }
@@ -97,10 +63,10 @@ namespace BobTheDiceMaster
     /// <see cref="CurrentRoll"/> dice at indexes <paramref name="diceIndexes"/>.
     /// Only possible in <see cref="GameOfSchoolState.Rolled"/> game state.
     /// </summary>
-    protected void ApplyRerollToDiceAtIndexesProtected(int[] newDiceValues, int[] diceIndexes)
+    public void ApplyRerollToDiceAtIndexes(int[] newDiceValues, int[] diceIndexes)
     {
       VerifyState(GameOfSchoolState.Rolled);
-      
+
       if (rerollsLeft == 0)
       {
         throw new InvalidOperationException("No rerolls are left, can't reroll the dice");
@@ -115,7 +81,7 @@ namespace BobTheDiceMaster
     /// Score a combination <paramref name="combination"/>.
     /// Only possible in <see cref="GameOfSchoolState.Rolled"/> game state.
     /// </summary>
-    protected void ScoreCombinationProtected(CombinationTypes combination)
+    public void ScoreCombination(CombinationTypes combination)
     {
       VerifyState(GameOfSchoolState.Rolled);
       if (!allowedCombinationTypes.HasFlag(combination))
@@ -128,7 +94,7 @@ namespace BobTheDiceMaster
         throw new InvalidOperationException(
           $"Combination {combination} can't be scored for roll {currentRoll}");
       }
-      if (rerollsLeft == RerollsPerTurn
+      if (rerollsLeft == rerollsPerTurn
         && !combination.IsFromSchool())
       {
         totalScore += currentRoll.Roll.Score(combination).Value * 2;
@@ -157,7 +123,7 @@ namespace BobTheDiceMaster
     /// Cross out a combination <paramref name="combination"/>.
     /// Only possible in <see cref="GameOfSchoolState.Rolled"/> game state.
     /// </summary>
-    protected void CrossOutCombinationProtected(CombinationTypes combination)
+    public void CrossOutCombination(CombinationTypes combination)
     {
       VerifyState(GameOfSchoolState.Rolled);
       if (!allowedCombinationTypes.HasFlag(combination))
@@ -179,16 +145,14 @@ namespace BobTheDiceMaster
       state = GameOfSchoolState.Idle;
     }
 
-    private const int RerollsPerTurn = 2;
+    private const int rerollsPerTurn = 2;
 
     private int totalScore;
     private bool isSchoolFinished;
     private GameOfSchoolState state;
     private int rerollsLeft;
     private DiceRollDistinct currentRoll;
-
-    //TODO[GE]: move to appropriate location, private fields too
-    protected CombinationTypes allowedCombinationTypes;
+    private CombinationTypes allowedCombinationTypes;
 
     private bool AreThreeGradesFinished(CombinationTypes combinationTypes)
     {
@@ -212,7 +176,7 @@ namespace BobTheDiceMaster
       return true;
     }
 
-    protected void VerifyState(GameOfSchoolState requiredState)
+    private void VerifyState(GameOfSchoolState requiredState)
     {
       if (state == requiredState)
       {
