@@ -7,8 +7,8 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "BobTheDiceMaster.dll": "sha256-vBn+Z\/jjA4T8poLHa\/hFYDacAvOdNTj7YLT1pHfSuXE=",
-      "BobTheDiceMaster.UI.Web.dll": "sha256-3I9+MHE5+ayam9MyWSoJNM6b\/LoEgOOExIdgEsQiDV4=",
+      "BobTheDiceMaster.dll": "sha256-EKIvANp8iwCf0d5kd74ijoy0BXUpaFtZffnTcdTMRtI=",
+      "BobTheDiceMaster.UI.Web.dll": "sha256-EZL28BrWnlAzd1H\/OJP025w5ZTxGQSqV+vGmEJ3o+co=",
       "Microsoft.AspNetCore.Components.dll": "sha256-Pl\/UQ0iOTeAYbdF1SW4LtYcLhOa7Y2X5LE\/JbYX0rOo=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-0FF2e7kgo+OaEpIvfajWgZrnvKTBJ+ieJfL5Q6xK0fA=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-zD6Me\/E7IFgEc8hbtU6Scr\/z5hu3zPTxoy5FcpBOPmU=",
@@ -40,7 +40,7 @@
       "System.Drawing.dll": "sha256-oIylcOnsGGLy0faWFe586IKbXjX9KJE9WOAZ4PSDIyc=",
       "System.Drawing.Primitives.dll": "sha256-BZ5TPmwxWklGyrv0FXGfII5WLaA0\/msWfutdgmAnVvo=",
       "System.IO.Compression.dll": "sha256-3qPdVXfkZs0HfD\/PVnQYe5AUwg6vWPy5IlmNQl8PEvY=",
-      "System.Linq.dll": "sha256-w2SMTvkdR6i30o8mpE+YO\/X7fDKQOIHvPyD7VBjdToU=",
+      "System.Linq.dll": "sha256-BPPCT5gppcFd97fGIL5OosnkSMNjnyk5BMyXVxgToGc=",
       "System.Linq.Expressions.dll": "sha256-tIFX+cnVhPYw4FYVOSORzaHPZqn\/TVIH7m9N80wB\/LI=",
       "System.Memory.dll": "sha256-1t6PrjTH4GuUZMttaPMfy9as7SXsopu2XjD9mY03T0I=",
       "System.Net.Http.dll": "sha256-AE9dXgt1zZtbfoHKnabTcUmm\/pOKIIILFxZatL5Gsvw=",
