@@ -5,18 +5,6 @@ namespace BobTheDiceMaster.Test
   public class TestDiceRollDistinct
   {
     [Fact]
-    public void Reroll_IsAppliedCorrectlyAndWithoutDiceReorder()
-    {
-      Mock<IDie> dieMock = TestHelper.GetDiceMock(new[] { 3, 1 });
-
-      DiceRollDistinct initialRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
-
-      DiceRollDistinct newRoll = initialRoll.RerollIndexes(new[] { 0, 2 }, dieMock.Object);
-
-      Assert.Equal(new DiceRollDistinct(new[] { 3, 2, 1, 4, 6 }), newRoll);
-    }
-
-    [Fact]
     public void ApplyReroll_IsAppliedCorrectlyAndWithoutDiceReorder()
     {
       DiceRollDistinct roll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });

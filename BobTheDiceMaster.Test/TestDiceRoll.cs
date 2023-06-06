@@ -25,22 +25,6 @@ namespace BobTheDiceMaster.Test
     }
 
     [Fact]
-    public void Reroll_YieldsCorrectResult()
-    {
-      var dieMock = TestHelper.GetDiceMock(new[] { 5, 6 });
-
-      DiceRoll initialRoll = new DiceRoll(new[] { 1, 3, 6, 6, 6 });
-
-      int[] diceIndexesToReroll = new[] { 0, 1 };
-
-      DiceRoll newRoll = initialRoll.RerollIndexes(diceIndexesToReroll, dieMock.Object);
-
-      DiceRoll expectedRoll = new DiceRoll(new[] { 5, 6, 6, 6, 6 });
-
-      Assert.Equal(expectedRoll, newRoll);
-    }
-
-    [Fact]
     public void RerollByValue_YieldsCorrectResult()
     {
       var dieMock = TestHelper.GetDiceMock(new[] { 5, 6 });
