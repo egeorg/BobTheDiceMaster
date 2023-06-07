@@ -16,7 +16,7 @@ namespace BobTheDiceMaster.Api.Controllers
     // POST /bob/{bobVersion}
     [HttpPost("{bobVersion}", Name = nameof(DecideOnRoll))]
     [Produces("application/json")]
-    public ActionResult<Model.Decision> DecideOnRoll(BobSelector bobVersion, [FromBody] GameOfSchoolContext gameContext)
+    public async Task<ActionResult<Model.Decision>> DecideOnRoll(BobSelector bobVersion, [FromBody] GameOfSchoolContext gameContext)
     {
       IPlayer bob = bobVersion switch
       {
@@ -27,7 +27,7 @@ namespace BobTheDiceMaster.Api.Controllers
         _ => new BruteForceBob(),
       };
 
-      Decision decision = bob.DecideOnRoll(
+      Decision decision = await bob.DecideOnRollAsync(
         gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RerollsLeft);
 
       return new Model.Decision(decision);
@@ -36,10 +36,10 @@ namespace BobTheDiceMaster.Api.Controllers
     // POST /bob
     [HttpPost(Name = nameof(DefaultBobDecideOnRoll))]
     [Produces("application/json")]
-    public ActionResult<Model.Decision> DefaultBobDecideOnRoll([FromBody] GameOfSchoolContext gameContext)
+    public async Task<ActionResult<Model.Decision>> DefaultBobDecideOnRoll([FromBody] GameOfSchoolContext gameContext)
     {
       IPlayer aiPlayer = new BruteForceBob();
-      Decision decision = aiPlayer.DecideOnRoll(
+      Decision decision = await aiPlayer.DecideOnRollAsync(
         gameContext.AvailableCombinations, new DiceRoll(gameContext.DiceRoll), gameContext.RerollsLeft);
       return new Model.Decision(decision);
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace BobTheDiceMaster
 {
@@ -14,9 +15,9 @@ namespace BobTheDiceMaster
   /// </summary>
   public class PrecomputedBob : IPlayer
   {
-    public Decision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerollsLeft)
+    public async Task<Decision> DecideOnRollAsync(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerollsLeft)
     {
-
+      await Task.Yield();
       using (ZipArchive precomputedDecisionsArchive =
         new ZipArchive(
           Assembly.GetAssembly(

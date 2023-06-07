@@ -46,11 +46,11 @@
     [InlineData(CombinationTypes.BigStraight,    new[] { 2, 3, 4, 5, 6 }, allButGrades456)]
     [InlineData(CombinationTypes.Poker,          new[] { 6, 6, 6, 6, 6 }, allButGrades456)]
     [InlineData(CombinationTypes.Trash,          new[] { 3, 4, 5, 6, 6 }, allButSchoolPokerStraightsCareFullAndPair)]
-    public void CorrectCombination_IsScored_WhenNoRerollsLeft(
+    public async Task CorrectCombination_IsScored_WhenNoRerollsLeft(
       CombinationTypes expectedCombination, int[] diceValues, CombinationTypes availableCombinations)
     {
       DiceRoll roll = new DiceRoll(diceValues);
-      Decision decision = bob.DecideOnRoll(availableCombinations, roll, 0);
+      Decision decision = await bob.DecideOnRollAsync(availableCombinations, roll, 0);
 
       Assert.Equal(new Score(expectedCombination), decision);
     }
@@ -72,20 +72,20 @@
     [InlineData(CombinationTypes.LittleStraight, new[] { 1, 2, 3, 4, 5 }, allButGrades456)]
     [InlineData(CombinationTypes.Poker,          new[] { 6, 6, 6, 6, 6 }, allButGrades456)]
     [InlineData(CombinationTypes.Trash,          new[] { 3, 4, 5, 6, 6 }, CombinationTypes.Trash)]
-    public void CorrectCombination_IsScored_WhenRolledOnFirstRoll(
+    public async Task CorrectCombination_IsScored_WhenRolledOnFirstRoll(
       CombinationTypes expectedCombination, int[] diceValues, CombinationTypes availableCombinations)
     {
       DiceRoll roll = new DiceRoll(diceValues);
-      Decision decision = bob.DecideOnRoll(availableCombinations, roll, 2);
+      Decision decision = await bob.DecideOnRollAsync(availableCombinations, roll, 2);
 
       Assert.Equal(new Score(expectedCombination), decision);
     }
 
     [Fact]
-    public void PokerCrossedOut_WhenRollFitsOnlyPairAndCorrespondingGradeAbsent()
+    public async Task PokerCrossedOut_WhenRollFitsOnlyPairAndCorrespondingGradeAbsent()
     {
       DiceRoll roll = new DiceRoll(new[] { 1, 2, 3, 6, 6 });
-      Decision decision = bob.DecideOnRoll(allButGrades456, roll, 0);
+      Decision decision = await bob.DecideOnRollAsync(allButGrades456, roll, 0);
 
       Assert.Equal(new CrossOut(CombinationTypes.Poker), decision);
     }
@@ -93,19 +93,19 @@
     [Theory]
     [InlineData(new[] { 2, 2, 6, 6, 6 }, 2)]
     [InlineData(new[] { 2, 2, 6, 6, 6 }, 1)]
-    public void DiceRerolledForSchool_IfPossibleAndRerollsLeft(int[] diceValues, int rerollsLeft)
+    public async Task DiceRerolledForSchool_IfPossibleAndRerollsLeft(int[] diceValues, int rerollsLeft)
     {
       DiceRoll roll = new DiceRoll(diceValues);
-      Decision decision = bob.DecideOnRoll(CombinationTypes.School, roll, rerollsLeft);
+      Decision decision = await bob.DecideOnRollAsync(CombinationTypes.School, roll, rerollsLeft);
 
       Assert.Equal(new Reroll(new[] { 2, 2 }), decision);
     }
 
     [Fact]
-    public void FirstValueIsRerolled_WhenIts1WithFour6()
+    public async Task FirstValueIsRerolled_WhenIts1WithFour6()
     {
       DiceRoll roll = new DiceRoll(new[] { 1, 6, 6, 6, 6 });
-      Decision decision = bob.DecideOnRoll(CombinationTypes.School, roll, 2);
+      Decision decision = await bob.DecideOnRollAsync(CombinationTypes.School, roll, 2);
 
       Assert.Equal(new Reroll(new[] { 1 }), decision);
     }
@@ -116,10 +116,10 @@
     [InlineData(new[] { 2, 3, 3, 5, 6 }, 3)]
     [InlineData(new[] { 2, 3, 4, 4, 6 }, 4)]
     [InlineData(new[] { 2, 3, 4, 5, 5 }, 5)]
-    public void AnyDiceIndexRerollIsPossible_ForBigStraigt(int[] diceValues, int expectedDieValueToReroll)
+    public async Task AnyDiceIndexRerollIsPossible_ForBigStraigt(int[] diceValues, int expectedDieValueToReroll)
     {
       DiceRoll roll = new DiceRoll(diceValues);
-      Decision decision = bob.DecideOnRoll(CombinationTypes.BigStraight, roll, 2);
+      Decision decision = await bob.DecideOnRollAsync(CombinationTypes.BigStraight, roll, 2);
 
       Assert.Equal(new Reroll(new[] { expectedDieValueToReroll }), decision);
     }
@@ -130,19 +130,19 @@
     [InlineData(new[] { 1, 2, 3, 3, 5 }, 3)]
     [InlineData(new[] { 1, 2, 3, 4, 4 }, 4)]
     [InlineData(new[] { 1, 2, 3, 4, 6 }, 6)]
-    public void AnyDiceIndexRerollIsPossible_ForSmallStraight(int[] diceValues, int expectedDieValueToReroll)
+    public async Task AnyDiceIndexRerollIsPossible_ForSmallStraight(int[] diceValues, int expectedDieValueToReroll)
     {
       DiceRoll roll = new DiceRoll(diceValues);
-      Decision decision = bob.DecideOnRoll(CombinationTypes.LittleStraight, roll, 2);
+      Decision decision = await bob.DecideOnRollAsync(CombinationTypes.LittleStraight, roll, 2);
 
       Assert.Equal(new Reroll(new[] { expectedDieValueToReroll }), decision);
     }
 
     [Fact]
-    public void AllDiceCanBeRerolled()
+    public async Task AllDiceCanBeRerolled()
     {
       DiceRoll roll = new DiceRoll(new[] { 1, 2, 3, 4, 5 });
-      Decision decision = bob.DecideOnRoll(CombinationTypes.Grade6, roll, 2);
+      Decision decision = await bob.DecideOnRollAsync(CombinationTypes.Grade6, roll, 2);
 
       Assert.Equal(new Reroll(new[] { 1, 2, 3, 4, 5 }), decision);
     }

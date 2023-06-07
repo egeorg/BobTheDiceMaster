@@ -12,11 +12,12 @@ namespace BobTheDiceMaster
   public class ParallelVerboseBruteForceBob : IPlayer
   {
     /// <inheritdoc/>
-    public Decision DecideOnRoll(
+    public async Task<Decision> DecideOnRollAsync(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)
     {
+      await Task.Yield();
       return DecideOnRollRatedDecisions(
         availableCombinations,
         currentRoll,

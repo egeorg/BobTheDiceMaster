@@ -65,7 +65,9 @@ namespace BobPrecomputer
       int decisionsCounter = 0;
       for (uint combinationsUint = 1; combinationsUint < availableCombinationsAmount; ++combinationsUint)
       {
-        Decision decision = bob.DecideOnRoll((CombinationTypes)combinationsUint, roll, rerollsLeft);
+        Task<Decision> decideOnRollTask = bob.DecideOnRollAsync((CombinationTypes)combinationsUint, roll, rerollsLeft);
+
+        Decision decision = decideOnRollTask.Result;
 
         switch (decision)
         {

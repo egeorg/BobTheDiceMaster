@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BobTheDiceMaster
 {
@@ -21,11 +22,12 @@ namespace BobTheDiceMaster
     /// the <see cref="Decision"/> returned contains non-empty
     /// <see cref="Decision.RatedDecisionInfo"/>.
     /// <remarks/>
-    public Decision DecideOnRoll(
+    public async Task<Decision> DecideOnRollAsync(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)
     {
+      await Task.Yield();
       return DecideOnRollRatedDecisions(
         availableCombinations,
         currentRoll,

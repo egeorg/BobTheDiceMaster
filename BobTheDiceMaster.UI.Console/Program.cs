@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 using BobTheDiceMaster.GameOfSchool;
 
@@ -42,7 +43,9 @@ namespace BobTheDiceMaster.UI.Console
         System.Console.WriteLine($"Rerolls left: {game.RerollsLeft}");
         System.Console.WriteLine($"Current roll is {game.CurrentRoll.Roll}. Waiting for a decision.");
 
-        Decision decision = game.GenerateAndApplyDecision();
+        Task<Decision> decideOnRollTask = game.GenerateAndApplyDecisionAsync();
+
+        Decision decision = decideOnRollTask.Result;
 
         System.Console.WriteLine(
           Environment.NewLine +

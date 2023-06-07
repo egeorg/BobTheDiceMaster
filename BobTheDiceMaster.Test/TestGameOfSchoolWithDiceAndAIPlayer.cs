@@ -19,7 +19,7 @@ namespace BobTheDiceMaster.Test
     }
 
     [Fact]
-    public void GenerateAndApplyDecision_CallsUnderlayingGameReroll_WhenPlayerRerolls()
+    public async Task GenerateAndApplyDecision_CallsUnderlayingGameReroll_WhenPlayerRerolls()
     {
       int[] initialRoll = new[] { 6, 1, 2, 2, 6 };
       int[] newDiceValues = new[] { 6, 5, 6 };
@@ -28,48 +28,48 @@ namespace BobTheDiceMaster.Test
       TestHelper.ConfigureDiceMock(diceMock, initialRoll, newDiceValues);
 
       playerMock.Setup(
-        player => player.DecideOnRoll(
+        player => player.DecideOnRollAsync(
           It.IsAny<CombinationTypes>(), It.IsAny<DiceRoll>(), It.IsAny<int>()))
-        .Returns(new Reroll(diceValuesToReroll));
+        .ReturnsAsync(new Reroll(diceValuesToReroll));
 
       underlayingGameMock.Setup(x => x.CurrentRoll).Returns(new DiceRollDistinct(initialRoll));
 
-      game.GenerateAndApplyDecision();
+      await game.GenerateAndApplyDecisionAsync();
 
       underlayingGameMock.Verify(x => x.ApplyRerollToDiceAtIndexes(newDiceValues, diceIndexesToReroll), Times.Once);
     }
 
     //TODO: replace long setups by mock setup
     [Fact]
-    public void GenerateAndApplyDecision_ScoresCorrectly()
+    public async Task GenerateAndApplyDecision_ScoresCorrectly()
     {
       underlayingGameMock
         .Setup(x => x.CurrentRoll)
         .Returns(new DiceRollDistinct(new[] { 6, 6, 6, 6, 6 }));
       CombinationTypes combinationToScore = CombinationTypes.Grade6;
       playerMock.Setup(
-        player => player.DecideOnRoll(
+        player => player.DecideOnRollAsync(
           It.IsAny<CombinationTypes>(), It.IsAny<DiceRoll>(), It.IsAny<int>()))
-        .Returns(new Score(combinationToScore));
+        .ReturnsAsync(new Score(combinationToScore));
 
-      game.GenerateAndApplyDecision();
+      await game.GenerateAndApplyDecisionAsync();
 
       underlayingGameMock.Verify(x => x.ScoreCombination(combinationToScore), Times.Once);
     }
 
     [Fact]
-    public void GenerateAndApplyDecision_CrossesOutCorrectly()
+    public async Task GenerateAndApplyDecision_CrossesOutCorrectly()
     {
       underlayingGameMock
         .Setup(x => x.CurrentRoll)
         .Returns(new DiceRollDistinct(new[] { 6, 6, 6, 6, 6 }));
       CombinationTypes combinationToCrossOut = CombinationTypes.LittleStraight;
       playerMock.Setup(
-        player => player.DecideOnRoll(
+        player => player.DecideOnRollAsync(
           It.IsAny<CombinationTypes>(), It.IsAny<DiceRoll>(), It.IsAny<int>()))
-        .Returns(new CrossOut(combinationToCrossOut));
+        .ReturnsAsync(new CrossOut(combinationToCrossOut));
 
-      game.GenerateAndApplyDecision();
+      await game.GenerateAndApplyDecisionAsync();
 
       underlayingGameMock.Verify(x => x.CrossOutCombination(combinationToCrossOut), Times.Once);
     }

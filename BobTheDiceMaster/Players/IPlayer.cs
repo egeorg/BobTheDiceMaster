@@ -1,4 +1,6 @@
-﻿namespace BobTheDiceMaster
+﻿using System.Threading.Tasks;
+
+namespace BobTheDiceMaster
 {
   /// <summary>
   /// An interface for a <see cref="GameOfSchool"/> player.
@@ -10,8 +12,9 @@
     /// <summary>
     /// Get a decision given a game context: available combination types,
     /// current roll result and how many rerolls are left.
+    /// All the heavyweight computation must be done asynchronously.
     /// </summary>
-    Decision DecideOnRoll(
+    Task<Decision> DecideOnRollAsync(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft);

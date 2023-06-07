@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BobTheDiceMaster
 {
@@ -13,11 +14,12 @@ namespace BobTheDiceMaster
     /// <remarks>
     /// Result is obtained using brute-force with several optimizations.
     /// </remarks>>
-    public Decision DecideOnRoll(
+    public async Task<Decision> DecideOnRollAsync(
       CombinationTypes availableCombinations,
       DiceRoll currentRoll,
       int rerollsLeft)
     {
+      await Task.Yield();
       DecisionInfo bestDecisionInfo = GetBestDecision(
         availableCombinations,
         currentRoll,

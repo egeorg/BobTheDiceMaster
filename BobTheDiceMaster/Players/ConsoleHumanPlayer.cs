@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BobTheDiceMaster
 {
@@ -25,8 +26,9 @@ namespace BobTheDiceMaster
     /// <li>Combination type string representation for score or cross out.</li>
     /// </ul>
     /// </summary>
-    public Decision DecideOnRoll(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerollsLeft)
+    public async Task<Decision> DecideOnRollAsync(CombinationTypes availableCombinations, DiceRoll currentRoll, int rerollsLeft)
     {
+      await Task.Yield();
       Decision inputDecision = null;
       while (inputDecision == null)
       {

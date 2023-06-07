@@ -1,6 +1,6 @@
-﻿using BobTheDiceMaster.GameOfSchool;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BobTheDiceMaster.GameOfSchool
 {
@@ -26,10 +26,11 @@ namespace BobTheDiceMaster.GameOfSchool
     /// </summary>
     /// <returns>
     /// The decision that was generated and applied.
+    /// All the heavyweight computation must be done asynchronously.
     /// </returns>
-    public Decision GenerateAndApplyDecision()
+    public async Task<Decision> GenerateAndApplyDecisionAsync()
     {
-      Decision decision = aiPlayer.DecideOnRoll(
+      Decision decision = await aiPlayer.DecideOnRollAsync(
         game.AllowedCombinationTypes, CurrentRoll.Roll, RerollsLeft);
       switch (decision)
       {
