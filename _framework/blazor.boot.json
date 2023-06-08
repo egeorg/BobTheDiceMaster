@@ -8,7 +8,7 @@
   "resources": {
     "assembly": {
       "BobTheDiceMaster.dll": "sha256-UxA2bjlvbm5cYDuvu8m3NuVgGGBVtx7U63xjFT+ZGmQ=",
-      "BobTheDiceMaster.UI.Web.dll": "sha256-hT64CWsoI1+tD2eDbj7QY1Je9g0J0zcfJJ91SJdbyXg=",
+      "BobTheDiceMaster.UI.Web.dll": "sha256-JzlLI27nt0G7Z55qfBMD6j0lajWTqhn5nv9lj6+sGhY=",
       "Microsoft.AspNetCore.Components.dll": "sha256-Pl\/UQ0iOTeAYbdF1SW4LtYcLhOa7Y2X5LE\/JbYX0rOo=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-0FF2e7kgo+OaEpIvfajWgZrnvKTBJ+ieJfL5Q6xK0fA=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-zD6Me\/E7IFgEc8hbtU6Scr\/z5hu3zPTxoy5FcpBOPmU=",
@@ -40,7 +40,7 @@
       "System.Drawing.dll": "sha256-oIylcOnsGGLy0faWFe586IKbXjX9KJE9WOAZ4PSDIyc=",
       "System.Drawing.Primitives.dll": "sha256-BZ5TPmwxWklGyrv0FXGfII5WLaA0\/msWfutdgmAnVvo=",
       "System.IO.Compression.dll": "sha256-3qPdVXfkZs0HfD\/PVnQYe5AUwg6vWPy5IlmNQl8PEvY=",
-      "System.Linq.dll": "sha256-BPPCT5gppcFd97fGIL5OosnkSMNjnyk5BMyXVxgToGc=",
+      "System.Linq.dll": "sha256-5jNV9Mx1oTeDHhOGK18szSIScV69pF1xJwgLIpHIuUk=",
       "System.Linq.Expressions.dll": "sha256-tIFX+cnVhPYw4FYVOSORzaHPZqn\/TVIH7m9N80wB\/LI=",
       "System.Memory.dll": "sha256-1t6PrjTH4GuUZMttaPMfy9as7SXsopu2XjD9mY03T0I=",
       "System.Net.Http.dll": "sha256-AE9dXgt1zZtbfoHKnabTcUmm\/pOKIIILFxZatL5Gsvw=",
@@ -52,7 +52,7 @@
       "System.Private.Xml.dll": "sha256-JiDmCU9E7LdCk79Fhb4+xzdHAXn4tAAGVDn8xXXYC9c=",
       "System.Private.Xml.Linq.dll": "sha256-vt15g9CqqhWAGAVa4pJ2A++kmmje6BFA5+AUT0rzafU=",
       "System.Runtime.CompilerServices.Unsafe.dll": "sha256-h9bKavhsuyFmVAbl1xnoISlBXVUjTBb5oz\/ubi91DSc=",
-      "System.Runtime.dll": "sha256-fVTzZLgahHSRhJU5Y5Xn9\/2qod4asK8PunyCmdz0AD0=",
+      "System.Runtime.dll": "sha256-pmIghLXSdSmIBr9g+pc8tm\/qawrBN6RlyAIf\/PNrlM4=",
       "System.Runtime.Numerics.dll": "sha256-Enxyo9kuQdCBdfvE2YzroJ0GfuEF9\/I5XfyjLXbtIaM=",
       "System.Runtime.Serialization.Formatters.dll": "sha256-4gm0D5HNXtv\/Pg8dTCUxp7tTXl6aim7X8VLPUUNocV4=",
       "System.Runtime.Serialization.Primitives.dll": "sha256-YQ4ngFzrdtZbE3YdsBOjbiEKardeEFYu340bjlvqDwQ=",
