@@ -70,8 +70,11 @@
 
   private DiceRollDistinct currentRoll = new DiceRollDistinct(new[] { 2, 2, 4, 4, 6 });
 
-  private GameOfSchoolWithDiceAndAIPlayer game =
-    new GameOfSchoolWithDiceAndAIPlayer(new GameOfSchool(), new D6(), new PrecomputedBob());
+  private GameOfSchoolWithDiceAndAIPlayer game = new GameOfSchoolWithDiceAndAIPlayer(
+      new GameOfSchool(),
+      new D6(),
+      new CloudBob("https://epjlghh8jh.execute-api.eu-central-1.amazonaws.com/"));
+      //new CloudBob("https://localhost:51777/"));
 
   private bool[] diceSelected = new[] { false, false, false, false, false };
 
