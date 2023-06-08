@@ -42,9 +42,9 @@ namespace BobTheDiceMaster.UI.Web
       {
         return new Score((CombinationTypes)apiDecision.Score.Combination);
       }
-      else if (apiDecision.Score != null)
+      else if (apiDecision.CrossOut != null)
       {
-        return new Score((CombinationTypes)apiDecision.Score.Combination);
+        return new CrossOut((CombinationTypes)apiDecision.CrossOut.Combination);
       }
       else
       {
