@@ -104,8 +104,60 @@
     // properties in attempt to make rendering timing time more intuitively.
     ScoreCombinationTypes = game.ScoreCombinationTypes.ToList();
     CrossOutCombinationTypes = game.CrossOutCombinationTypes.ToList();
-    CombinationToScore = ScoreCombinationTypes.FirstOrDefault().ToString();
-    CombinationToCrossOut = CrossOutCombinationTypes.FirstOrDefault().ToString();
+    CombinationToScore = GetBestCombinationToScore().ToString();
+    CombinationToCrossOut = GetBestCombinationToCrossOut().ToString();
+  }
+
+  private CombinationTypes GetBestCombinationToScore()
+  {
+    double bestScore = double.NegativeInfinity;
+    CombinationTypes bestCombination = CombinationTypes.None;
+
+    foreach (var combination in game.AllowedCombinationTypes)
+    {
+      double? currentRollScore = game.CurrentRoll.Roll.Score(combination);
+
+      if (!currentRollScore.HasValue)
+      {
+        continue;
+      }
+
+      if (game.RerollsLeft == 2 && !combination.IsFromSchool())
+      {
+        currentRollScore *= 2;
+      }
+
+      //TODO[GE]: Does AverageScore depend on availableCombinations?
+      double combinationScore = currentRollScore.Value
+          - DiceRoll.AverageScore(combination);
+
+      if (combinationScore > bestScore)
+      {
+        bestScore = combinationScore;
+        bestCombination = combination;
+      }
+    }
+
+    return bestCombination;
+}
+
+  private CombinationTypes GetBestCombinationToCrossOut()
+  {
+    double bestScore = double.NegativeInfinity;
+    CombinationTypes bestCombination = CombinationTypes.None;
+
+    foreach (var combination in game.AllowedCombinationTypes.Where(c => !c.IsFromSchool()))
+    {
+      //TODO[GE]: Does AverageScore depend on availableCombinations?
+      double combinationScore = -DiceRoll.AverageScore(combination);
+
+      if (combinationScore > bestScore)
+      {
+        bestScore = combinationScore;
+        bestCombination = combination;
+      }
+    }
+    return bestCombination;
   }
 
   private void ResetRolls()
