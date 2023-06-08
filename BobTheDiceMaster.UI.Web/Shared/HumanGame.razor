@@ -106,6 +106,7 @@
     CrossOutCombinationTypes = game.CrossOutCombinationTypes.ToList();
     CombinationToScore = GetBestCombinationToScore().ToString();
     CombinationToCrossOut = GetBestCombinationToCrossOut().ToString();
+    StateHasChanged();
   }
 
   private CombinationTypes GetBestCombinationToScore()
